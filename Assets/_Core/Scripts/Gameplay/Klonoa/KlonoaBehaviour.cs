@@ -7,10 +7,7 @@ namespace Gameplay.Klonoa
 {
     public class KlonoaBehaviour : MonoBehaviour
     {
-        [SerializeField] private float _accelaration = 20f;
-        [SerializeField] private float _drag = 5f;
-        [SerializeField] private float _jumpSpeed = 5f;
-        [SerializeField] private float _gravity = 15f;
+        [SerializeField] private KlonoaDefinition _definition;
         [Space]
         [SerializeField] private float _groundDistance = 0.5f;
         [SerializeField] private float _groundCheckLength = 0.05f;
@@ -37,8 +34,8 @@ namespace Gameplay.Klonoa
             //To make X value 0 means locate the character just above the rail
             _controller.Velocity.x = -_controller.Position.x * 5f;
             //Changing Z value in local position means moving toward rail direction
-            _controller.Velocity.z += MoveDirection.x * _accelaration * Time.fixedDeltaTime;
-            _controller.Velocity.z -= _controller.Velocity.z * _drag * Time.fixedDeltaTime;
+            _controller.Velocity.z += MoveDirection.x * _definition.Acceleration * Time.fixedDeltaTime;
+            _controller.Velocity.z -= _controller.Velocity.z * _definition.Drag * Time.fixedDeltaTime;
             if (Walking) Facing = _controller.Velocity.z;
 
             //Y+ axis = Upwoard (depends on rail rotation)
@@ -48,10 +45,10 @@ namespace Gameplay.Klonoa
                 _controller.Velocity.y = (_groundDistance - distance.Value) / Time.fixedDeltaTime; //ths results for smooth move on slopes
 
                 if (_jump)
-                    _controller.Velocity.y = _jumpSpeed + Mathf.Max(0, (_groundDistance - distance.Value) / Time.fixedDeltaTime);
+                    _controller.Velocity.y = _definition.JumpSpeed + Mathf.Max(0, (_groundDistance - distance.Value) / Time.fixedDeltaTime);
             }
             else
-                _controller.Velocity.y -= _gravity * Time.fixedDeltaTime;
+                _controller.Velocity.y -= _definition.Gravity * Time.fixedDeltaTime;
 
             _jump = false;
         }

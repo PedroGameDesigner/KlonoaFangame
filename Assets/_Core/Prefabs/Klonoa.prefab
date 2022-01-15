@@ -213,6 +213,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 68de3016a1a774c40acc96f349a14075, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  _camera: {fileID: 0}
 --- !u!114 &9048982795958330331
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -225,10 +226,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 8e4f6d3faaf7d304f924c85b9a7c5a8e, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _accelaration: 20
-  _drag: 5
-  _jumpSpeed: 5
-  _gravity: 15
+  _definition: {fileID: 11400000, guid: 680bdc05022a86a4793778bd2179b41a, type: 2}
   _groundDistance: 0.5
   _groundCheckLength: 0.05
   _minWalkSpeed: 0.2
