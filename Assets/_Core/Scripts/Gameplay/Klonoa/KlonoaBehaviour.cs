@@ -48,7 +48,7 @@ namespace Gameplay.Klonoa
                 _controller.Velocity.y = (_groundDistance - distance.Value) / Time.fixedDeltaTime; //ths results for smooth move on slopes
 
                 if (_jump)
-                    _controller.Velocity.y = _jumpSpeed + Mathf.Abs(distance.Value);
+                    _controller.Velocity.y = _jumpSpeed + Mathf.Max(0, (_groundDistance - distance.Value) / Time.fixedDeltaTime);
             }
             else
                 _controller.Velocity.y -= _gravity * Time.fixedDeltaTime;

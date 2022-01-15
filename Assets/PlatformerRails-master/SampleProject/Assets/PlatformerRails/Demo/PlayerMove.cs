@@ -37,7 +37,7 @@ public class PlayerMove : MonoBehaviour
         {
             Controller.Velocity.y = (GroundDistance - distance.Value) / Time.fixedDeltaTime; //ths results for smooth move on slopes
             if (Input.GetButtonDown("Jump"))
-                Controller.Velocity.y = JumpSpeed + (GroundDistance - distance.Value) / Time.fixedDeltaTime;
+                Controller.Velocity.y = JumpSpeed;
         }
         else
             Controller.Velocity.y -= Gravity * Time.fixedDeltaTime;
