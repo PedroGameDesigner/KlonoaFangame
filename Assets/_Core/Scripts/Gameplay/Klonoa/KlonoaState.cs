@@ -11,7 +11,6 @@ namespace Gameplay.Klonoa
     {
         private SpeedData _moveSpeed = null;
         private float _exitTime = -1;
-        private float _groundDistance = 0.5f;
         private float _gravity = 0;
         private bool _canTurn = false;
 
@@ -28,7 +27,7 @@ namespace Gameplay.Klonoa
         private bool _timerFinished;
         private Vector2 _lastDirection;
 
-        public KlonoaState(SpeedData moveSpeed = null, float exitTime = -1, float groundDistance = 0, 
+        public KlonoaState(SpeedData moveSpeed = null, float exitTime = -1, 
                             float gravity = 0, bool canTurn = false,
                             SimpleAction jumpAction = null, SimpleAction jumpKeepAction = null,
                             SimpleAction jumpReleaseAction = null, SimpleAction attackAction = null,
@@ -36,7 +35,6 @@ namespace Gameplay.Klonoa
         {
             _moveSpeed = moveSpeed;
             _exitTime = exitTime;
-            _groundDistance = groundDistance;
             _gravity = gravity;
             _canTurn = canTurn;
 
@@ -54,21 +52,21 @@ namespace Gameplay.Klonoa
             _timerFinished = false;
     }
 
-        public void FixedUpdate(MoverOnRails mover, Vector2 input, float deltaTime, float? floorDistance)
+        public void FixedUpdate(MoverOnRails mover, Vector2 input, CollisionData collision, float deltaTime)
         {
             UpdateMove(mover, input, deltaTime);
-            UpdateGravity(mover, deltaTime, floorDistance);
+            UpdateGravity(mover, collision, deltaTime);
             UpdateTimer(deltaTime);
             _passiveAction?.Invoke(deltaTime);
         }
 
-        private void UpdateGravity(MoverOnRails mover, float deltaTime, float? floorDistance)
+        private void UpdateGravity(MoverOnRails mover, CollisionData collision, float deltaTime)
         {
             if (_gravity <= 0) return;
             //Y+ axis = Upwoard (depends on rail rotation)
-            if (floorDistance != null)
+            if (collision.Grounded)
             {
-                mover.Velocity.y = (_groundDistance - floorDistance.Value) / deltaTime; //ths results for smooth move on slopes                
+                mover.Velocity.y = (collision.MaxGroundDistance - collision.GroundDistance) / deltaTime; //ths results for smooth move on slopes                
             }
             else
                 mover.Velocity.y -= _gravity * deltaTime;

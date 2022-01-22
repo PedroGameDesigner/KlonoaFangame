@@ -16,7 +16,6 @@ namespace Gameplay.Klonoa
 
         public bool _jumpKeep;
         private bool _jumpActivated;
-        private float? _groundDistance;
         private float _floatYSpeed;
         private bool _floatUsed;
 
@@ -25,8 +24,10 @@ namespace Gameplay.Klonoa
         KlonoaState _normalState;
         KlonoaState _floatState;
 
+        CollisionData _collisionData;
+
         public Vector2 MoveDirection { set; private get; }
-        public bool Grounded => _groundDistance != null;
+        public bool Grounded => _collisionData.Grounded;
         public bool Walking => Mathf.Abs(EffectiveSpeed.z) > _minWalkSpeed && Mathf.Abs(MoveDirection.x) > 0;
         public bool Floating => _currentState == _floatState;
         public Vector3 EffectiveSpeed => _mover.Velocity;
@@ -36,8 +37,9 @@ namespace Gameplay.Klonoa
         void Awake()
         {
             _mover = GetComponent<MoverOnRails>();
+            _collisionData = new CollisionData(_maxGroundDistance, _groundCheckLength);
             _normalState = new KlonoaState(
-                moveSpeed: _definition.MoveSpeed, groundDistance: _maxGroundDistance, gravity: _definition.Gravity, canTurn: true,
+                moveSpeed: _definition.MoveSpeed, gravity: _definition.Gravity, canTurn: true,
                 jumpAction: StartJumpAction,
                 jumpKeepAction: FloatAction);
             _floatState = new KlonoaState(
@@ -54,9 +56,9 @@ namespace Gameplay.Klonoa
             float deltaTime = Time.fixedDeltaTime;
             //To make X value 0 means locate the character just above the rail
             _mover.Velocity.x = -_mover.Position.x * 5f;
-            _groundDistance = CheckGroundDistance();
+            CheckGroundDistance();
 
-            _currentState.FixedUpdate(_mover, MoveDirection, deltaTime, _groundDistance);
+            _currentState.FixedUpdate(_mover, MoveDirection, _collisionData, deltaTime);
             if (_jumpKeep)
                 _currentState.JumpKeepAction();
 
@@ -65,22 +67,21 @@ namespace Gameplay.Klonoa
             _jumpActivated = false;
         }
 
-        float? CheckGroundDistance()
+        void CheckGroundDistance()
         {
-            RaycastHit info;
-            var hit = Physics.Raycast(transform.position, -transform.up, out info, _maxGroundDistance + _groundCheckLength);
-            if (hit) 
+            bool previousGrounded = _collisionData.Grounded;
+            _collisionData.CheckGround(transform);
+
+            if (_collisionData.Grounded && !previousGrounded) 
             {
                 _floatUsed = false;
-                return info.distance;
-            } else
-                return null;
+            }
         }
 
         private void JumpAction(float deltaTime)
         {
             if (Grounded && _jumpActivated)
-                _mover.Velocity.y = _definition.JumpSpeed + Mathf.Max(0, (_maxGroundDistance - _groundDistance.Value) / deltaTime);
+                _mover.Velocity.y = _definition.JumpSpeed + Mathf.Max(0, (_maxGroundDistance - _collisionData.GroundDistance) / deltaTime);
         }
 
         private void UpdateFacing()
