@@ -10,6 +10,7 @@ namespace Gameplay.Klonoa
         [Header("Animator Parameter")]
         [SerializeField] private string _groundedParameter = "Grounded";
         [SerializeField] private string _walkingParameter = "Walking";
+        [SerializeField] private string _floatParameter = "Floating";
         [SerializeField] private string _ySpeedParameter = "YSpeed";
 
         private SpriteRenderer _renderer = null;
@@ -26,6 +27,7 @@ namespace Gameplay.Klonoa
         {
             _animator.SetBool(_groundedParameter, _behaviour.Grounded);
             _animator.SetBool(_walkingParameter, _behaviour.Walking);
+            _animator.SetBool(_floatParameter, _behaviour.Floating);
             _animator.SetFloat(_ySpeedParameter, _behaviour.EffectiveSpeed.y);
             _renderer.flipX = _behaviour.Facing < 0;
         }

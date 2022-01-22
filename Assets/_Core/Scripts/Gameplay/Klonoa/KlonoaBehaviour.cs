@@ -28,6 +28,7 @@ namespace Gameplay.Klonoa
         public Vector2 MoveDirection { set; private get; }
         public bool Grounded => _groundDistance != null;
         public bool Walking => Mathf.Abs(EffectiveSpeed.z) > _minWalkSpeed && Mathf.Abs(MoveDirection.x) > 0;
+        public bool Floating => _currentState == _floatState;
         public Vector3 EffectiveSpeed => _mover.Velocity;
         public float Facing { get; private set; }
 
