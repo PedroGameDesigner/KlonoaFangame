@@ -9,12 +9,24 @@ namespace Gameplay.Klonoa
     public class KlonoaDefinition : ScriptableObject
     {
         [SerializeField] private SpeedData _moveSpeed;
+
+        [SerializeField] private SpeedData _floatMoveSpeed;
+        [SerializeField] private float _floatStartSpeed;
+        [SerializeField] private float _floatHeight;
+        [SerializeField] private float _floatTime;
+
         [SerializeField] private float _jumpSpeed = 5f;
         [SerializeField] private float _gravity = 15f;
 
-        public SpeedData MoveSpeed
+        public SpeedData MoveSpeed => _moveSpeed;
+        public SpeedData FloatMoveSpeed => _floatMoveSpeed;
+        public float FloatStartSpeed => _floatStartSpeed;
+
+        public float FloatAcceleration => 2 * (_floatHeight - _floatStartSpeed) / _floatTime;
+
+        public float FloatTime
         {
-            get { return _moveSpeed; }
+            get { return _floatTime; }
         }
 
         public float JumpSpeed

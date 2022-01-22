@@ -6,9 +6,11 @@ using UnityEngine;
 
 namespace Gameplay.Klonoa
 {
+    [System.Serializable]
     public class KlonoaState
     {
         private SpeedData _moveSpeed = null;
+        private float _exitTime = -1;
         private float _groundDistance = 0.5f;
         private float _gravity = 0;
         private bool _canTurn = false;
@@ -17,30 +19,46 @@ namespace Gameplay.Klonoa
         public delegate void ContinousAction(float deltaTime);
         private SimpleAction _jumpAction;
         private SimpleAction _jumpKeepAction;
+        private SimpleAction _jumpReleaseAction;
         private SimpleAction _attackAction;
+        private SimpleAction _exitAction;
         private ContinousAction _passiveAction;
 
+        private float _timer;
+        private bool _timerFinished;
         private Vector2 _lastDirection;
 
-        public KlonoaState(SpeedData moveSpeed = null, float groundDistance = 0, float gravity = 0, bool canTurn = false,
+        public KlonoaState(SpeedData moveSpeed = null, float exitTime = -1, float groundDistance = 0, 
+                            float gravity = 0, bool canTurn = false,
                             SimpleAction jumpAction = null, SimpleAction jumpKeepAction = null,
-                            SimpleAction attackAction = null, ContinousAction passiveAction = null)
+                            SimpleAction jumpReleaseAction = null, SimpleAction attackAction = null,
+                            SimpleAction exitAction = null, ContinousAction passiveAction = null)
         {
             _moveSpeed = moveSpeed;
+            _exitTime = exitTime;
             _groundDistance = groundDistance;
             _gravity = gravity;
             _canTurn = canTurn;
 
             _jumpAction = jumpAction;
             _jumpKeepAction = jumpKeepAction;
+            _jumpReleaseAction = jumpReleaseAction;
             _attackAction = attackAction;
             _passiveAction = passiveAction;
+
+            _exitAction = exitAction;
         }
+        public void Restart()
+        {
+            _timer = 0;
+            _timerFinished = false;
+    }
 
         public void FixedUpdate(MoverOnRails mover, Vector2 input, float deltaTime, float? floorDistance)
         {
             UpdateMove(mover, input, deltaTime);
             UpdateGravity(mover, deltaTime, floorDistance);
+            UpdateTimer(deltaTime);
             _passiveAction?.Invoke(deltaTime);
         }
 
@@ -67,14 +85,33 @@ namespace Gameplay.Klonoa
             mover.Velocity.z -= mover.Velocity.z * _moveSpeed.Drag * deltaTime;
         }
 
+        private void UpdateTimer(float deltaTime)
+        {
+            if (_timerFinished || _exitTime < 0) return;
+            
+            _timer += deltaTime;
+            if (_timer > _exitTime)
+            {
+                _exitAction?.Invoke();
+                _timerFinished = true;
+            }            
+        }
+
         public void JumpAction()
         {
             _jumpAction?.Invoke();
         }
+
         public void JumpKeepAction()
         {
             _jumpKeepAction?.Invoke();
         }
+
+        public void JumpReleaseAction()
+        {
+            _jumpReleaseAction?.Invoke();
+        }
+
         public void AttackAction()
         {
             _attackAction?.Invoke();

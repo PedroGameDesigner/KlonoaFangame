@@ -17,10 +17,13 @@ namespace Gameplay.Klonoa
         public bool _jumpKeep;
         private bool _jumpActivated;
         private float? _groundDistance;
+        private float _floatYSpeed;
+        private bool _floatUsed;
 
         MoverOnRails _mover;
         KlonoaState _currentState;
         KlonoaState _normalState;
+        KlonoaState _floatState;
 
         public Vector2 MoveDirection { set; private get; }
         public bool Grounded => _groundDistance != null;
@@ -36,6 +39,12 @@ namespace Gameplay.Klonoa
                 moveSpeed: _definition.MoveSpeed, groundDistance: _maxGroundDistance, gravity: _definition.Gravity, canTurn: true,
                 jumpAction: StartJumpAction,
                 jumpKeepAction: FloatAction);
+            _floatState = new KlonoaState(
+                moveSpeed: _definition.FloatMoveSpeed, canTurn: true, exitTime: _definition.FloatTime,
+                passiveAction: FloatUpdate,
+                exitAction: ChangeToNormal,
+                jumpReleaseAction: ChangeToNormal);
+
             ChangeState(_normalState);
         }
 
@@ -47,6 +56,8 @@ namespace Gameplay.Klonoa
             _groundDistance = CheckGroundDistance();
 
             _currentState.FixedUpdate(_mover, MoveDirection, deltaTime, _groundDistance);
+            if (_jumpKeep)
+                _currentState.JumpKeepAction();
 
             JumpAction(deltaTime);
             UpdateFacing();
@@ -57,9 +68,11 @@ namespace Gameplay.Klonoa
         {
             RaycastHit info;
             var hit = Physics.Raycast(transform.position, -transform.up, out info, _maxGroundDistance + _groundCheckLength);
-            if (hit)
+            if (hit) 
+            {
+                _floatUsed = false;
                 return info.distance;
-            else
+            } else
                 return null;
         }
 
@@ -84,6 +97,7 @@ namespace Gameplay.Klonoa
         public void EndJump()
         {
             _jumpKeep = false;
+            _currentState.JumpReleaseAction();
         }
 
         public void StartAttack()
@@ -105,12 +119,29 @@ namespace Gameplay.Klonoa
 
         private void FloatAction()
         {
-            
+            if (!_floatUsed && !Grounded && _mover.Velocity.y < 0)
+            {
+                _floatUsed = true;
+                _floatYSpeed = _definition.FloatStartSpeed;
+                ChangeState(_floatState);
+            }
+        }
+
+        private void FloatUpdate(float deltaTime)
+        {
+            _floatYSpeed += _definition.FloatAcceleration * deltaTime;
+            _mover.Velocity.y = _floatYSpeed;
+        }
+
+        private void ChangeToNormal()
+        {
+            ChangeState(_normalState);
         }
 
         private void ChangeState(KlonoaState newState)
         {
             _currentState = newState;
+            _currentState.Restart();
         }
 
 
