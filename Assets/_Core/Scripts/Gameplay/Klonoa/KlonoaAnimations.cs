@@ -10,6 +10,7 @@ namespace Gameplay.Klonoa
         [Header("Animator Parameter")]
         [SerializeField] private string _groundedParameter = "Grounded";
         [SerializeField] private string _walkingParameter = "Walking";
+        [SerializeField] private string _captureProjectileParameter = "CaptureProjectile";
         [SerializeField] private string _floatParameter = "Floating";
         [SerializeField] private string _ySpeedParameter = "YSpeed";
 
@@ -20,6 +21,8 @@ namespace Gameplay.Klonoa
         {
             _renderer = GetComponent<SpriteRenderer>();
             _animator = GetComponent<Animator>();
+
+            _behaviour.CaptureProjectileEvent += OnCaptureProjectile;
         }
 
         // Update is called once per frame
@@ -30,6 +33,11 @@ namespace Gameplay.Klonoa
             _animator.SetBool(_floatParameter, _behaviour.Floating);
             _animator.SetFloat(_ySpeedParameter, _behaviour.EffectiveSpeed.y);
             _renderer.flipX = _behaviour.Facing < 0;
+        }
+
+        private void OnCaptureProjectile()
+        {
+            _animator.SetTrigger(_captureProjectileParameter);
         }
     }
 }
