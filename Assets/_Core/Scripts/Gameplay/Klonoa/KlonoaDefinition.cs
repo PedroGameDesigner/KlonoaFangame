@@ -1,7 +1,6 @@
-using System.Collections;
-using System.Collections.Generic;
 using System;
 using UnityEngine;
+using Gameplay.Projectile;
 
 namespace Gameplay.Klonoa
 {
@@ -18,27 +17,21 @@ namespace Gameplay.Klonoa
         [SerializeField] private float _jumpSpeed = 5f;
         [SerializeField] private float _gravity = 15f;
 
+        [SerializeField] private CaptureProjectile _captureProjectile;
+
+        public SpeedData NotMoveSpeed => new SpeedData();
         public SpeedData MoveSpeed => _moveSpeed;
         public SpeedData FloatMoveSpeed => _floatMoveSpeed;
         public float FloatStartSpeed => _floatStartSpeed;
 
         public float FloatAcceleration => 2 * (_floatHeight - _floatStartSpeed) / _floatTime;
 
-        public float FloatTime
-        {
-            get { return _floatTime; }
-        }
-
-        public float JumpSpeed
-        {
-            get { return _jumpSpeed; }
-        }
-
-        public float Gravity
-        {
-            get { return _gravity; }
-        }
+        public float FloatTime => _floatTime;
+        public float JumpSpeed => _jumpSpeed; 
+        public float Gravity => _gravity;
+        public CaptureProjectile CaptureProjectile => _captureProjectile;
     }
+
     [Serializable]
     public class SpeedData
     {

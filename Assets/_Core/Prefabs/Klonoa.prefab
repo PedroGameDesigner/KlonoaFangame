@@ -1,5 +1,49 @@
 %YAML 1.1
 %TAG !u! tag:unity3d.com,2011:
+--- !u!1 &2913861027620595233
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 4440753262782048645}
+  - component: {fileID: 863335812960224249}
+  m_Layer: 0
+  m_Name: Projectile Origin
+  m_TagString: Untagged
+  m_Icon: {fileID: 4422084297763085224, guid: 0000000000000000d000000000000000, type: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &4440753262782048645
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2913861027620595233}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: -0.2, z: 0.35}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_Children: []
+  m_Father: {fileID: 9048982795958330325}
+  m_RootOrder: 0
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &863335812960224249
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2913861027620595233}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: b334d4730c33f0f4d9a94add1f9cd1e2, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _behaviour: {fileID: 9048982795958330331}
 --- !u!1 &9048982794688697682
 GameObject:
   m_ObjectHideFlags: 0
@@ -30,7 +74,7 @@ Transform:
   m_Children:
   - {fileID: 9048982795073711795}
   m_Father: {fileID: 9048982795958330325}
-  m_RootOrder: 0
+  m_RootOrder: 1
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!114 &9048982794688697772
 MonoBehaviour:
@@ -93,6 +137,7 @@ MonoBehaviour:
   _behaviour: {fileID: 9048982795958330331}
   _groundedParameter: Grounded
   _walkingParameter: Walking
+  _floatParameter: Floating
   _ySpeedParameter: YSpeed
 --- !u!212 &9048982795073711756
 SpriteRenderer:
@@ -136,7 +181,7 @@ SpriteRenderer:
   m_SortingOrder: 0
   m_Sprite: {fileID: -4360651699206733200, guid: ff0bed1d3fd341f44a775e4f5413c40a, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
-  m_FlipX: 1
+  m_FlipX: 0
   m_FlipY: 0
   m_DrawMode: 0
   m_Size: {x: 1, y: 1}
@@ -196,6 +241,7 @@ Transform:
   m_LocalPosition: {x: 1.42, y: 1.55, z: -2.15}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:
+  - {fileID: 4440753262782048645}
   - {fileID: 9048982794688697683}
   - {fileID: 9048982796796437422}
   m_Father: {fileID: 0}
@@ -227,9 +273,10 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _definition: {fileID: 11400000, guid: 680bdc05022a86a4793778bd2179b41a, type: 2}
-  _groundDistance: 0.5
+  _maxGroundDistance: 0.5
   _groundCheckLength: 0.05
   _minWalkSpeed: 0.2
+  _projectileOrigin: {fileID: 4440753262782048645}
 --- !u!114 &9048982795958330329
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -305,7 +352,7 @@ Transform:
   m_LocalScale: {x: 0.5000005, y: 0.5, z: 0.5000005}
   m_Children: []
   m_Father: {fileID: 9048982795958330325}
-  m_RootOrder: 1
+  m_RootOrder: 2
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!33 &9048982796796437417
 MeshFilter:

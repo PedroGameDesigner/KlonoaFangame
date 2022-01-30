@@ -12,7 +12,15 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 19a575994eef94c47a3446edb4515930, type: 3}
   m_Name: Klonoa Definition
   m_EditorClassIdentifier: 
-  _accelaration: 20
-  _drag: 5
+  _moveSpeed:
+    _accelaration: 20
+    _drag: 5
+  _floatMoveSpeed:
+    _accelaration: 5
+    _drag: 5
+  _floatStartSpeed: -1
+  _floatHeight: 0.5
+  _floatTime: 1
   _jumpSpeed: 5
   _gravity: 15
+  _captureProjectile: {fileID: 5373462825906385168, guid: e1f30890edb6bf743847ad1bbdaf1a56, type: 3}

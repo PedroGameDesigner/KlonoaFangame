@@ -1,4 +1,6 @@
+using Gameplay.Projectile;
 using PlatformerRails;
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -13,8 +15,10 @@ namespace Gameplay.Klonoa
         [SerializeField] private float _groundCheckLength = 0.05f;
         [Space]
         [SerializeField] private float _minWalkSpeed = 0.1f;
+        [Space]
+        [SerializeField] private Transform _projectileOrigin;
 
-        public bool _jumpKeep;
+        private bool _jumpKeep;
         private bool _jumpActivated;
         private float _floatYSpeed;
         private bool _floatUsed;
@@ -23,7 +27,9 @@ namespace Gameplay.Klonoa
         KlonoaState _currentState;
         KlonoaState _normalState;
         KlonoaState _floatState;
+        KlonoaState _captureState;
 
+        CaptureProjectile _projectile;
         CollisionData _collisionData;
 
         public Vector2 MoveDirection { set; private get; }
@@ -31,7 +37,10 @@ namespace Gameplay.Klonoa
         public bool Walking => Mathf.Abs(EffectiveSpeed.z) > _minWalkSpeed && Mathf.Abs(MoveDirection.x) > 0;
         public bool Floating => _currentState == _floatState;
         public Vector3 EffectiveSpeed => _mover.Velocity;
-        public float Facing { get; private set; }
+        public float Facing { get; private set; } = 1;
+
+        //Events
+        public event Action CaptureProjectileEvent;
 
         //Behaviour Methods
         void Awake()
@@ -41,12 +50,15 @@ namespace Gameplay.Klonoa
             _normalState = new KlonoaState(
                 moveSpeed: _definition.MoveSpeed, gravity: _definition.Gravity, canTurn: true,
                 jumpAction: StartJumpAction,
-                jumpKeepAction: FloatAction);
+                jumpKeepAction: FloatAction,
+                attackAction: StartCapture);
             _floatState = new KlonoaState(
                 moveSpeed: _definition.FloatMoveSpeed, canTurn: true, exitTime: _definition.FloatTime,
                 passiveAction: FloatUpdate,
                 exitAction: ChangeToNormal,
                 jumpReleaseAction: ChangeToNormal);
+            _captureState = new KlonoaState(
+                moveSpeed: _definition.NotMoveSpeed, gravity: _definition.Gravity, canTurn: false);
 
             ChangeState(_normalState);
         }
@@ -86,7 +98,7 @@ namespace Gameplay.Klonoa
 
         private void UpdateFacing()
         {
-            if (Walking) Facing = _mover.Velocity.z;
+            if (Walking) Facing = Mathf.Sign(_mover.Velocity.z);
         }
 
         //Input Access Methods
@@ -112,7 +124,6 @@ namespace Gameplay.Klonoa
 
         }
 
-
         //States Actions
         private void StartJumpAction()
         {
@@ -133,6 +144,38 @@ namespace Gameplay.Klonoa
         {
             _floatYSpeed += _definition.FloatAcceleration * deltaTime;
             _mover.Velocity.y = _floatYSpeed;
+        }
+
+        private void StartCapture()
+        {
+            if (_projectile != null) return;
+            _projectile = Instantiate(_definition.CaptureProjectile, _projectileOrigin.position, Quaternion.identity);
+            _projectile.MovingFinishEvent += OnCaptureEventFinish;
+            _projectile.ReturnFinishEvent += OnReturnEventFinish;
+            Debug.Log("Facing: " + Facing);
+            _projectile.StartMovement(transform.forward * Facing, _mover.Velocity.z, _projectileOrigin);
+            CaptureProjectileEvent?.Invoke();
+            ChangeState(_captureState);
+        }
+
+        private void OnCaptureEventFinish()
+        {
+            if (!Grounded)
+            {
+                FinishCapture();
+            }
+        }
+
+        private void OnReturnEventFinish()
+        {
+            FinishCapture();
+        }
+
+        private void FinishCapture()
+        {
+            _projectile.MovingFinishEvent -= OnCaptureEventFinish;
+            _projectile.ReturnFinishEvent -= OnReturnEventFinish;
+            ChangeState(_normalState);
         }
 
         private void ChangeToNormal()
