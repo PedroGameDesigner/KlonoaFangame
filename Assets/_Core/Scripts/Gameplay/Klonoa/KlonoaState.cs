@@ -9,19 +9,19 @@ namespace Gameplay.Klonoa
     [System.Serializable]
     public class KlonoaState
     {
-        private SpeedData _moveSpeed = null;
-        private float _exitTime = -1;
-        private float _gravity = 0;
-        private bool _canTurn = false;
+        private readonly SpeedData _moveSpeed;
+        private readonly float _exitTime;
+        private readonly float _gravity;
+        private readonly bool _canTurn;
 
         public delegate void SimpleAction();
         public delegate void ContinousAction(float deltaTime);
-        private SimpleAction _jumpAction;
-        private SimpleAction _jumpKeepAction;
-        private SimpleAction _jumpReleaseAction;
-        private SimpleAction _attackAction;
-        private SimpleAction _exitAction;
-        private ContinousAction _passiveAction;
+        private readonly SimpleAction _jumpAction;
+        private readonly SimpleAction _jumpKeepAction;
+        private readonly SimpleAction _jumpReleaseAction;
+        private readonly SimpleAction _attackAction;
+        private readonly SimpleAction _exitAction;
+        private readonly ContinousAction _passiveAction;
 
         private float _timer;
         private bool _timerFinished;

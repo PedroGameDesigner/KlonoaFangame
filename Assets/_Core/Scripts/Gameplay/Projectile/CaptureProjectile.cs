@@ -1,12 +1,13 @@
 using System;
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
+using Extensions;
+using Gameplay.Enemies;
 
 namespace Gameplay.Projectile
 {
     public class CaptureProjectile : MonoBehaviour
     {
+        [SerializeField] private LayerMask _collisionMask;
         [SerializeField] private float _reach;
         [SerializeField] private float _advanceTime;
         [SerializeField] private float _returnTime;
@@ -23,6 +24,7 @@ namespace Gameplay.Projectile
 
         public event Action MovingFinishEvent;
         public event Action ReturnFinishEvent;
+        public event Action<EnemyBehaviour> EnemyCapturedEvent;
 
         public void StartMovement(Vector3 direction, float extraSpeed, Transform origin)
         {
@@ -76,6 +78,17 @@ namespace Gameplay.Projectile
         private void Finish()
         {
             Destroy(gameObject);
+        }
+
+        private void OnCollisionEnter(Collision collision)
+        {
+            if (_collisionMask.CheckLayer(collision.gameObject.layer))
+            {
+                EnemyBehaviour enemy = collision.gameObject.GetComponent<EnemyBehaviour>();
+                enemy.Kill();
+                EnemyCapturedEvent?.Invoke(enemy);
+                Finish();
+            }
         }
     }
 }

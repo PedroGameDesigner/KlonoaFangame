@@ -1,3 +1,4 @@
+using Gameplay.Enemies;
 using Gameplay.Projectile;
 using PlatformerRails;
 using System;
@@ -17,6 +18,8 @@ namespace Gameplay.Klonoa
         [SerializeField] private float _minWalkSpeed = 0.1f;
         [Space]
         [SerializeField] private Transform _projectileOrigin;
+        [Space]
+        [SerializeField] private Transform _ballHolder;
 
         private bool _jumpKeep;
         private bool _jumpActivated;
@@ -28,8 +31,10 @@ namespace Gameplay.Klonoa
         KlonoaState _normalState;
         KlonoaState _floatState;
         KlonoaState _captureState;
+        KlonoaState _holdingState;
 
         CaptureProjectile _projectile;
+        EnemyBall _holdedBall;
         CollisionData _collisionData;
 
         public Vector2 MoveDirection { set; private get; }
@@ -59,6 +64,9 @@ namespace Gameplay.Klonoa
                 jumpReleaseAction: ChangeToNormal);
             _captureState = new KlonoaState(
                 moveSpeed: _definition.NotMoveSpeed, gravity: _definition.Gravity, canTurn: false);
+            _holdingState = new KlonoaState(
+                moveSpeed: _definition.MoveSpeed, gravity: _definition.Gravity, canTurn: true,
+                jumpAction: StartJumpAction);
 
             ChangeState(_normalState);
         }
@@ -121,7 +129,7 @@ namespace Gameplay.Klonoa
 
         public void StopAttack() 
         {
-
+            //unused, added for completition
         }
 
         //States Actions
@@ -152,6 +160,7 @@ namespace Gameplay.Klonoa
             _projectile = Instantiate(_definition.CaptureProjectile, _projectileOrigin.position, Quaternion.identity);
             _projectile.MovingFinishEvent += OnCaptureEventFinish;
             _projectile.ReturnFinishEvent += OnReturnEventFinish;
+            _projectile.EnemyCapturedEvent += OnEnemyCaptured;
             Debug.Log("Facing: " + Facing);
             _projectile.StartMovement(transform.forward * Facing, _mover.Velocity.z, _projectileOrigin);
             CaptureProjectileEvent?.Invoke();
@@ -175,7 +184,18 @@ namespace Gameplay.Klonoa
         {
             _projectile.MovingFinishEvent -= OnCaptureEventFinish;
             _projectile.ReturnFinishEvent -= OnReturnEventFinish;
+            _projectile.EnemyCapturedEvent -= OnEnemyCaptured;
             ChangeState(_normalState);
+        }
+
+        private void OnEnemyCaptured(EnemyBehaviour enemy)
+        {
+            _projectile.MovingFinishEvent -= OnCaptureEventFinish;
+            _projectile.ReturnFinishEvent -= OnReturnEventFinish;
+            _projectile.EnemyCapturedEvent -= OnEnemyCaptured;
+
+            _holdedBall = enemy.InstantiateBall(_ballHolder);
+            ChangeState(_holdingState);
         }
 
         private void ChangeToNormal()

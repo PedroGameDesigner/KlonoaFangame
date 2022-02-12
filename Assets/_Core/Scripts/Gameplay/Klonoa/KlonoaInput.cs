@@ -35,7 +35,7 @@ namespace Gameplay.Klonoa
         private void Update()
         {
             Vector2 correctDirection = GetCorrectDirection(_moveInput.ReadValue<Vector2>());
-            _mainBehaviour.MoveDirection = _moveInput.ReadValue<Vector2>();
+            _mainBehaviour.MoveDirection = correctDirection;
         }
 
         private void OnJumpStarted(InputAction.CallbackContext context)
