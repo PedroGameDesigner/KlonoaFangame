@@ -14,6 +14,7 @@ namespace Gameplay.Klonoa
         private PlayerControl _control;
         private InputAction _moveInput;
 
+
         private void Awake()
         {
             _control = new PlayerControl();
@@ -61,7 +62,7 @@ namespace Gameplay.Klonoa
         private Vector2 GetCorrectDirection(Vector2 input)
         {
             Vector3 forward = _camera.transform.forward;
-            Vector3 right = _camera.transform.forward;
+            Vector3 right = _camera.transform.right;
             Vector3 correctedDirection = forward * input.y + right * input.x;
             return (new Vector2(correctedDirection.x, correctedDirection.z)).normalized;
         }
