@@ -14,6 +14,7 @@ namespace Gameplay.Klonoa
         [Space]
         [SerializeField] private float _maxGroundDistance = 0.5f;
         [SerializeField] private float _groundCheckLength = 0.05f;
+        [SerializeField] private LayerMask _groundLayer;
         [Space]
         [SerializeField] private float _minWalkSpeed = 0.1f;
         [Space]
@@ -27,6 +28,7 @@ namespace Gameplay.Klonoa
         private bool _floatUsed;
 
         MoverOnRails _mover;
+        Rigidbody _rigidbody;
         KlonoaState _currentState;
         KlonoaState _normalState;
         KlonoaState _floatState;
@@ -46,12 +48,14 @@ namespace Gameplay.Klonoa
 
         //Events
         public event Action CaptureProjectileEvent;
+        public event Action BeginHoldingEvent;
 
         //Behaviour Methods
         void Awake()
         {
             _mover = GetComponent<MoverOnRails>();
-            _collisionData = new CollisionData(_maxGroundDistance, _groundCheckLength);
+            _rigidbody = GetComponent<Rigidbody>();
+            _collisionData = new CollisionData(_maxGroundDistance, _groundCheckLength, _groundLayer);
             _normalState = new KlonoaState(
                 moveSpeed: _definition.MoveSpeed, gravity: _definition.Gravity, canTurn: true,
                 jumpAction: StartJumpAction,
@@ -194,7 +198,8 @@ namespace Gameplay.Klonoa
             _projectile.ReturnFinishEvent -= OnReturnEventFinish;
             _projectile.EnemyCapturedEvent -= OnEnemyCaptured;
 
-            _holdedBall = enemy.InstantiateBall(_ballHolder);
+            _holdedBall = enemy.InstantiateBall(_ballHolder, _rigidbody);
+            BeginHoldingEvent?.Invoke();
             ChangeState(_holdingState);
         }
 
