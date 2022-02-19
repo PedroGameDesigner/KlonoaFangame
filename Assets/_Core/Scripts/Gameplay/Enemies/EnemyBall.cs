@@ -12,9 +12,8 @@ namespace Gameplay.Enemies
         private readonly float RAY_EXTRA_LENGTH = 0.1f;
         private readonly float SKIN_SIZE = 0.05f;
 
-
-        [SerializeField] private LayerMask _layerMask;
-        [SerializeField] private float _fullRegrowTime;
+        [SerializeField] private LayerMask _layerMask = 0;
+        [SerializeField] private float _fullRegrowTime = 0;
 
         private BoxCollider _collider;
         private Vector3 _baseSize;

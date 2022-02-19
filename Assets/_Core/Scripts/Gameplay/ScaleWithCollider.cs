@@ -6,7 +6,7 @@ namespace Gameplay
 {
     public class ScaleWithCollider : MonoBehaviour
     {
-        [SerializeField] private BoxCollider _collider;
+        [SerializeField] private BoxCollider _collider = null;
 
         private Vector3 _baseSize;
         private Vector3 _proxySize;

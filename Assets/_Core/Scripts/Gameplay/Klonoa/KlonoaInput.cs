@@ -8,14 +8,11 @@ namespace Gameplay.Klonoa
 {
     public class KlonoaInput : MonoBehaviour
     {
-        [SerializeField] private Camera _camera;
+        [SerializeField] private Camera _camera = null;
 
         private KlonoaBehaviour _mainBehaviour;
         private PlayerControl _control;
         private InputAction _moveInput;
-
-        Vector2 correctDirection;
-        Vector3 forward;
 
         private void Awake()
         {
@@ -37,8 +34,7 @@ namespace Gameplay.Klonoa
 
         private void Update()
         {
-            correctDirection = _moveInput.ReadValue<Vector2>(); //GetCorrectDirection(_moveInput.ReadValue<Vector2>());
-            _mainBehaviour.MoveDirection = correctDirection;
+            _mainBehaviour.MoveDirection = _moveInput.ReadValue<Vector2>();
         }
 
         private void OnJumpStarted(InputAction.CallbackContext context)
@@ -60,15 +56,7 @@ namespace Gameplay.Klonoa
         {
             _mainBehaviour.StopAttack();
         }
-
-        private Vector2 GetCorrectDirection(Vector2 input)
-        {
-            forward = _camera.transform.forward;
-            Vector3 right = _camera.transform.right;
-            Vector3 correctedDirection = forward * input.y + right * input.x;
-            return (new Vector2(correctedDirection.x, correctedDirection.z)).normalized;
-        }
-
+        
         private void OnDisable()
         {
             _control.Player.Jump.started -= OnJumpStarted;
