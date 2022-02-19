@@ -10,8 +10,8 @@ GameObject:
   m_Component:
   - component: {fileID: 6218368295295086268}
   - component: {fileID: 1020939667055835225}
-  - component: {fileID: 8625127620188576110}
-  m_Layer: 0
+  - component: {fileID: 1062907453401404767}
+  m_Layer: 10
   m_Name: Moo Ball
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -45,8 +45,12 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 780404f98346c664cac01d929aa58d5b, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
---- !u!135 &8625127620188576110
-SphereCollider:
+  _layerMask:
+    serializedVersion: 2
+    m_Bits: 128
+  _fullRegrowTime: 0
+--- !u!65 &1062907453401404767
+BoxCollider:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
@@ -56,8 +60,8 @@ SphereCollider:
   m_IsTrigger: 0
   m_Enabled: 1
   serializedVersion: 2
-  m_Radius: 0.41
-  m_Center: {x: 0, y: 0, z: 0}
+  m_Size: {x: 0.75, y: 0.75, z: 0.75}
+  m_Center: {x: 0, y: -0.03, z: 0}
 --- !u!1 &8729436876643846528
 GameObject:
   m_ObjectHideFlags: 0
@@ -69,8 +73,9 @@ GameObject:
   - component: {fileID: 8045978861397870521}
   - component: {fileID: 5736782534936605800}
   - component: {fileID: 4285246493378894306}
+  - component: {fileID: 1949216637195387835}
   - component: {fileID: 7081720881479321419}
-  m_Layer: 8
+  m_Layer: 10
   m_Name: Sprite
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -161,7 +166,7 @@ Animator:
   m_HasTransformHierarchy: 1
   m_AllowConstantClipSamplingOptimization: 1
   m_KeepAnimatorControllerStateOnDisable: 0
---- !u!114 &7081720881479321419
+--- !u!114 &1949216637195387835
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -169,6 +174,19 @@ MonoBehaviour:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 8729436876643846528}
   m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 91c366d2e63766b43b4dff797e6c6999, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _collider: {fileID: 1062907453401404767}
+--- !u!114 &7081720881479321419
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8729436876643846528}
+  m_Enabled: 0
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 568c0de9b2547544e8ceec322ae2b2da, type: 3}
   m_Name: 

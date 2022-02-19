@@ -12,7 +12,7 @@ GameObject:
   - component: {fileID: 5373462825906385168}
   - component: {fileID: 5236284239880585153}
   - component: {fileID: 44092042651126835}
-  m_Layer: 0
+  m_Layer: 10
   m_Name: Capture Projectile
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -92,7 +92,7 @@ GameObject:
   - component: {fileID: 8871211947757710337}
   - component: {fileID: 660523593332564575}
   - component: {fileID: 9104247304211681217}
-  m_Layer: 0
+  m_Layer: 10
   m_Name: Sprite
   m_TagString: Untagged
   m_Icon: {fileID: 0}

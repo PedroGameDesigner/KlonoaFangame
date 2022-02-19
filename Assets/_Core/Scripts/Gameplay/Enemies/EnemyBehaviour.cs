@@ -13,9 +13,11 @@ namespace Gameplay.Enemies
             gameObject.SetActive(false);
         }
 
-        internal EnemyBall InstantiateBall(Transform ballHolder)
+        internal EnemyBall InstantiateBall(Transform holderTransform, Rigidbody holderRigidbody)
         {
-            return Instantiate(_ballPrefab, ballHolder);
+            EnemyBall ball = Instantiate(_ballPrefab, holderTransform.position, holderTransform.rotation);
+            ball.AssignHolder(holderTransform);
+            return ball;
         }
     }
 }
