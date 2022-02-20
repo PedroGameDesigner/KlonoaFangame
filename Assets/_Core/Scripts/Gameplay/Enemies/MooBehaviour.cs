@@ -6,6 +6,7 @@ namespace Gameplay.Enemies
 {
     public class MooBehaviour : EnemyBehaviour
     {
-        
+        private const bool IS_CAPTURABLE = true;
+        public override bool IsCapturable => IS_CAPTURABLE;
     }
 }

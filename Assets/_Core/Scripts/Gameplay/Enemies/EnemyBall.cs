@@ -2,6 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using Extensions;
+using System;
 
 namespace Gameplay.Enemies
 {
@@ -12,7 +13,8 @@ namespace Gameplay.Enemies
         private readonly float RAY_EXTRA_LENGTH = 0.1f;
         private readonly float SKIN_SIZE = 0.05f;
 
-        [SerializeField] private LayerMask _layerMask = 0;
+        [SerializeField] private LayerMask _groundLayer = 0;
+        [SerializeField] private LayerMask _enemyLayer = 0;
         [SerializeField] private float _fullRegrowTime = 0;
 
         private BoxCollider _collider;
@@ -20,6 +22,8 @@ namespace Gameplay.Enemies
 
         private readonly Vector3 _rayDirection = Vector3.up;
         private float _regrowSpeed = 0;
+        private Vector3 _lastPosition;
+        Vector3 _speed;
 
         private Vector3 InnerColliderSize => _collider.size - Vector3.one * SKIN_SIZE;
         private Vector3 RaysOrigin => ColliderCenter + Vector3.down * _collider.size.y * 0.5f +
@@ -29,11 +33,14 @@ namespace Gameplay.Enemies
         private float RayLength => _baseSize.y + RAY_EXTRA_LENGTH;
         private Vector3 ColliderCenter => transform.position + _collider.center;
 
+        public event Action DestroyEvent;
+
         private void Awake()
         {
             _collider = GetComponent<BoxCollider>();
             _baseSize = _collider.size;
             _regrowSpeed = _baseSize.y / _fullRegrowTime;
+            _lastPosition = transform.position;
         }
 
         public void AssignHolder(Transform holder)
@@ -43,6 +50,12 @@ namespace Gameplay.Enemies
 
         private void LateUpdate()
         {
+            CalculateSize();
+            DetectCollision();
+            _lastPosition = transform.position;
+        }
+
+        private void CalculateSize() { 
             float collisionDistance = CheckCeilDistance();
 
             float newHeight = collisionDistance - RAY_EXTRA_LENGTH;
@@ -58,7 +71,7 @@ namespace Gameplay.Enemies
             }
         }
 
-        public float CheckCeilDistance()
+    public float CheckCeilDistance()
         {
             RaycastHit info;
             float collisionDistance = float.PositiveInfinity;
@@ -66,7 +79,7 @@ namespace Gameplay.Enemies
             {
                 for (int j = 0; j < DEPTH_POINTS_COUNT; j++)
                 {
-                    bool hit = Physics.Raycast(GenerateRayOrigin(i, j), _rayDirection, out info, RayLength, _layerMask);
+                    bool hit = Physics.Raycast(GenerateRayOrigin(i, j), _rayDirection, out info, RayLength, _groundLayer);
                     if (hit)
                         collisionDistance = Mathf.Min(info.distance, collisionDistance);
                 }
@@ -84,8 +97,6 @@ namespace Gameplay.Enemies
         private void RegrowColliderSize(float newHeight, Vector3 size)
         {
             float sizeDiference = Mathf.Min(newHeight, _baseSize.y) - size.y;
-
-            Debug.Log("sizeDiference = " + sizeDiference);
             float regrowAmount = Mathf.Min(sizeDiference, _regrowSpeed * Time.deltaTime);
             size.y = size.y + regrowAmount;
             _collider.size = size;
@@ -102,6 +113,29 @@ namespace Gameplay.Enemies
         private Vector3 RotateVector(Vector3 vector)
         {
             return transform.rotation * vector;
+        }
+
+        private void DetectCollision()
+        {
+            _speed = transform.position - _lastPosition;
+            RaycastHit[] results;
+            _collider.Cast(_speed.normalized, _enemyLayer, out results, _speed.magnitude);
+            if (results.Length > 0)
+            {
+                EnemyBehaviour enemy = results[0].collider.GetComponent<EnemyBehaviour>();
+                if (enemy != null)
+                {
+                    enemy.Kill();
+                    DestroySelf();
+                }
+            }
+        }
+
+        private void DestroySelf()
+        {
+            DestroyEvent?.Invoke();
+            transform.parent = null;
+            Destroy(gameObject);
         }
 
         private void OnDrawGizmos()
@@ -121,7 +155,10 @@ namespace Gameplay.Enemies
                     Gizmos.DrawRay(origin, _rayDirection * RayLength);
                 }
             }
-            
+
+            Gizmos.color = Color.red;
+            Gizmos.DrawRay(_collider.center, _speed.normalized);
+
         }
     }
 }

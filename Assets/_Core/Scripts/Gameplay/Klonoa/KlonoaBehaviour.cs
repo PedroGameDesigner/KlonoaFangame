@@ -49,6 +49,7 @@ namespace Gameplay.Klonoa
         //Events
         public event Action CaptureProjectileEvent;
         public event Action BeginHoldingEvent;
+        public event Action EndHoldingEvent;
 
         //Behaviour Methods
         void Awake()
@@ -199,8 +200,16 @@ namespace Gameplay.Klonoa
             _projectile.EnemyCapturedEvent -= OnEnemyCaptured;
 
             _holdedBall = enemy.InstantiateBall(_ballHolder, _rigidbody);
+            _holdedBall.DestroyEvent += OnHoldedBallDestroyed;
             BeginHoldingEvent?.Invoke();
             ChangeState(_holdingState);
+        }
+
+        private void OnHoldedBallDestroyed()
+        {
+            _holdedBall = null;
+            EndHoldingEvent?.Invoke();
+            ChangeToNormal();
         }
 
         private void ChangeToNormal()

@@ -45,10 +45,13 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 780404f98346c664cac01d929aa58d5b, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _layerMask:
+  _groundLayer:
     serializedVersion: 2
     m_Bits: 128
-  _fullRegrowTime: 0
+  _enemyLayer:
+    serializedVersion: 2
+    m_Bits: 256
+  _fullRegrowTime: 0.2
 --- !u!65 &1062907453401404767
 BoxCollider:
   m_ObjectHideFlags: 0

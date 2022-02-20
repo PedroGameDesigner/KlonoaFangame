@@ -5,10 +5,13 @@ using UnityEngine;
 
 namespace Gameplay.Enemies
 {
-    public class EnemyBehaviour : MonoBehaviour
+    public abstract class EnemyBehaviour : MonoBehaviour
     {
-        [SerializeField] protected EnemyBall _ballPrefab;
-        public void Kill()
+        [SerializeField] protected EnemyBall _ballPrefab = null;
+
+        public abstract bool IsCapturable { get; }
+
+        public virtual void Kill()
         {
             gameObject.SetActive(false);
         }

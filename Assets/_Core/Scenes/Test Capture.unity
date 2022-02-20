@@ -4464,7 +4464,7 @@ MonoBehaviour:
   m_IsSelectable: 1
   m_SelectedFaces: 
   m_SelectedEdges: []
-  m_SelectedVertices: 
+  m_SelectedVertices: 09000000
 --- !u!1 &1379179412
 GameObject:
   m_ObjectHideFlags: 0
@@ -6522,6 +6522,10 @@ PrefabInstance:
     - target: {fileID: 8469474013821667107, guid: d5486bca1edf07e48852db07744073c8, type: 3}
       propertyPath: m_Name
       value: Spiker
+      objectReference: {fileID: 0}
+    - target: {fileID: 8469474013821667107, guid: d5486bca1edf07e48852db07744073c8, type: 3}
+      propertyPath: m_IsActive
+      value: 1
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: d5486bca1edf07e48852db07744073c8, type: 3}

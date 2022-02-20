@@ -53,11 +53,7 @@ namespace Gameplay.Projectile
             _timer += deltaTime;
             if (_timer > _advanceTime)
             {
-                _timer = 0;
-                Moving = false;
-                _movingFinal = transform.position;
-                Returning = true;
-                MovingFinishEvent?.Invoke();
+                FinishMovement();
             }
         }
 
@@ -75,6 +71,15 @@ namespace Gameplay.Projectile
             }
         }
 
+        private void FinishMovement()
+        {
+            _timer = 0;
+            Moving = false;
+            _movingFinal = transform.position;
+            Returning = true;
+            MovingFinishEvent?.Invoke();
+        }
+
         private void Finish()
         {
             Destroy(gameObject);
@@ -86,8 +91,13 @@ namespace Gameplay.Projectile
             {
                 EnemyBehaviour enemy = collision.gameObject.GetComponent<EnemyBehaviour>();
                 enemy.Kill();
-                EnemyCapturedEvent?.Invoke(enemy);
-                Finish();
+                if (enemy.IsCapturable)
+                {
+                    EnemyCapturedEvent?.Invoke(enemy);
+                    Finish();
+                }
+                else
+                    FinishMovement();
             }
         }
     }

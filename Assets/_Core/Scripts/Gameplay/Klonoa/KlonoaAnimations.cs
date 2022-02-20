@@ -12,6 +12,7 @@ namespace Gameplay.Klonoa
         [SerializeField] private string _walkingParameter = "Walking";
         [SerializeField] private string _captureProjectileParameter = "CaptureProjectile";
         [SerializeField] private string _beginHoldingParameter = "BeginHolding";
+        [SerializeField] private string _endHoldingParameter = "EndHolding";
         [SerializeField] private string _floatParameter = "Floating";
         [SerializeField] private string _ySpeedParameter = "YSpeed";
 
@@ -25,6 +26,7 @@ namespace Gameplay.Klonoa
 
             _behaviour.CaptureProjectileEvent += OnCaptureProjectile;
             _behaviour.BeginHoldingEvent += OnBeginHolding;
+            _behaviour.EndHoldingEvent += OnEndHolding;
         }
 
         // Update is called once per frame
@@ -45,6 +47,11 @@ namespace Gameplay.Klonoa
         private void OnBeginHolding()
         {
             _animator.SetTrigger(_beginHoldingParameter);
+        }
+
+        private void OnEndHolding()
+        {
+            _animator.SetTrigger(_endHoldingParameter);
         }
     }
 }
