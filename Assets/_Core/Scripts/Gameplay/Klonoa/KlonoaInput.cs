@@ -8,8 +8,6 @@ namespace Gameplay.Klonoa
 {
     public class KlonoaInput : MonoBehaviour
     {
-        [SerializeField] private Camera _camera = null;
-
         private KlonoaBehaviour _mainBehaviour;
         private PlayerControl _control;
         private InputAction _moveInput;

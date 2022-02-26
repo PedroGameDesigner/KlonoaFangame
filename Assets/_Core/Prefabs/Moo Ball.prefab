@@ -10,6 +10,7 @@ GameObject:
   m_Component:
   - component: {fileID: 6218368295295086268}
   - component: {fileID: 1020939667055835225}
+  - component: {fileID: 3575764557800602442}
   - component: {fileID: 1062907453401404767}
   m_Layer: 10
   m_Name: Moo Ball
@@ -52,6 +53,18 @@ MonoBehaviour:
     serializedVersion: 2
     m_Bits: 256
   _fullRegrowTime: 0.2
+--- !u!114 &3575764557800602442
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8704238770098229188}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e934c3d7d1402aa4fb7726725145de3f, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!65 &1062907453401404767
 BoxCollider:
   m_ObjectHideFlags: 0

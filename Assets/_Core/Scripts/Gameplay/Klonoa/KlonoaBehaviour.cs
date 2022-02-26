@@ -1,4 +1,5 @@
 using Gameplay.Enemies;
+using Gameplay.Enemies.Ball;
 using Gameplay.Projectile;
 using PlatformerRails;
 using System;
@@ -71,7 +72,8 @@ namespace Gameplay.Klonoa
                 moveSpeed: _definition.NotMoveSpeed, gravity: _definition.Gravity, canTurn: false);
             _holdingState = new KlonoaState(
                 moveSpeed: _definition.MoveSpeed, gravity: _definition.Gravity, canTurn: true,
-                jumpAction: StartJumpAction);
+                jumpAction: StartJumpAction,
+                attackAction: ThrowHoldedEnemy);
 
             ChangeState(_normalState);
         }
@@ -200,12 +202,19 @@ namespace Gameplay.Klonoa
             _projectile.EnemyCapturedEvent -= OnEnemyCaptured;
 
             _holdedBall = enemy.InstantiateBall(_ballHolder, _rigidbody);
-            _holdedBall.DestroyEvent += OnHoldedBallDestroyed;
+            _holdedBall.DestroyEvent += OnEndHolding;
             BeginHoldingEvent?.Invoke();
             ChangeState(_holdingState);
         }
 
-        private void OnHoldedBallDestroyed()
+        private void ThrowHoldedEnemy()
+        {
+            _holdedBall.transform.position = _projectileOrigin.transform.position;
+            _holdedBall.Throw(Facing);
+            OnEndHolding();
+        }
+
+        private void OnEndHolding()
         {
             _holdedBall = null;
             EndHoldingEvent?.Invoke();

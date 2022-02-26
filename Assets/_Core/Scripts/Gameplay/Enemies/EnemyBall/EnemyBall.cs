@@ -4,7 +4,7 @@ using UnityEngine;
 using Extensions;
 using System;
 
-namespace Gameplay.Enemies
+namespace Gameplay.Enemies.Ball
 {
     public class EnemyBall : MonoBehaviour
     {
@@ -23,7 +23,12 @@ namespace Gameplay.Enemies
         private readonly Vector3 _rayDirection = Vector3.up;
         private float _regrowSpeed = 0;
         private Vector3 _lastPosition;
-        Vector3 _speed;
+        protected Vector3 _speed;
+
+        public Vector3 Position => transform.position;
+        public Vector3 ColliderSize => _collider.size;
+        public Vector3 BaseSize => _baseSize;
+        public float RegrowSpeed => _regrowSpeed;
 
         private Vector3 InnerColliderSize => _collider.size - Vector3.one * SKIN_SIZE;
         private Vector3 RaysOrigin => ColliderCenter + Vector3.down * _collider.size.y * 0.5f +
@@ -43,35 +48,23 @@ namespace Gameplay.Enemies
             _lastPosition = transform.position;
         }
 
+        private void Update() 
+        { 
+            _lastPosition = Position;
+        }
+
         public void AssignHolder(Transform holder)
         {
             transform.parent = holder.transform;
         }
 
-        private void LateUpdate()
+        public void Throw(float direction)
         {
-            CalculateSize();
-            DetectCollision();
-            _lastPosition = transform.position;
+            transform.parent = null;
+
         }
 
-        private void CalculateSize() { 
-            float collisionDistance = CheckCeilDistance();
-
-            float newHeight = collisionDistance - RAY_EXTRA_LENGTH;
-            Vector3 size = _collider.size;
-
-            if (newHeight < size.y)
-            {
-                ReduceColliderSize(newHeight, size);
-            }
-            else
-            {
-                RegrowColliderSize(newHeight, size);
-            }
-        }
-
-    public float CheckCeilDistance()
+        public float CheckCeilDistance()
         {
             RaycastHit info;
             float collisionDistance = float.PositiveInfinity;
@@ -84,23 +77,7 @@ namespace Gameplay.Enemies
                         collisionDistance = Mathf.Min(info.distance, collisionDistance);
                 }
             }
-            return collisionDistance;
-        }
-
-        private void ReduceColliderSize(float newHeight, Vector3 size)
-        {
-            _collider.center = Vector3.down * (_baseSize.y - newHeight) * 0.5f;
-            size.y = newHeight;
-            _collider.size = size;
-        }
-
-        private void RegrowColliderSize(float newHeight, Vector3 size)
-        {
-            float sizeDiference = Mathf.Min(newHeight, _baseSize.y) - size.y;
-            float regrowAmount = Mathf.Min(sizeDiference, _regrowSpeed * Time.deltaTime);
-            size.y = size.y + regrowAmount;
-            _collider.size = size;
-            _collider.center = Vector3.down * (_baseSize.y - size.y) * 0.5f;
+            return collisionDistance - RAY_EXTRA_LENGTH;
         }
 
         private Vector3 GenerateRayOrigin(int xIndex, int zIndex)
@@ -115,23 +92,23 @@ namespace Gameplay.Enemies
             return transform.rotation * vector;
         }
 
-        private void DetectCollision()
+        public void ChangeColliderHeight(float newHeight)
         {
-            _speed = transform.position - _lastPosition;
-            RaycastHit[] results;
-            _collider.Cast(_speed.normalized, _enemyLayer, out results, _speed.magnitude);
-            if (results.Length > 0)
-            {
-                EnemyBehaviour enemy = results[0].collider.GetComponent<EnemyBehaviour>();
-                if (enemy != null)
-                {
-                    enemy.Kill();
-                    DestroySelf();
-                }
-            }
+            Vector3 size = ColliderSize;
+            _collider.center = Vector3.down * (_baseSize.y - newHeight) * 0.5f;
+            size.y = newHeight;
+            _collider.size = size;
         }
 
-        private void DestroySelf()
+        public RaycastHit[] CheckCollisions()
+        {
+            _speed = Position - _lastPosition;
+            RaycastHit[] results;
+            _collider.Cast(_speed.normalized, _enemyLayer, out results, _speed.magnitude);
+            return results;
+        }
+
+        public void DestroySelf()
         {
             DestroyEvent?.Invoke();
             transform.parent = null;
@@ -155,10 +132,6 @@ namespace Gameplay.Enemies
                     Gizmos.DrawRay(origin, _rayDirection * RayLength);
                 }
             }
-
-            Gizmos.color = Color.red;
-            Gizmos.DrawRay(_collider.center, _speed.normalized);
-
         }
     }
 }
