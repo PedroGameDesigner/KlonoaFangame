@@ -25,7 +25,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 264606702570258213}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: -0, y: -0.05, z: 0.5}
+  m_LocalPosition: {x: 0, y: -0.05, z: 0.232}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 9048982795958330325}
@@ -228,6 +228,7 @@ MonoBehaviour:
   _captureProjectileParameter: CaptureProjectile
   _beginHoldingParameter: BeginHolding
   _endHoldingParameter: EndHolding
+  _throwParameter: Throw
   _floatParameter: Floating
   _ySpeedParameter: YSpeed
 --- !u!212 &9048982795073711756

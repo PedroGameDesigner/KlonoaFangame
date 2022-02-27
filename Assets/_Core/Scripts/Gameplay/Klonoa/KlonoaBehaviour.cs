@@ -52,6 +52,7 @@ namespace Gameplay.Klonoa
         public event Action CaptureProjectileEvent;
         public event Action BeginHoldingEvent;
         public event Action EndHoldingEvent;
+        public event Action ThrowEnemyEvent;
 
         //Behaviour Methods
         void Awake()
@@ -212,7 +213,9 @@ namespace Gameplay.Klonoa
         {
             _holdedBall.transform.position = _EnemyProjectileOrigin.transform.position;
             _holdedBall.Throw(transform.forward * Facing);
-            OnEndHolding();
+            _holdedBall = null;
+            ThrowEnemyEvent?.Invoke();
+            ChangeToNormal();
         }
 
         private void OnEndHolding()
