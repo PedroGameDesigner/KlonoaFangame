@@ -16,35 +16,39 @@ namespace Gameplay.Enemies.Ball
         [SerializeField] private LayerMask _groundLayer = 0;
         [SerializeField] private LayerMask _enemyLayer = 0;
         [SerializeField] private float _fullRegrowTime = 0;
+        [SerializeField] private float _flySpeed = 4;
+        [SerializeField] private float _maxFlyDistance = 10;
 
         private BoxCollider _collider;
-        private Vector3 _baseSize;
 
         private readonly Vector3 _rayDirection = Vector3.up;
-        private float _regrowSpeed = 0;
         private Vector3 _lastPosition;
         protected Vector3 _speed;
+        protected Vector3 _flyDirection;
 
         public Vector3 Position => transform.position;
         public Vector3 ColliderSize => _collider.size;
-        public Vector3 BaseSize => _baseSize;
-        public float RegrowSpeed => _regrowSpeed;
+        public Vector3 BaseSize { get; private set; }
+        public float RegrowSpeed { get; private set; }
+        public Vector3 FlyVelocity => _flyDirection * _flySpeed;
+        public float MaxFlyDistance => _maxFlyDistance;
 
         private Vector3 InnerColliderSize => _collider.size - Vector3.one * SKIN_SIZE;
         private Vector3 RaysOrigin => ColliderCenter + Vector3.down * _collider.size.y * 0.5f +
                 RotateVector(new Vector3(-InnerColliderSize.x, 0, -InnerColliderSize.z) * 0.5f);
         private float WidthSegment => InnerColliderSize.x / (WIDTH_POINTS_COUNT - 1);
         private float DepthSegment => InnerColliderSize.z / (DEPTH_POINTS_COUNT - 1);
-        private float RayLength => _baseSize.y + RAY_EXTRA_LENGTH;
+        private float RayLength => BaseSize.y + RAY_EXTRA_LENGTH;
         private Vector3 ColliderCenter => transform.position + _collider.center;
 
         public event Action DestroyEvent;
+        public event Action ThrownEvent;
 
         private void Awake()
         {
             _collider = GetComponent<BoxCollider>();
-            _baseSize = _collider.size;
-            _regrowSpeed = _baseSize.y / _fullRegrowTime;
+            BaseSize = _collider.size;
+            RegrowSpeed = BaseSize.y / _fullRegrowTime;
             _lastPosition = transform.position;
         }
 
@@ -53,15 +57,38 @@ namespace Gameplay.Enemies.Ball
             _lastPosition = Position;
         }
 
+        private void LateUpdate()
+        {
+            DetectCollision();
+        }
+
+        private void DetectCollision()
+        {
+            _speed = Position - _lastPosition;
+            RaycastHit[] results;
+            _collider.Cast(_speed.normalized, _enemyLayer, out results, _speed.magnitude);
+
+            if (results.Length > 0)
+            {
+                EnemyBehaviour enemy = results[0].collider.GetComponent<EnemyBehaviour>();
+                if (enemy != null)
+                {
+                    enemy.Kill();
+                    DestroySelf();
+                }
+            }
+        }
+
         public void AssignHolder(Transform holder)
         {
             transform.parent = holder.transform;
         }
 
-        public void Throw(float direction)
+        public void Throw(Vector3 direction)
         {
             transform.parent = null;
-
+            _flyDirection = direction;
+            ThrownEvent?.Invoke();
         }
 
         public float CheckCeilDistance()
@@ -95,19 +122,11 @@ namespace Gameplay.Enemies.Ball
         public void ChangeColliderHeight(float newHeight)
         {
             Vector3 size = ColliderSize;
-            _collider.center = Vector3.down * (_baseSize.y - newHeight) * 0.5f;
+            _collider.center = Vector3.down * (BaseSize.y - newHeight) * 0.5f;
             size.y = newHeight;
             _collider.size = size;
         }
-
-        public RaycastHit[] CheckCollisions()
-        {
-            _speed = Position - _lastPosition;
-            RaycastHit[] results;
-            _collider.Cast(_speed.normalized, _enemyLayer, out results, _speed.magnitude);
-            return results;
-        }
-
+        
         public void DestroySelf()
         {
             DestroyEvent?.Invoke();

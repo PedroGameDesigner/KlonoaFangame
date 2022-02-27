@@ -53,6 +53,8 @@ MonoBehaviour:
     serializedVersion: 2
     m_Bits: 256
   _fullRegrowTime: 0.2
+  _flySpeed: 5
+  _maxFlyDistance: 10
 --- !u!114 &3575764557800602442
 MonoBehaviour:
   m_ObjectHideFlags: 0

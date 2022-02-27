@@ -7,35 +7,32 @@ namespace Gameplay.Enemies.Ball
 {
     public class FlyingState : State<EnemyBall>
     {
-        public FlyingState(EnemyBall behaviour) : base(behaviour)
-        {
+        private float _traveledDistance = 0;
 
-        }
+        public FlyingState(EnemyBall behaviour) : base(behaviour) { }
 
         public override void Enter()
         {
-            throw new System.NotImplementedException();
+            _traveledDistance = 0;
         }
 
-        public override void Exit()
+        public override void Exit() { }
+
+        public override void FixedUpdate(float deltaTime) 
         {
-            throw new System.NotImplementedException();
+            Vector3 translation = _behaviour.FlyVelocity * deltaTime;
+            _traveledDistance += translation.magnitude;
+            _behaviour.transform.Translate(translation, Space.World);
+
+            if (_traveledDistance >= _behaviour.MaxFlyDistance)
+            {
+                _behaviour.DestroySelf();
+            }
         }
 
-        public override void FixedUpdate(float deltaTime)
-        {
-            throw new System.NotImplementedException();
-        }
+        public override void LateUpdate(float deltaTime) { }
+        public override void Update(float deltaTime) { }
 
-        public override void LateUpdate(float deltaTime)
-        {
-            throw new System.NotImplementedException();
-        }
-
-        public override void Update(float deltaTime)
-        {
-            throw new System.NotImplementedException();
-        }
         public override void DrawGizmos() { }
     }
 }

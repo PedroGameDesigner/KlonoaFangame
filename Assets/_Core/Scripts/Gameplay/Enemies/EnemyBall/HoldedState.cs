@@ -14,7 +14,10 @@ namespace Gameplay.Enemies.Ball
             _nextState = nextState;
         }
 
-        public override void Enter() { }
+        public override void Enter() 
+        {
+            _behaviour.ThrownEvent += OnThrown;
+        }
 
         public override void FixedUpdate(float deltaTime) { }
         public override void Update(float deltaTime) { }
@@ -22,7 +25,6 @@ namespace Gameplay.Enemies.Ball
         public override void LateUpdate(float deltaTime)
         {
             CalculateSize();
-            DetectCollision();
         }
 
         private void CalculateSize()
@@ -52,24 +54,19 @@ namespace Gameplay.Enemies.Ball
             float regrowAmount = Mathf.Min(sizeDiference, _behaviour.RegrowSpeed * Time.deltaTime);
             float actualHeight = size.y + regrowAmount;
             _behaviour.ChangeColliderHeight(actualHeight);
-        }
+        }        
 
-        private void DetectCollision()
+        private void OnThrown()
         {
-            RaycastHit[] results = _behaviour.CheckCollisions();
-            
-            if (results.Length > 0)
-            {
-                EnemyBehaviour enemy = results[0].collider.GetComponent<EnemyBehaviour>();
-                if (enemy != null)
-                {
-                    enemy.Kill();
-                    _behaviour.DestroySelf();
-                }
-            }
+            ChangeState(_nextState);
         }
 
-        public override void Exit() { }
+        public override void Exit()
+        {
+            _behaviour.ChangeColliderHeight(_behaviour.BaseSize.y);
+            _behaviour.ThrownEvent -= OnThrown;
+        }
+
         public override void DrawGizmos() { }
     }
 }

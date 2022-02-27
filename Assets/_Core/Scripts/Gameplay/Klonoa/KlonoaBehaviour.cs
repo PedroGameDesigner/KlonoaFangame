@@ -19,7 +19,8 @@ namespace Gameplay.Klonoa
         [Space]
         [SerializeField] private float _minWalkSpeed = 0.1f;
         [Space]
-        [SerializeField] private Transform _projectileOrigin;
+        [SerializeField] private Transform _captureProjectileOrigin;
+        [SerializeField] private Transform _EnemyProjectileOrigin;
         [Space]
         [SerializeField] private Transform _ballHolder;
 
@@ -164,12 +165,12 @@ namespace Gameplay.Klonoa
         private void StartCapture()
         {
             if (_projectile != null) return;
-            _projectile = Instantiate(_definition.CaptureProjectile, _projectileOrigin.position, Quaternion.identity);
+            _projectile = Instantiate(_definition.CaptureProjectile, _captureProjectileOrigin.position, Quaternion.identity);
             _projectile.MovingFinishEvent += OnCaptureEventFinish;
             _projectile.ReturnFinishEvent += OnReturnEventFinish;
             _projectile.EnemyCapturedEvent += OnEnemyCaptured;
             Debug.Log("Facing: " + Facing);
-            _projectile.StartMovement(transform.forward * Facing, _mover.Velocity.z, _projectileOrigin);
+            _projectile.StartMovement(transform.forward * Facing, _mover.Velocity.z, _captureProjectileOrigin);
             CaptureProjectileEvent?.Invoke();
             ChangeState(_captureState);
         }
@@ -209,8 +210,8 @@ namespace Gameplay.Klonoa
 
         private void ThrowHoldedEnemy()
         {
-            _holdedBall.transform.position = _projectileOrigin.transform.position;
-            _holdedBall.Throw(Facing);
+            _holdedBall.transform.position = _EnemyProjectileOrigin.transform.position;
+            _holdedBall.Throw(transform.forward * Facing);
             OnEndHolding();
         }
 
