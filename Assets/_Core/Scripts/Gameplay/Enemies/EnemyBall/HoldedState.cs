@@ -17,6 +17,7 @@ namespace Gameplay.Enemies.Ball
         public override void Enter() 
         {
             _behaviour.ThrownEvent += OnThrown;
+            _behaviour.FollowPath = false;
         }
 
         public override void FixedUpdate(float deltaTime) { }

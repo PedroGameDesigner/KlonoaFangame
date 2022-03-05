@@ -83,8 +83,10 @@ namespace Gameplay.Klonoa
         void FixedUpdate()
         {
             float deltaTime = Time.fixedDeltaTime;
+            Vector3 velocity = _mover.Velocity;
             //To make X value 0 means locate the character just above the rail
-            _mover.Velocity.x = -_mover.Position.x * 5f;
+            velocity.x = -_mover.Position.x * 5f;
+            _mover.Velocity = velocity;
             CheckGroundDistance();
 
             _currentState.FixedUpdate(_mover, MoveDirection, _collisionData, deltaTime);
@@ -110,7 +112,11 @@ namespace Gameplay.Klonoa
         private void JumpAction(float deltaTime)
         {
             if (Grounded && _jumpActivated)
-                _mover.Velocity.y = _definition.JumpSpeed + Mathf.Max(0, (_maxGroundDistance - _collisionData.GroundDistance) / deltaTime);
+            {
+                Vector3 velocity = _mover.Velocity;
+                velocity.y = _definition.JumpSpeed + Mathf.Max(0, (_maxGroundDistance - _collisionData.GroundDistance) / deltaTime);
+                _mover.Velocity = velocity;
+            }
         }
 
         private void UpdateFacing()
@@ -159,8 +165,10 @@ namespace Gameplay.Klonoa
 
         private void FloatUpdate(float deltaTime)
         {
+            Vector3 velocity = _mover.Velocity;
             _floatYSpeed += _definition.FloatAcceleration * deltaTime;
-            _mover.Velocity.y = _floatYSpeed;
+            velocity.y = _floatYSpeed;
+            _mover.Velocity = velocity;
         }
 
         private void StartCapture()
@@ -212,7 +220,7 @@ namespace Gameplay.Klonoa
         private void ThrowHoldedEnemy()
         {
             _holdedBall.transform.position = _EnemyProjectileOrigin.transform.position;
-            _holdedBall.Throw(transform.forward * Facing);
+            _holdedBall.Throw(Facing);
             _holdedBall = null;
             ThrowEnemyEvent?.Invoke();
             ChangeToNormal();

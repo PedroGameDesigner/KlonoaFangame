@@ -5,26 +5,24 @@ using StateMachine;
 
 namespace Gameplay.Enemies.Ball
 {
-    public class FlyingState : State<EnemyBall>
+    public class FreeFlyState : State<EnemyBall>
     {
-        private float _traveledDistance = 0;
+        private float _traveledTime = 0;
 
-        public FlyingState(EnemyBall behaviour) : base(behaviour) { }
+        public FreeFlyState(EnemyBall behaviour) : base(behaviour) { }
 
         public override void Enter()
         {
-            _traveledDistance = 0;
+            _traveledTime = 0;
+            _behaviour.FollowPath = false;
+            _behaviour.Speed(_behaviour.FlySpeed);
         }
-
-        public override void Exit() { }
 
         public override void FixedUpdate(float deltaTime) 
         {
-            Vector3 translation = _behaviour.FlyVelocity * deltaTime;
-            _traveledDistance += translation.magnitude;
-            _behaviour.transform.Translate(translation, Space.World);
+            _traveledTime += _behaviour.FlySpeed * deltaTime;
 
-            if (_traveledDistance >= _behaviour.MaxFlyDistance)
+            if (_traveledTime >= _behaviour.FreeFlyTime)
             {
                 _behaviour.DestroySelf();
             }
@@ -32,6 +30,7 @@ namespace Gameplay.Enemies.Ball
 
         public override void LateUpdate(float deltaTime) { }
         public override void Update(float deltaTime) { }
+        public override void Exit() { }
 
         public override void DrawGizmos() { }
     }

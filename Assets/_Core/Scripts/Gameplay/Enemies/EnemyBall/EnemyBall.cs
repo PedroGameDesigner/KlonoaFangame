@@ -3,6 +3,8 @@ using System.Collections.Generic;
 using UnityEngine;
 using Extensions;
 using System;
+using PlatformerRails;
+using Gameplay.Rails;
 
 namespace Gameplay.Enemies.Ball
 {
@@ -17,21 +19,35 @@ namespace Gameplay.Enemies.Ball
         [SerializeField] private LayerMask _enemyLayer = 0;
         [SerializeField] private float _fullRegrowTime = 0;
         [SerializeField] private float _flySpeed = 4;
-        [SerializeField] private float _maxFlyDistance = 10;
+        [SerializeField] private float _followPathTime = 1.5f;
+        [SerializeField] private float _freeFlyTime = 6;
 
         private BoxCollider _collider;
+        private TranslatorOnRails _mover;
 
         private readonly Vector3 _rayDirection = Vector3.up;
         private Vector3 _lastPosition;
         protected Vector3 _speed;
-        protected Vector3 _flyDirection;
+        protected float _flyDirection;
+        protected Vector3 _velocity;
 
         public Vector3 Position => transform.position;
         public Vector3 ColliderSize => _collider.size;
         public Vector3 BaseSize { get; private set; }
         public float RegrowSpeed { get; private set; }
-        public Vector3 FlyVelocity => _flyDirection * _flySpeed;
-        public float MaxFlyDistance => _maxFlyDistance;
+        public bool FollowPath 
+        {
+            get => _mover.enabled;
+            set
+            {
+                _mover.Velocity = Vector3.zero;
+                _velocity = Vector3.zero;
+                _mover.enabled = value;
+            } 
+        }
+        public float FollowPathTime => _followPathTime;
+        public float FreeFlyTime => _freeFlyTime;
+        public float FlySpeed => _flySpeed;
 
         private Vector3 InnerColliderSize => _collider.size - Vector3.one * SKIN_SIZE;
         private Vector3 RaysOrigin => ColliderCenter + Vector3.down * _collider.size.y * 0.5f +
@@ -47,6 +63,8 @@ namespace Gameplay.Enemies.Ball
         private void Awake()
         {
             _collider = GetComponent<BoxCollider>();
+            _mover = GetComponent<TranslatorOnRails>();
+
             BaseSize = _collider.size;
             RegrowSpeed = BaseSize.y / _fullRegrowTime;
             _lastPosition = transform.position;
@@ -55,6 +73,15 @@ namespace Gameplay.Enemies.Ball
         private void Update() 
         { 
             _lastPosition = Position;
+        }
+
+        private void FixedUpdate()
+        {
+            if (!FollowPath)
+            {
+                Vector3 translation = _velocity * Time.fixedDeltaTime;
+                transform.Translate(translation, Space.World);
+            }
         }
 
         private void LateUpdate()
@@ -79,12 +106,24 @@ namespace Gameplay.Enemies.Ball
             }
         }
 
+        public void Speed(float speed)
+        {
+            if (FollowPath)
+            {
+                _mover.Velocity = Vector3.forward * _flyDirection * _flySpeed;
+            }
+            else
+            {
+                _velocity = transform.forward * _flyDirection * _flySpeed;
+            }
+        }
+
         public void AssignHolder(Transform holder)
         {
             transform.parent = holder.transform;
         }
 
-        public void Throw(Vector3 direction)
+        public void Throw(float direction)
         {
             transform.parent = null;
             _flyDirection = direction;

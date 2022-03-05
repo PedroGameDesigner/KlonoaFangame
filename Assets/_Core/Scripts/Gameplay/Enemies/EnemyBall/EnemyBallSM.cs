@@ -9,12 +9,14 @@ namespace Gameplay.Enemies.Ball
     public class EnemyBallSM : StateMachine<EnemyBall>
     {
         protected HoldedState _holdedState;
-        protected FlyingState _flyingState;
+        protected PathFlyState _pathFlyState;
+        protected FreeFlyState _freeFlyState;
 
         protected override State<EnemyBall> InitializeStates()
         {
-            _flyingState = new FlyingState(_behaviour);
-            _holdedState = new HoldedState(_behaviour, _flyingState);
+            _freeFlyState = new FreeFlyState(_behaviour);
+            _pathFlyState = new PathFlyState(_behaviour, _freeFlyState);
+            _holdedState = new HoldedState(_behaviour, _pathFlyState);
             return _holdedState;
         }
     }

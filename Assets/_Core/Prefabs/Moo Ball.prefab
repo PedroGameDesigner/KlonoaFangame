@@ -11,6 +11,7 @@ GameObject:
   - component: {fileID: 6218368295295086268}
   - component: {fileID: 1020939667055835225}
   - component: {fileID: 3575764557800602442}
+  - component: {fileID: 2214867659244121269}
   - component: {fileID: 1062907453401404767}
   m_Layer: 10
   m_Name: Moo Ball
@@ -53,7 +54,8 @@ MonoBehaviour:
     serializedVersion: 2
     m_Bits: 256
   _fullRegrowTime: 0.2
-  _flySpeed: 5
+  _flySpeed: 6
+  _followPathTime: 0.5
   _maxFlyDistance: 10
 --- !u!114 &3575764557800602442
 MonoBehaviour:
@@ -67,6 +69,20 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: e934c3d7d1402aa4fb7726725145de3f, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+--- !u!114 &2214867659244121269
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8704238770098229188}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 061ae47100780ce498a0a03587eafbff, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  railBehaviour: {fileID: 0}
+  velocity: {x: 0, y: 0, z: 0}
 --- !u!65 &1062907453401404767
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -204,7 +220,7 @@ MonoBehaviour:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 8729436876643846528}
-  m_Enabled: 0
+  m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 568c0de9b2547544e8ceec322ae2b2da, type: 3}
   m_Name: 

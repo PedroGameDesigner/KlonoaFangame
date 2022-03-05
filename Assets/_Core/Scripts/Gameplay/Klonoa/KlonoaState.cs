@@ -64,12 +64,14 @@ namespace Gameplay.Klonoa
         {
             if (_gravity <= 0) return;
             //Y+ axis = Upwoard (depends on rail rotation)
+            Vector3 velocity = mover.Velocity;
             if (collision.Grounded)
             {
-                mover.Velocity.y = (collision.MaxGroundDistance - collision.GroundDistance) / deltaTime; //ths results for smooth move on slopes                
+                velocity.y = (collision.MaxGroundDistance - collision.GroundDistance) / deltaTime; //ths results for smooth move on slopes                
             }
             else
-                mover.Velocity.y -= _gravity * deltaTime;
+                velocity.y -= _gravity * deltaTime;
+            mover.Velocity = velocity;
 
         }
 
@@ -77,10 +79,12 @@ namespace Gameplay.Klonoa
         {
             if (_moveSpeed.Acceleration <= 0) return;
             //Changing Z value in local position means moving toward rail direction
+            Vector3 velocity = mover.Velocity;
             if (_canTurn)
                 _lastDirection = input;
-            mover.Velocity.z += _lastDirection.x * _moveSpeed.Acceleration * deltaTime;
-            mover.Velocity.z -= mover.Velocity.z * _moveSpeed.Drag * deltaTime;
+            velocity.z += _lastDirection.x * _moveSpeed.Acceleration * deltaTime;
+            velocity.z -= mover.Velocity.z * _moveSpeed.Drag * deltaTime;
+            mover.Velocity = velocity;
         }
 
         private void UpdateTimer(float deltaTime)
