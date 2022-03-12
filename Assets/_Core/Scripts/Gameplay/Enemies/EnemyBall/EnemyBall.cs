@@ -49,9 +49,28 @@ namespace Gameplay.Enemies.Ball
                 _mover.enabled = value;
             } 
         }
+
         public float FollowPathTime => _followPathTime;
         public float FreeFlyTime => _freeFlyTime;
         public float FlySpeed => _flySpeed;
+        public CollisionType SelectedCollisionType { get; set; } = CollisionType.None;
+        public LayerMask CollisionMask
+        {
+            get
+            {
+                switch (SelectedCollisionType)
+                {
+                    case CollisionType.Enemies:
+                        return _enemyLayer;
+                    case CollisionType.Ground:
+                        return _groundLayer;
+                    case CollisionType.All:
+                        return _enemyLayer | _groundLayer;
+                    default:
+                        return new LayerMask();
+                }
+            }
+        }
 
         private Vector3 InnerColliderSize => _collider.size - Vector3.one * SKIN_SIZE;
         private Vector3 RaysOrigin => ColliderCenter + Vector3.down * _collider.size.y * 0.5f +
@@ -74,14 +93,10 @@ namespace Gameplay.Enemies.Ball
             RegrowSpeed = BaseSize.y / _fullRegrowTime;
             _lastPosition = transform.position;
         }
-
-        private void Update() 
-        { 
-            _lastPosition = Position;
-        }
-
+        
         private void FixedUpdate()
         {
+            _lastPosition = Position;
             _collisionData.CheckGround(transform);
             UpdateSlopeClimb(Time.fixedDeltaTime);
             UpdateFreeMovement();
@@ -114,7 +129,7 @@ namespace Gameplay.Enemies.Ball
             }
         }
 
-    private void LateUpdate()
+        private void LateUpdate()
         {
             DetectCollision();
         }
@@ -123,16 +138,16 @@ namespace Gameplay.Enemies.Ball
         {
             _speed = Position - _lastPosition;
             RaycastHit[] results;
-            _collider.Cast(_speed.normalized, _enemyLayer, out results, _speed.magnitude);
+            _collider.Cast(_speed.normalized, CollisionMask, out results, _speed.magnitude);
 
             if (results.Length > 0)
             {
+                Debug.Log("Enemy hit: " + results[0].transform.name);
                 EnemyBehaviour enemy = results[0].collider.GetComponent<EnemyBehaviour>();
                 if (enemy != null)
-                {
                     enemy.Kill();
-                    DestroySelf();
-                }
+                
+                DestroySelf();
             }
         }
 
@@ -155,6 +170,7 @@ namespace Gameplay.Enemies.Ball
 
         public void Throw(float direction)
         {
+            _lastPosition = transform.position;
             transform.parent = null;
             _flyDirection = direction;
             ThrownEvent?.Invoke();
@@ -220,6 +236,14 @@ namespace Gameplay.Enemies.Ball
                     Gizmos.DrawRay(origin, _rayDirection * RayLength);
                 }
             }
+        }
+
+        public enum CollisionType
+        {
+            None,
+            All,
+            Ground,
+            Enemies
         }
     }
 }

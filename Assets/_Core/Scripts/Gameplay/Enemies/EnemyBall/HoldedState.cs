@@ -17,6 +17,7 @@ namespace Gameplay.Enemies.Ball
         public override void Enter() 
         {
             _behaviour.ThrownEvent += OnThrown;
+            _behaviour.SelectedCollisionType = EnemyBall.CollisionType.Enemies;
             _behaviour.FollowPath = false;
         }
 

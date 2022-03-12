@@ -15,6 +15,7 @@ namespace Gameplay.Enemies.Ball
         {
             _traveledTime = 0;
             _behaviour.FollowPath = false;
+            _behaviour.SelectedCollisionType = EnemyBall.CollisionType.All;
             _behaviour.Velocity(_behaviour.FlySpeed);
         }
 

@@ -20,7 +20,7 @@ namespace Gameplay.Klonoa
         [SerializeField] private float _minWalkSpeed = 0.1f;
         [Space]
         [SerializeField] private Transform _captureProjectileOrigin;
-        [SerializeField] private Transform _EnemyProjectileOrigin;
+        [SerializeField] private Transform _enemyProjectileOrigin;
         [Space]
         [SerializeField] private Transform _ballHolder;
 
@@ -219,7 +219,7 @@ namespace Gameplay.Klonoa
 
         private void ThrowHoldedEnemy()
         {
-            _holdedBall.transform.position = _EnemyProjectileOrigin.transform.position;
+            _holdedBall.transform.position = _enemyProjectileOrigin.position;
             _holdedBall.Throw(Facing);
             _holdedBall = null;
             ThrowEnemyEvent?.Invoke();
