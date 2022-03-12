@@ -15,7 +15,7 @@ namespace Gameplay.Enemies.Ball
         {
             _traveledTime = 0;
             _behaviour.FollowPath = false;
-            _behaviour.Speed(_behaviour.FlySpeed);
+            _behaviour.Velocity(_behaviour.FlySpeed);
         }
 
         public override void FixedUpdate(float deltaTime) 

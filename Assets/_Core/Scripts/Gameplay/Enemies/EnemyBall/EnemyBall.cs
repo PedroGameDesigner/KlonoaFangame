@@ -5,6 +5,7 @@ using Extensions;
 using System;
 using PlatformerRails;
 using Gameplay.Rails;
+using Gameplay.Klonoa;
 
 namespace Gameplay.Enemies.Ball
 {
@@ -21,6 +22,8 @@ namespace Gameplay.Enemies.Ball
         [SerializeField] private float _flySpeed = 4;
         [SerializeField] private float _followPathTime = 1.5f;
         [SerializeField] private float _freeFlyTime = 6;
+        [SerializeField] private float _maxGroundDistance;
+        [SerializeField] private float _groundCheckLength;
 
         private BoxCollider _collider;
         private TranslatorOnRails _mover;
@@ -30,6 +33,7 @@ namespace Gameplay.Enemies.Ball
         protected Vector3 _speed;
         protected float _flyDirection;
         protected Vector3 _velocity;
+        protected CollisionData _collisionData;
 
         public Vector3 Position => transform.position;
         public Vector3 ColliderSize => _collider.size;
@@ -64,6 +68,7 @@ namespace Gameplay.Enemies.Ball
         {
             _collider = GetComponent<BoxCollider>();
             _mover = GetComponent<TranslatorOnRails>();
+            _collisionData = new CollisionData(_maxGroundDistance, _groundCheckLength, _groundLayer);
 
             BaseSize = _collider.size;
             RegrowSpeed = BaseSize.y / _fullRegrowTime;
@@ -77,6 +82,13 @@ namespace Gameplay.Enemies.Ball
 
         private void FixedUpdate()
         {
+            _collisionData.CheckGround(transform);
+            UpdateSlopeClimb(Time.fixedDeltaTime);
+            UpdateFreeMovement();
+        }
+
+        private void UpdateFreeMovement()
+        {
             if (!FollowPath)
             {
                 Vector3 translation = _velocity * Time.fixedDeltaTime;
@@ -84,7 +96,25 @@ namespace Gameplay.Enemies.Ball
             }
         }
 
-        private void LateUpdate()
+        private void UpdateSlopeClimb(float deltaTime)
+        {
+            if (_collisionData.Grounded)
+            {
+                float velocityY = 
+                    (_collisionData.MaxGroundDistance - _collisionData.GroundDistance) / deltaTime; //ths results for smooth move on slopes                
+
+                if (FollowPath)
+                {
+                    Vector3 velocity = _mover.Velocity;
+                    velocity.y = velocityY;
+                    _mover.Velocity = velocity;
+                }
+                else
+                    _velocity.y = velocityY;
+            }
+        }
+
+    private void LateUpdate()
         {
             DetectCollision();
         }
@@ -106,7 +136,7 @@ namespace Gameplay.Enemies.Ball
             }
         }
 
-        public void Speed(float speed)
+        public void Velocity(float speed)
         {
             if (FollowPath)
             {

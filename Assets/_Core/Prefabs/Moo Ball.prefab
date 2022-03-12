@@ -56,7 +56,9 @@ MonoBehaviour:
   _fullRegrowTime: 0.2
   _flySpeed: 6
   _followPathTime: 0.5
-  _maxFlyDistance: 10
+  _freeFlyTime: 6
+  _maxGroundDistance: 0.5
+  _groundCheckLength: 0.05
 --- !u!114 &3575764557800602442
 MonoBehaviour:
   m_ObjectHideFlags: 0

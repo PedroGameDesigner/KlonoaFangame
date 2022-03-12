@@ -71,8 +71,8 @@ namespace Gameplay.Klonoa
             }
             else
                 velocity.y -= _gravity * deltaTime;
-            mover.Velocity = velocity;
 
+            mover.Velocity = velocity;
         }
 
         private void UpdateMove(MoverOnRails mover, Vector2 input, float deltaTime)
