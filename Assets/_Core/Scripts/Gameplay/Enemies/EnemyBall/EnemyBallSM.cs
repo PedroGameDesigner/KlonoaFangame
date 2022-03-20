@@ -6,7 +6,7 @@ using StateMachine;
 namespace Gameplay.Enemies.Ball
 {
     [RequireComponent(typeof(EnemyBall))]
-    public class EnemyBallSM : StateMachine<EnemyBall>
+    public class EnemyBallSM : StateMachineMono<EnemyBall>
     {
         protected HoldedState _holdedState;
         protected PathFlyState _pathFlyState;

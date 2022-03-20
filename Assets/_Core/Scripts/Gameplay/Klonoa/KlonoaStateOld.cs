@@ -7,7 +7,7 @@ using UnityEngine;
 namespace Gameplay.Klonoa
 {
     [System.Serializable]
-    public class KlonoaState
+    public class KlonoaStateOld
     {
         private readonly SpeedData _moveSpeed;
         private readonly float _exitTime;
@@ -27,7 +27,7 @@ namespace Gameplay.Klonoa
         private bool _timerFinished;
         private Vector2 _lastDirection;
 
-        public KlonoaState(SpeedData moveSpeed = null, float exitTime = -1, 
+        public KlonoaStateOld(SpeedData moveSpeed = null, float exitTime = -1, 
                             float gravity = 0, bool canTurn = false,
                             SimpleAction jumpAction = null, SimpleAction jumpKeepAction = null,
                             SimpleAction jumpReleaseAction = null, SimpleAction attackAction = null,

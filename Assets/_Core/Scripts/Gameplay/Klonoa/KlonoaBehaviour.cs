@@ -27,26 +27,23 @@ namespace Gameplay.Klonoa
         private bool _jumpKeep;
         private bool _jumpActivated;
         private float _floatYSpeed;
-        private bool _floatUsed;
 
+        KlonoaStateMachine _stateMachine;
         MoverOnRails _mover;
         Rigidbody _rigidbody;
-        KlonoaState _currentState;
-        KlonoaState _normalState;
-        KlonoaState _floatState;
-        KlonoaState _captureState;
-        KlonoaState _holdingState;
 
         CaptureProjectile _projectile;
-        EnemyBall _holdedBall;
-        CollisionData _collisionData;
 
-        public Vector2 MoveDirection { set; private get; }
-        public bool Grounded => _collisionData.Grounded;
+        public KlonoaDefinition Definition => _definition;
+        private Vector2 MoveDirection { set;  get; }
+        public CollisionData CollisionData { get; private set; } 
+        public bool Grounded => CollisionData.Grounded;
         public bool Walking => Mathf.Abs(EffectiveSpeed.z) > _minWalkSpeed && Mathf.Abs(MoveDirection.x) > 0;
-        public bool Floating => _currentState == _floatState;
+        public bool Floating => _stateMachine.IsFloatState;
+        public bool CaptureProjectileThrowed => _projectile != null;
         public Vector3 EffectiveSpeed => _mover.Velocity;
         public float Facing { get; private set; } = 1;
+        public EnemyBall HoldedBall { get; private set; }
 
         //Events
         public event Action CaptureProjectileEvent;
@@ -54,59 +51,43 @@ namespace Gameplay.Klonoa
         public event Action EndHoldingEvent;
         public event Action ThrowEnemyEvent;
 
+        public event Action JumpEvent;
+        public event Action JumpKeepEvent;
+        public event Action JumpReleaseEvent;
+        public event Action AttackEvent;
+        public event Action<Vector2> DirectionChangeEvent;
+
         //Behaviour Methods
         void Awake()
         {
+            _stateMachine = new KlonoaStateMachine(this);
+            _stateMachine.StartMachine();
             _mover = GetComponent<MoverOnRails>();
             _rigidbody = GetComponent<Rigidbody>();
-            _collisionData = new CollisionData(_maxGroundDistance, _groundCheckLength, _groundLayer);
-            _normalState = new KlonoaState(
-                moveSpeed: _definition.MoveSpeed, gravity: _definition.Gravity, canTurn: true,
-                jumpAction: StartJumpAction,
-                jumpKeepAction: FloatAction,
-                attackAction: StartCapture);
-            _floatState = new KlonoaState(
-                moveSpeed: _definition.FloatMoveSpeed, canTurn: true, exitTime: _definition.FloatTime,
-                passiveAction: FloatUpdate,
-                exitAction: ChangeToNormal,
-                jumpReleaseAction: ChangeToNormal);
-            _captureState = new KlonoaState(
-                moveSpeed: _definition.NotMoveSpeed, gravity: _definition.Gravity, canTurn: false);
-            _holdingState = new KlonoaState(
-                moveSpeed: _definition.MoveSpeed, gravity: _definition.Gravity, canTurn: true,
-                jumpAction: StartJumpAction,
-                attackAction: ThrowHoldedEnemy);
-
-            ChangeState(_normalState);
+            CollisionData = new CollisionData(_maxGroundDistance, _groundCheckLength, _groundLayer);
         }
 
-        void FixedUpdate()
+        private void Update()
+        {
+            _stateMachine.Update(Time.deltaTime);
+        }
+
+        private void FixedUpdate()
         {
             float deltaTime = Time.fixedDeltaTime;
             Vector3 velocity = _mover.Velocity;
             //To make X value 0 means locate the character just above the rail
             velocity.x = -_mover.Position.x * 5f;
             _mover.Velocity = velocity;
-            CheckGroundDistance();
+            CollisionData.CheckGround(transform);
 
-            _currentState.FixedUpdate(_mover, MoveDirection, _collisionData, deltaTime);
+            _stateMachine.FixedUpdate(deltaTime);
             if (_jumpKeep)
-                _currentState.JumpKeepAction();
+                JumpKeepEvent?.Invoke();
 
             JumpAction(deltaTime);
             UpdateFacing();
             _jumpActivated = false;
-        }
-
-        void CheckGroundDistance()
-        {
-            bool previousGrounded = _collisionData.Grounded;
-            _collisionData.CheckGround(transform);
-
-            if (_collisionData.Grounded && !previousGrounded) 
-            {
-                _floatUsed = false;
-            }
         }
 
         private void JumpAction(float deltaTime)
@@ -114,7 +95,7 @@ namespace Gameplay.Klonoa
             if (Grounded && _jumpActivated)
             {
                 Vector3 velocity = _mover.Velocity;
-                velocity.y = _definition.JumpSpeed + Mathf.Max(0, (_maxGroundDistance - _collisionData.GroundDistance) / deltaTime);
+                velocity.y = _definition.JumpSpeed + Mathf.Max(0, (_maxGroundDistance - CollisionData.GroundDistance) / deltaTime);
                 _mover.Velocity = velocity;
             }
         }
@@ -123,23 +104,34 @@ namespace Gameplay.Klonoa
         {
             if (Walking) Facing = Mathf.Sign(_mover.Velocity.z);
         }
+        
+        private void LateUpdate()
+        {
+            _stateMachine.LateUpdate(Time.deltaTime);
+        }
 
         //Input Access Methods
+        public void SetMoveDirection(Vector2 direction)
+        {
+            MoveDirection = direction;
+            DirectionChangeEvent?.Invoke(MoveDirection);
+        }
+
         public void StartJump()  
         {
-            _currentState.JumpAction();
+            JumpEvent?.Invoke();
             _jumpKeep = true;
         }
 
         public void EndJump()
         {
             _jumpKeep = false;
-            _currentState.JumpReleaseAction();
+            JumpReleaseEvent?.Invoke();
         }
 
         public void StartAttack()
         {
-            _currentState.AttackAction();
+            AttackEvent?.Invoke();
         }
 
         public void StopAttack() 
@@ -148,102 +140,44 @@ namespace Gameplay.Klonoa
         }
 
         //States Actions
-        private void StartJumpAction()
+        public void StartJumpAction()
         {
             _jumpActivated = true;
-        }
+        }        
 
-        private void FloatAction()
+        public CaptureProjectile InstantiateCapture()
         {
-            if (!_floatUsed && !Grounded && _mover.Velocity.y < 0)
-            {
-                _floatUsed = true;
-                _floatYSpeed = _definition.FloatStartSpeed;
-                ChangeState(_floatState);
-            }
-        }
-
-        private void FloatUpdate(float deltaTime)
-        {
-            Vector3 velocity = _mover.Velocity;
-            _floatYSpeed += _definition.FloatAcceleration * deltaTime;
-            velocity.y = _floatYSpeed;
-            _mover.Velocity = velocity;
-        }
-
-        private void StartCapture()
-        {
-            if (_projectile != null) return;
             _projectile = Instantiate(_definition.CaptureProjectile, _captureProjectileOrigin.position, Quaternion.identity);
-            _projectile.MovingFinishEvent += OnCaptureEventFinish;
-            _projectile.ReturnFinishEvent += OnReturnEventFinish;
-            _projectile.EnemyCapturedEvent += OnEnemyCaptured;
-            Debug.Log("Facing: " + Facing);
             _projectile.StartMovement(transform.forward * Facing, _mover.Velocity.z, _captureProjectileOrigin);
             CaptureProjectileEvent?.Invoke();
-            ChangeState(_captureState);
+
+            return _projectile;
+        }
+        
+        public void HoldEnemy(EnemyBehaviour enemy)
+        {
+            HoldedBall = enemy.InstantiateBall(_ballHolder, _rigidbody);
         }
 
-        private void OnCaptureEventFinish()
+        public void ThrowHoldedEnemy()
         {
-            if (!Grounded)
-            {
-                FinishCapture();
-            }
-        }
+            if (HoldedBall == null) return;
 
-        private void OnReturnEventFinish()
-        {
-            FinishCapture();
-        }
-
-        private void FinishCapture()
-        {
-            _projectile.MovingFinishEvent -= OnCaptureEventFinish;
-            _projectile.ReturnFinishEvent -= OnReturnEventFinish;
-            _projectile.EnemyCapturedEvent -= OnEnemyCaptured;
-            ChangeState(_normalState);
-        }
-
-        private void OnEnemyCaptured(EnemyBehaviour enemy)
-        {
-            _projectile.MovingFinishEvent -= OnCaptureEventFinish;
-            _projectile.ReturnFinishEvent -= OnReturnEventFinish;
-            _projectile.EnemyCapturedEvent -= OnEnemyCaptured;
-
-            _holdedBall = enemy.InstantiateBall(_ballHolder, _rigidbody);
-            _holdedBall.DestroyEvent += OnEndHolding;
-            BeginHoldingEvent?.Invoke();
-            ChangeState(_holdingState);
-        }
-
-        private void ThrowHoldedEnemy()
-        {
-            _holdedBall.transform.position = _enemyProjectileOrigin.position;
-            _holdedBall.Throw(Facing);
-            _holdedBall = null;
+            HoldedBall.transform.position = _enemyProjectileOrigin.position;
+            HoldedBall.Throw(Facing);
+            HoldedBall = null;
             ThrowEnemyEvent?.Invoke();
-            ChangeToNormal();
+        }
+        
+        public void InvokeBeginHoldingEvent()
+        {
+            BeginHoldingEvent?.Invoke();
         }
 
-        private void OnEndHolding()
+        public void InvokeEndHoldingEvent()
         {
-            _holdedBall = null;
             EndHoldingEvent?.Invoke();
-            ChangeToNormal();
         }
-
-        private void ChangeToNormal()
-        {
-            ChangeState(_normalState);
-        }
-
-        private void ChangeState(KlonoaState newState)
-        {
-            _currentState = newState;
-            _currentState.Restart();
-        }
-
 
 #if UNITY_EDITOR
         void OnDrawGizmos()

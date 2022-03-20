@@ -4,37 +4,33 @@ using UnityEngine;
 
 namespace StateMachine
 {
-    public abstract class StateMachine<E>
+    public abstract class StateMachineMono<E> : MonoBehaviour 
     {
         protected E _behaviour;
         protected State<E> _currentState;
 
-        protected StateMachine(E behaviour)
+        private void Awake()
         {
-            _behaviour = behaviour;
-        }
-
-        public void StartMachine()
-        {
+            _behaviour = GetComponent<E>();
             State<E> firstState = InitializeStates();
             OnStateChange(firstState);
         }
 
         protected abstract State<E> InitializeStates();
 
-        public void Update(float deltaTime)
+        private void Update()
         {
-            _currentState?.Update(deltaTime);
+            _currentState?.Update(Time.deltaTime);
         }
 
-        public void FixedUpdate(float deltaTime)
+        private void FixedUpdate()
         {
-            _currentState?.FixedUpdate(deltaTime);
+            _currentState?.FixedUpdate(Time.fixedDeltaTime);
         }
 
-        public void LateUpdate(float deltaTime)
+        private void LateUpdate()
         {
-            _currentState?.LateUpdate(deltaTime);
+            _currentState?.LateUpdate(Time.deltaTime);
         }
 
         protected virtual void OnStateChange(State<E> nextState)

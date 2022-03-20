@@ -370,10 +370,10 @@ MonoBehaviour:
   _groundCheckLength: 0.05
   _groundLayer:
     serializedVersion: 2
-    m_Bits: 0
+    m_Bits: 128
   _minWalkSpeed: 0.2
   _captureProjectileOrigin: {fileID: 4440753262782048645}
-  _EnemyProjectileOrigin: {fileID: 7930583601812512931}
+  _enemyProjectileOrigin: {fileID: 7930583601812512931}
   _ballHolder: {fileID: 4379109525414224699}
 --- !u!114 &9048982795958330329
 MonoBehaviour:
