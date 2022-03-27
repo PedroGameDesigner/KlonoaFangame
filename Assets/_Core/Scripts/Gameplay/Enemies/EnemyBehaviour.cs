@@ -8,9 +8,12 @@ namespace Gameplay.Enemies
 {
     public abstract class EnemyBehaviour : MonoBehaviour
     {
+        protected const float RESPAWN_TIME = 0.5f;
+
         [SerializeField] protected EnemyBall _ballPrefab = null;
 
         public abstract bool IsCapturable { get; }
+        protected EnemyBall SpawnedBall { get; set; }
 
         public virtual void Kill()
         {
@@ -19,9 +22,16 @@ namespace Gameplay.Enemies
 
         internal EnemyBall InstantiateBall(Transform holderTransform, Rigidbody holderRigidbody)
         {
-            EnemyBall ball = Instantiate(_ballPrefab, holderTransform.position, holderTransform.rotation);
-            ball.AssignHolder(holderTransform);
-            return ball;
+            SpawnedBall = Instantiate(_ballPrefab, holderTransform.position, holderTransform.rotation);
+            SpawnedBall.AssignHolder(holderTransform);
+            SpawnedBall.DestroyEvent += OnBallDestroyed;
+            return SpawnedBall;
+        }
+
+        protected void OnBallDestroyed()
+        {
+            SpawnedBall = null;
+            gameObject.SetActive(true); 
         }
     }
 }
