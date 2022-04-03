@@ -7,16 +7,19 @@ namespace Gameplay.Klonoa
     public class NormalState : KlonoaState
     {
         private const bool CAN_TURN = true;
+        private const float STUCK_STATE_TIME = 0.1f;
 
         private KlonoaState _floatState;
         private KlonoaState _captureState;
 
         private bool _floatUsed;
         private bool _previousGrounded;
+        private float _timer;
 
         protected override SpeedData MoveSpeed => _definition.MoveSpeed;
         protected override float Gravity => _definition.Gravity;
         protected override bool CanTurn => CAN_TURN;
+        protected bool CanChangeState => _timer >= STUCK_STATE_TIME;
 
         public NormalState(KlonoaBehaviour behaviour) : base(behaviour) { }
         
@@ -24,6 +27,18 @@ namespace Gameplay.Klonoa
         {
             _floatState = floatState;
             _captureState = captureState;
+        }
+
+        public override void Enter()
+        {
+            base.Enter();
+            _timer = 0;
+        }
+
+        public override void Update(float deltaTime)
+        {
+            base.Update(deltaTime);
+            _timer += deltaTime;
         }
 
         public override void FixedUpdate(float deltaTime)
@@ -45,12 +60,12 @@ namespace Gameplay.Klonoa
 
         public override void JumpAction()
         {
-            _behaviour.StartJumpAction();
+            _behaviour.StartJumpAction(_definition.JumpSpeed);
         }
 
         public override void JumpKeepAction()
         {
-            if (!_floatUsed && !_behaviour.Grounded && _mover.Velocity.y < 0)
+            if (CanChangeState && !_floatUsed && !_behaviour.Grounded && _mover.Velocity.y < 0)
             {
                 _floatUsed = true;
                 ChangeState(_floatState);

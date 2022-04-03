@@ -7,18 +7,22 @@ namespace Gameplay.Enemies.Ball
 {
     public class HoldedState : State<EnemyBall>
     {
-        protected State<EnemyBall> _nextState;
+        protected State<EnemyBall> _throwSideState;
+        protected State<EnemyBall> _throwDownState;
 
-        public HoldedState(EnemyBall behaviour, State<EnemyBall> nextState) :base(behaviour)
+        public HoldedState(EnemyBall behaviour, State<EnemyBall> throwSideState, State<EnemyBall> throwDownState) :base(behaviour)
         {
-            _nextState = nextState;
+            _throwSideState = throwSideState;
+            _throwDownState = throwDownState;
         }
 
         public override void Enter() 
         {
             _behaviour.ThrownEvent += OnThrown;
             _behaviour.SelectedCollisionType = EnemyBall.CollisionType.Enemies;
+            _behaviour.CollisionEnabled = true;
             _behaviour.FollowPath = false;
+            _behaviour.ClimbSlope = false;
         }
 
         public override void FixedUpdate(float deltaTime) { }
@@ -58,9 +62,16 @@ namespace Gameplay.Enemies.Ball
             _behaviour.ChangeColliderHeight(actualHeight);
         }        
 
-        private void OnThrown()
+        private void OnThrown(Vector3 direction)
         {
-            ChangeState(_nextState);
+            if (direction.y != 0f) 
+            {
+                ChangeState(_throwDownState);
+            }
+            else
+            {
+                ChangeState(_throwSideState);
+            }
         }
 
         public override void Exit()
@@ -69,6 +80,10 @@ namespace Gameplay.Enemies.Ball
             _behaviour.ThrownEvent -= OnThrown;
         }
 
-        public override void DrawGizmos() { }
+        public override void DrawGizmos()
+        {
+            Gizmos.color = Color.green;
+            Gizmos.DrawWireSphere(_behaviour.Position, 0.5f);
+        }
     }
 }

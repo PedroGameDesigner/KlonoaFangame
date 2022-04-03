@@ -11,10 +11,8 @@ namespace Gameplay.Klonoa
         private LayerMask _layer;
 
         private float? _groundDistance;
-
-        public bool Grounded => _groundDistance != null;
         public float MaxGroundDistance { get; private set; }
-        public float GroundDistance => _groundDistance.Value;
+        public float GroundDistance => _groundDistance.HasValue ? _groundDistance.Value : MaxGroundDistance;
 
         public CollisionData(float maxGroundDistance, float groundCheckLength, LayerMask layer)
         {

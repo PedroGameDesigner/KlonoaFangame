@@ -11,7 +11,7 @@ namespace Gameplay.Klonoa
         private FloatState _floatState;
         private CaptureState _captureState;
         private HoldingState _holdingState;
-        private KlonoaState _doubleJump;
+        private DoubleJumpState _doubleJumpState;
 
         public bool IsFloatState => _currentState == _floatState;
 
@@ -23,11 +23,13 @@ namespace Gameplay.Klonoa
             _floatState = new FloatState(_behaviour);
             _captureState = new CaptureState(_behaviour);
             _holdingState = new HoldingState(_behaviour);
+            _doubleJumpState = new DoubleJumpState(_behaviour);
 
             _normalState.SetStates(_floatState, _captureState);
             _floatState.SetStates(_normalState);
             _captureState.SetStates(_normalState, _holdingState);
-            _holdingState.SetStates(_normalState);
+            _holdingState.SetStates(_normalState, _doubleJumpState);
+            _doubleJumpState.SetStates(_normalState);
 
             return _normalState;
         }
@@ -35,9 +37,9 @@ namespace Gameplay.Klonoa
         protected override void OnStateChange(State<KlonoaBehaviour> nextState)
         {
             if (_currentState != null)
-                Debug.LogFormat("Klonoa state change: {0} => {1}", _currentState.GetType(), nextState.GetType());
+                Debug.LogFormat("Klonoa: state change: {0} => {1}", _currentState.GetType(), nextState.GetType());
             else
-                Debug.LogFormat("Klonoa first state: {0}", nextState.GetType());
+                Debug.LogFormat("Klonoa: first state: {0}", nextState.GetType());
 
             base.OnStateChange(nextState);
         }

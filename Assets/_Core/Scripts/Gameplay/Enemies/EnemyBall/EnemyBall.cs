@@ -31,7 +31,7 @@ namespace Gameplay.Enemies.Ball
         private readonly Vector3 _rayDirection = Vector3.up;
         private Vector3 _lastPosition;
         protected Vector3 _speed;
-        protected float _flyDirection;
+        protected Vector3 _flyDirection;
         protected Vector3 _velocity;
         protected CollisionData _collisionData;
 
@@ -50,8 +50,11 @@ namespace Gameplay.Enemies.Ball
             } 
         }
 
+        public bool ClimbSlope { get; set; }
+        public bool CollisionEnabled { get; set; }
         public float FollowPathTime => _followPathTime;
         public float FreeFlyTime => _freeFlyTime;
+        public float FullFlyTime => _followPathTime + _freeFlyTime;
         public float FlySpeed => _flySpeed;
         public CollisionType SelectedCollisionType { get; set; } = CollisionType.None;
         public LayerMask CollisionMask
@@ -72,6 +75,7 @@ namespace Gameplay.Enemies.Ball
             }
         }
 
+        private Vector3 Velocity => FollowPath ? _mover.Velocity : _velocity;
         private Vector3 InnerColliderSize => _collider.size - Vector3.one * SKIN_SIZE;
         private Vector3 RaysOrigin => ColliderCenter + Vector3.down * _collider.size.y * 0.5f +
                 RotateVector(new Vector3(-InnerColliderSize.x, 0, -InnerColliderSize.z) * 0.5f);
@@ -81,7 +85,9 @@ namespace Gameplay.Enemies.Ball
         private Vector3 ColliderCenter => transform.position + _collider.center;
 
         public event Action DestroyEvent;
-        public event Action ThrownEvent;
+        public event Action StartTransitionEvent;
+        public event Action TransitionFinishEvent;
+        public event Action<Vector3> ThrownEvent;
 
         private void Awake()
         {
@@ -107,17 +113,18 @@ namespace Gameplay.Enemies.Ball
             if (!FollowPath)
             {
                 Vector3 translation = _velocity * Time.fixedDeltaTime;
-                transform.Translate(translation, Space.World);
+                transform.Translate(translation, Space.Self);
             }
         }
 
         private void UpdateSlopeClimb(float deltaTime)
         {
-            if (_collisionData.Grounded)
+            if (_collisionData.Grounded && ClimbSlope)
             {
                 float velocityY = 
                     (_collisionData.MaxGroundDistance - _collisionData.GroundDistance) / deltaTime; //ths results for smooth move on slopes                
 
+                velocityY = Mathf.Max(0, velocityY);
                 if (FollowPath)
                 {
                     Vector3 velocity = _mover.Velocity;
@@ -136,9 +143,17 @@ namespace Gameplay.Enemies.Ball
 
         private void DetectCollision()
         {
+            if (!CollisionEnabled) return;
+
             _speed = Position - _lastPosition;
+            Vector3 speed;
+            if (Velocity.magnitude > 0)
+                speed = Velocity * Time.deltaTime;
+            else
+                speed = _speed;
+
             RaycastHit[] results;
-            _collider.Cast(_speed.normalized, CollisionMask, out results, _speed.magnitude);
+            _collider.Cast(speed.normalized, CollisionMask, out results, speed.magnitude);
 
             if (results.Length > 0)
             {
@@ -149,17 +164,22 @@ namespace Gameplay.Enemies.Ball
                 
                 DestroySelf();
             }
+
+            if ((_collisionData.Grounded && _flyDirection.y < 0))
+            {
+                DestroySelf();
+            }
         }
 
-        public void Velocity(float speed)
+        public void SetVelocity(float speed)
         {
             if (FollowPath)
             {
-                _mover.Velocity = Vector3.forward * _flyDirection * _flySpeed;
+                _mover.Velocity = _flyDirection * _flySpeed;
             }
             else
             {
-                _velocity = transform.forward * _flyDirection * _flySpeed;
+                _velocity = _flyDirection * _flySpeed;
             }
         }
 
@@ -168,12 +188,27 @@ namespace Gameplay.Enemies.Ball
             transform.parent = holder.transform;
         }
 
-        public void Throw(float direction)
+        public void StartTransition()
         {
+            StartTransitionEvent?.Invoke();
+        }
+
+        public void ThrowSide(float direction)
+        {
+            TransitionFinishEvent?.Invoke();
             _lastPosition = transform.position;
             transform.parent = null;
-            _flyDirection = direction;
-            ThrownEvent?.Invoke();
+            _flyDirection = Vector3.forward * direction;
+            ThrownEvent?.Invoke(_flyDirection);
+        }
+
+        public void ThrowDown()
+        {
+            TransitionFinishEvent?.Invoke();
+            _lastPosition = transform.position;
+            transform.parent = null;
+            _flyDirection = Vector3.down;
+            ThrownEvent?.Invoke(_flyDirection);
         }
 
         public float CheckCeilDistance()
@@ -214,6 +249,7 @@ namespace Gameplay.Enemies.Ball
         
         public void DestroySelf()
         {
+            Debug.Log("EnemyBall Destroy Self");
             DestroyEvent?.Invoke();
             transform.parent = null;
             Destroy(gameObject);

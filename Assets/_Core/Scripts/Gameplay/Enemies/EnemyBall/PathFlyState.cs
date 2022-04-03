@@ -8,27 +8,32 @@ namespace Gameplay.Enemies.Ball
 {
     public class PathFlyState : State<EnemyBall>
     {
+        private readonly float _travelTime;
+
         private float _traveledTime = 0;
         State<EnemyBall> _nextState;
 
-        public PathFlyState(EnemyBall behaviour, State<EnemyBall> nextState) : base(behaviour)
+        public PathFlyState(EnemyBall behaviour, State<EnemyBall> nextState, float travelTime) : base(behaviour)
         {
             _nextState = nextState;
+            _travelTime = travelTime;
         }
 
         public override void Enter()
         {
             _traveledTime = 0;
             _behaviour.FollowPath = true;
+            _behaviour.ClimbSlope = true;
             _behaviour.SelectedCollisionType = EnemyBall.CollisionType.All;
-            _behaviour.Velocity(_behaviour.FlySpeed);
+            _behaviour.CollisionEnabled = true;
+            _behaviour.SetVelocity(_behaviour.FlySpeed);
         }
 
         public override void FixedUpdate(float deltaTime)
         {
             _traveledTime += deltaTime;
 
-            if (_traveledTime >= _behaviour.FollowPathTime)
+            if (_traveledTime >= _travelTime)
             {
                 ChangeState(_nextState);
             }
@@ -42,6 +47,8 @@ namespace Gameplay.Enemies.Ball
 
         public override void DrawGizmos()
         {
+            Gizmos.color = Color.blue;
+            Gizmos.DrawWireSphere(_behaviour.Position, 0.5f);
         }
     }
 }

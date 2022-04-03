@@ -9,15 +9,31 @@ namespace Gameplay.Enemies.Ball
     public class EnemyBallSM : StateMachineMono<EnemyBall>
     {
         protected HoldedState _holdedState;
+        protected TransitionState _transitionState;
+        protected FreeFlyState _fullFreeFlyState;
         protected PathFlyState _pathFlyState;
         protected FreeFlyState _freeFlyState;
 
         protected override State<EnemyBall> InitializeStates()
         {
-            _freeFlyState = new FreeFlyState(_behaviour);
-            _pathFlyState = new PathFlyState(_behaviour, _freeFlyState);
-            _holdedState = new HoldedState(_behaviour, _pathFlyState);
+            _fullFreeFlyState = new FreeFlyState(_behaviour, _behaviour.FullFlyTime);
+            _transitionState = new TransitionState(_behaviour);
+            _freeFlyState = new FreeFlyState(_behaviour, _behaviour.FreeFlyTime);
+            _pathFlyState = new PathFlyState(_behaviour, _freeFlyState, _behaviour.FollowPathTime);
+            _holdedState = new HoldedState(_behaviour, _pathFlyState, _fullFreeFlyState);
             return _holdedState;
         }
+
+        protected void Start()
+        {
+            _behaviour.StartTransitionEvent += OnStartTransition;
+        }
+
+        protected void OnStartTransition()
+        {
+            _transitionState.SetNextState(_currentState);
+            OnStateChange(_transitionState);
+        }
+
     }
 }

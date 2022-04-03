@@ -21,11 +21,14 @@ namespace Gameplay.Klonoa
         [Space]
         [SerializeField] private Transform _captureProjectileOrigin;
         [SerializeField] private Transform _enemyProjectileOrigin;
+        [SerializeField] private Transform _feetPosition;
         [Space]
-        [SerializeField] private Transform _ballHolder;
+        [SerializeField] private BallHolder _ballHolder;
 
         private bool _jumpKeep;
         private bool _jumpActivated;
+        private bool _ignoreGround;
+        private float _jumpForce;
         private float _floatYSpeed;
 
         KlonoaStateMachine _stateMachine;
@@ -92,10 +95,11 @@ namespace Gameplay.Klonoa
 
         private void JumpAction(float deltaTime)
         {
-            if (Grounded && _jumpActivated)
+            if ((Grounded || _ignoreGround ) && _jumpActivated)
             {
                 Vector3 velocity = _mover.Velocity;
-                velocity.y = _definition.JumpSpeed + Mathf.Max(0, (_maxGroundDistance - CollisionData.GroundDistance) / deltaTime);
+                velocity.y = _jumpForce + Mathf.Max(0, (_maxGroundDistance - CollisionData.GroundDistance) / deltaTime);
+                Debug.Log("Klonoa: JUMP FORCE: " + velocity.y);
                 _mover.Velocity = velocity;
             }
         }
@@ -140,9 +144,11 @@ namespace Gameplay.Klonoa
         }
 
         //States Actions
-        public void StartJumpAction()
+        public void StartJumpAction(float jumpForce, bool ignoreGround = false)
         {
             _jumpActivated = true;
+            _jumpForce = jumpForce;
+            _ignoreGround = ignoreGround;
         }        
 
         public CaptureProjectile InstantiateCapture()
@@ -156,19 +162,39 @@ namespace Gameplay.Klonoa
         
         public void HoldEnemy(EnemyBehaviour enemy)
         {
-            HoldedBall = enemy.InstantiateBall(_ballHolder, _rigidbody);
+            HoldedBall = enemy.InstantiateBall(_ballHolder.transform, _rigidbody);
+            _ballHolder.SetHoldedBall(HoldedBall);
+            _ballHolder.RestoreOriginPosition();
+            _ballHolder.MoveFromPosition(enemy.transform.position, _definition.CaptureRepositionTime);
         }
 
-        public void ThrowHoldedEnemy()
+        public void MoveBallToFeet(Action finishAction)
+        {
+            _ballHolder.MoveToPosition(
+                _feetPosition.position,
+                _definition.DoubleJumpPreparationTime,
+                finishAction);
+        }
+
+        public void ThrowHoldedEnemySideways()
         {
             if (HoldedBall == null) return;
 
             HoldedBall.transform.position = _enemyProjectileOrigin.position;
-            HoldedBall.Throw(Facing);
+            HoldedBall.ThrowSide(Facing);
             HoldedBall = null;
             ThrowEnemyEvent?.Invoke();
         }
-        
+
+        public void ThrowHoldedEnemyDownwards()
+        {
+            if (HoldedBall == null) return;
+
+            HoldedBall.ThrowDown();
+            HoldedBall = null;
+            ThrowEnemyEvent?.Invoke();
+        }
+
         public void InvokeBeginHoldingEvent()
         {
             BeginHoldingEvent?.Invoke();
