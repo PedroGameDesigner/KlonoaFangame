@@ -40,9 +40,10 @@ namespace Gameplay.Klonoa
         public KlonoaDefinition Definition => _definition;
         private Vector2 MoveDirection { set;  get; }
         public CollisionData CollisionData { get; private set; } 
-        public bool Grounded => CollisionData.Grounded;
-        public bool Walking => Mathf.Abs(EffectiveSpeed.z) > _minWalkSpeed && Mathf.Abs(MoveDirection.x) > 0;
-        public bool Floating => _stateMachine.IsFloatState;
+        public bool IsGrounded => CollisionData.Grounded;
+        public bool IsWalking => Mathf.Abs(EffectiveSpeed.z) > _minWalkSpeed && Mathf.Abs(MoveDirection.x) > 0;
+        public bool IsFloating => _stateMachine.IsFloatState;
+        public bool IsDoubleJump => _stateMachine.IsDoubleJumpState;
         public bool CaptureProjectileThrowed => _projectile != null;
         public Vector3 EffectiveSpeed => _mover.Velocity;
         public float Facing { get; private set; } = 1;
@@ -52,7 +53,7 @@ namespace Gameplay.Klonoa
         public event Action CaptureProjectileEvent;
         public event Action BeginHoldingEvent;
         public event Action EndHoldingEvent;
-        public event Action ThrowEnemyEvent;
+        public event Action SideThrowEnemyEvent;
 
         public event Action JumpEvent;
         public event Action JumpKeepEvent;
@@ -95,7 +96,7 @@ namespace Gameplay.Klonoa
 
         private void JumpAction(float deltaTime)
         {
-            if ((Grounded || _ignoreGround ) && _jumpActivated)
+            if ((IsGrounded || _ignoreGround ) && _jumpActivated)
             {
                 Vector3 velocity = _mover.Velocity;
                 velocity.y = _jumpForce + Mathf.Max(0, (_maxGroundDistance - CollisionData.GroundDistance) / deltaTime);
@@ -106,7 +107,7 @@ namespace Gameplay.Klonoa
 
         private void UpdateFacing()
         {
-            if (Walking) Facing = Mathf.Sign(_mover.Velocity.z);
+            if (IsWalking) Facing = Mathf.Sign(_mover.Velocity.z);
         }
         
         private void LateUpdate()
@@ -183,7 +184,7 @@ namespace Gameplay.Klonoa
             HoldedBall.transform.position = _enemyProjectileOrigin.position;
             HoldedBall.ThrowSide(Facing);
             HoldedBall = null;
-            ThrowEnemyEvent?.Invoke();
+            SideThrowEnemyEvent?.Invoke();
         }
 
         public void ThrowHoldedEnemyDownwards()
@@ -192,7 +193,7 @@ namespace Gameplay.Klonoa
 
             HoldedBall.ThrowDown();
             HoldedBall = null;
-            ThrowEnemyEvent?.Invoke();
+            //ThrowEnemyEvent?.Invoke();
         }
 
         public void InvokeBeginHoldingEvent()

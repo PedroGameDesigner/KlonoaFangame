@@ -42,7 +42,7 @@ namespace Gameplay.Klonoa
 
         public override void JumpAction()
         {
-            if (_behaviour.Grounded)
+            if (_behaviour.IsGrounded)
                 _behaviour.StartJumpAction(_definition.JumpSpeed);
             else
                 ChangeState(_doubleJumpState);

@@ -16,6 +16,7 @@ namespace Gameplay.Klonoa
         [SerializeField] private string _throwParameter = "Throw";
         [SerializeField] private string _floatParameter = "Floating";
         [SerializeField] private string _ySpeedParameter = "YSpeed";
+        [SerializeField] private string _doubleJumpParameter = "DoubleJump";
 
         private SpriteRenderer _renderer = null;
         private Animator _animator = null;
@@ -28,16 +29,17 @@ namespace Gameplay.Klonoa
             _behaviour.CaptureProjectileEvent += OnCaptureProjectile;
             _behaviour.BeginHoldingEvent += OnBeginHolding;
             _behaviour.EndHoldingEvent += OnEndHolding;
-            _behaviour.ThrowEnemyEvent += OnThrow;
+            _behaviour.SideThrowEnemyEvent += OnThrow;
         }
 
         // Update is called once per frame
         void Update()
         {
-            _animator.SetBool(_groundedParameter, _behaviour.Grounded);
-            _animator.SetBool(_walkingParameter, _behaviour.Walking);
-            _animator.SetBool(_floatParameter, _behaviour.Floating);
+            _animator.SetBool(_groundedParameter, _behaviour.IsGrounded);
+            _animator.SetBool(_walkingParameter, _behaviour.IsWalking);
+            _animator.SetBool(_floatParameter, _behaviour.IsFloating);
             _animator.SetFloat(_ySpeedParameter, _behaviour.EffectiveSpeed.y);
+            _animator.SetBool(_doubleJumpParameter, _behaviour.IsDoubleJump);
             _renderer.flipX = _behaviour.Facing < 0;
         }
 

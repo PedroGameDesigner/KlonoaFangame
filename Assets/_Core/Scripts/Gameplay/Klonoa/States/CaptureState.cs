@@ -37,7 +37,7 @@ namespace Gameplay.Klonoa
 
         private void OnCaptureEventFinish()
         {
-            if (!_behaviour.Grounded)
+            if (!_behaviour.IsGrounded)
             {
                 FinishCapture();
             }

@@ -65,7 +65,7 @@ namespace Gameplay.Klonoa
 
         public override void JumpKeepAction()
         {
-            if (CanChangeState && !_floatUsed && !_behaviour.Grounded && _mover.Velocity.y < 0)
+            if (CanChangeState && !_floatUsed && !_behaviour.IsGrounded && _mover.Velocity.y < 0)
             {
                 _floatUsed = true;
                 ChangeState(_floatState);

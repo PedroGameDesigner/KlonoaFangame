@@ -14,6 +14,7 @@ namespace Gameplay.Klonoa
         private DoubleJumpState _doubleJumpState;
 
         public bool IsFloatState => _currentState == _floatState;
+        public bool IsDoubleJumpState => _currentState == _doubleJumpState;
 
         public KlonoaStateMachine(KlonoaBehaviour behaviour) : base(behaviour) { }
 
