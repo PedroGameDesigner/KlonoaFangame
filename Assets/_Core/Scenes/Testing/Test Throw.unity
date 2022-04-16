@@ -320,7 +320,7 @@ Transform:
   m_Children:
   - {fileID: 1583552330}
   m_Father: {fileID: 664916784}
-  m_RootOrder: 5
+  m_RootOrder: 3
   m_LocalEulerAnglesHint: {x: 0, y: -90, z: 0}
 --- !u!43 &86038860
 Mesh:
@@ -2275,7 +2275,7 @@ PrefabInstance:
       objectReference: {fileID: 80968892}
     - target: {fileID: 3703951820015085532, guid: 7c9adb3bfb1539542bdd2a7d58e0e439, type: 3}
       propertyPath: m_RootOrder
-      value: 3
+      value: 4
       objectReference: {fileID: 0}
     - target: {fileID: 4379109525414224699, guid: 7c9adb3bfb1539542bdd2a7d58e0e439, type: 3}
       propertyPath: m_RootOrder
@@ -2283,7 +2283,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 7930583601812512931, guid: 7c9adb3bfb1539542bdd2a7d58e0e439, type: 3}
       propertyPath: m_RootOrder
-      value: 4
+      value: 5
       objectReference: {fileID: 0}
     - target: {fileID: 9048982794688697683, guid: 7c9adb3bfb1539542bdd2a7d58e0e439, type: 3}
       propertyPath: m_RootOrder
@@ -2293,6 +2293,10 @@ PrefabInstance:
       propertyPath: m_Sprite
       value: 
       objectReference: {fileID: -4360651699206733200, guid: ff0bed1d3fd341f44a775e4f5413c40a, type: 3}
+    - target: {fileID: 9048982795073711757, guid: 7c9adb3bfb1539542bdd2a7d58e0e439, type: 3}
+      propertyPath: _damageParameter
+      value: Damage
+      objectReference: {fileID: 0}
     - target: {fileID: 9048982795958330324, guid: 7c9adb3bfb1539542bdd2a7d58e0e439, type: 3}
       propertyPath: m_Height
       value: 0.375

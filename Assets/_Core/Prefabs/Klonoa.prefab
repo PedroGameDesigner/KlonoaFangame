@@ -284,11 +284,13 @@ MonoBehaviour:
   _walkingParameter: Walking
   _captureProjectileParameter: CaptureProjectile
   _beginHoldingParameter: BeginHolding
+  _isHoldingParameter: isHolding
   _endHoldingParameter: EndHolding
   _throwParameter: Throw
   _floatParameter: Floating
   _ySpeedParameter: YSpeed
   _doubleJumpParameter: DoubleJump
+  _damageParameter: Damage
 --- !u!212 &9048982795073711756
 SpriteRenderer:
   m_ObjectHideFlags: 0

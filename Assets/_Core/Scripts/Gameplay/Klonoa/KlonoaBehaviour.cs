@@ -52,7 +52,9 @@ namespace Gameplay.Klonoa
         public bool IsGrounded => CollisionData.Grounded;
         public bool IsWalking => Mathf.Abs(EffectiveSpeed.z) > _minWalkSpeed && Mathf.Abs(MoveDirection.x) > 0;
         public bool IsFloating => _stateMachine.IsFloatState;
-        public bool IsDoubleJump => _stateMachine.IsDoubleJumpState;
+        public bool IsInDoubleJump => _stateMachine.IsDoubleJumpState;
+        public bool IsInDamage => _stateMachine.IsDamageState;
+        public bool IsInvincible => _invincible;
         public bool CaptureProjectileThrowed => _projectile != null;
         public Vector3 EffectiveSpeed => _mover.Velocity;
         public float Facing { get; private set; } = 1;

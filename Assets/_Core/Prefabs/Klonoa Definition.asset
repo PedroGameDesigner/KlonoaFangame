@@ -23,5 +23,11 @@ MonoBehaviour:
   _floatTime: 1
   _jumpSpeed: 5
   _gravity: 15
+  _doubleJumpSpeed: 10
+  _doubleJumppreparationTime: 0.3
   _captureProjectile: {fileID: 5373462825906385168, guid: e1f30890edb6bf743847ad1bbdaf1a56, type: 3}
   _captureRepositionTime: 0.1
+  _stunnedTime: 0.5
+  _knockbackForce: 4
+  _knockbackDirection: {x: 0, y: 0.7, z: 0.7}
+  _invincibilityTime: 3
