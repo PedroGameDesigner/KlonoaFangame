@@ -288,6 +288,7 @@ MonoBehaviour:
   _throwParameter: Throw
   _floatParameter: Floating
   _ySpeedParameter: YSpeed
+  _doubleJumpParameter: DoubleJump
 --- !u!212 &9048982795073711756
 SpriteRenderer:
   m_ObjectHideFlags: 0
@@ -429,6 +430,9 @@ MonoBehaviour:
   _groundLayer:
     serializedVersion: 2
     m_Bits: 128
+  _enemyLayer:
+    serializedVersion: 2
+    m_Bits: 256
   _minWalkSpeed: 0.2
   _captureProjectileOrigin: {fileID: 4440753262782048645}
   _enemyProjectileOrigin: {fileID: 7930583601812512931}

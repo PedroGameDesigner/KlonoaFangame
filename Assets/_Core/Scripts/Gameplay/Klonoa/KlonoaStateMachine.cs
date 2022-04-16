@@ -12,6 +12,7 @@ namespace Gameplay.Klonoa
         private CaptureState _captureState;
         private HoldingState _holdingState;
         private DoubleJumpState _doubleJumpState;
+        private DamageState _damageState;
 
         public bool IsFloatState => _currentState == _floatState;
         public bool IsDoubleJumpState => _currentState == _doubleJumpState;
@@ -25,12 +26,14 @@ namespace Gameplay.Klonoa
             _captureState = new CaptureState(_behaviour);
             _holdingState = new HoldingState(_behaviour);
             _doubleJumpState = new DoubleJumpState(_behaviour);
+            _damageState = new DamageState(_behaviour);
 
             _normalState.SetStates(_floatState, _captureState);
             _floatState.SetStates(_normalState);
             _captureState.SetStates(_normalState, _holdingState);
             _holdingState.SetStates(_normalState, _doubleJumpState);
             _doubleJumpState.SetStates(_normalState);
+            _damageState.SetStates(_normalState);
 
             return _normalState;
         }
@@ -43,6 +46,11 @@ namespace Gameplay.Klonoa
                 Debug.LogFormat("Klonoa: first state: {0}", nextState.GetType());
 
             base.OnStateChange(nextState);
+        }
+
+        public void ChangeToDamageState(RaycastHit hit)
+        {
+            OnStateChange(_damageState);
         }
     }
 }

@@ -3,8 +3,7 @@ using Gameplay.Enemies.Ball;
 using Gameplay.Projectile;
 using PlatformerRails;
 using System;
-using System.Collections;
-using System.Collections.Generic;
+using Extensions;
 using UnityEngine;
 
 namespace Gameplay.Klonoa
@@ -16,6 +15,7 @@ namespace Gameplay.Klonoa
         [SerializeField] private float _maxGroundDistance = 0.5f;
         [SerializeField] private float _groundCheckLength = 0.05f;
         [SerializeField] private LayerMask _groundLayer;
+        [SerializeField] private LayerMask _enemyLayer;
         [Space]
         [SerializeField] private float _minWalkSpeed = 0.1f;
         [Space]
@@ -28,14 +28,23 @@ namespace Gameplay.Klonoa
         private bool _jumpKeep;
         private bool _jumpActivated;
         private bool _ignoreGround;
+        private bool _invincible;
+        private float _invincibleTimer;
         private float _jumpForce;
         private float _floatYSpeed;
 
         KlonoaStateMachine _stateMachine;
         MoverOnRails _mover;
         Rigidbody _rigidbody;
+        CapsuleCollider _collider;
 
         CaptureProjectile _projectile;
+        RaycastHit _damageHit;
+        RaycastHit[] _hits = new RaycastHit[10];
+        float resultsCount;
+        Vector3 point1;
+        Vector3 point2;
+        Vector3 checkDirection;
 
         public KlonoaDefinition Definition => _definition;
         private Vector2 MoveDirection { set;  get; }
@@ -68,12 +77,27 @@ namespace Gameplay.Klonoa
             _stateMachine.StartMachine();
             _mover = GetComponent<MoverOnRails>();
             _rigidbody = GetComponent<Rigidbody>();
+            _collider = GetComponent<CapsuleCollider>();
             CollisionData = new CollisionData(_maxGroundDistance, _groundCheckLength, _groundLayer);
         }
 
         private void Update()
         {
-            _stateMachine.Update(Time.deltaTime);
+            float deltaTime = Time.deltaTime;
+            _stateMachine.Update(deltaTime);
+            UpdateInvincibility(deltaTime);
+        }
+
+        private void UpdateInvincibility(float deltaTime)
+        {
+            if (_invincible)
+            {
+                _invincibleTimer += deltaTime;
+                if (_invincibleTimer >= Definition.InvincibilityTime)
+                {
+                    _invincible = false;
+                }
+            }
         }
 
         private void FixedUpdate()
@@ -91,6 +115,7 @@ namespace Gameplay.Klonoa
 
             JumpAction(deltaTime);
             UpdateFacing();
+            CheckEnemyCollision(deltaTime);
             _jumpActivated = false;
         }
 
@@ -109,42 +134,45 @@ namespace Gameplay.Klonoa
         {
             if (IsWalking) Facing = Mathf.Sign(_mover.Velocity.z);
         }
+
+        private void CheckEnemyCollision(float deltaTime)
+        {
+            if (!_invincible)
+            {
+                checkDirection = -transform.forward * Facing;
+                point1 = _collider.Points()[0];
+                point2 = _collider.Points()[1];
+                resultsCount = _collider.Cast(checkDirection, _enemyLayer, out _hits, 0.1f * deltaTime);
+
+                if (resultsCount > 0)
+                {
+                    float nearDistance = float.PositiveInfinity;
+                    int nearIndex = 0;
+                    for (int i = 0; i < resultsCount; i++)
+                    {
+                        if (_hits[i].distance < nearDistance)
+                        {
+                            nearDistance = _hits[i].distance;
+                            nearIndex = i;
+                        }
+                    }
+
+                    OnDamage(_hits[nearIndex]);
+                }
+            }
+        }
         
         private void LateUpdate()
         {
             _stateMachine.LateUpdate(Time.deltaTime);
         }
 
-        //Input Access Methods
-        public void SetMoveDirection(Vector2 direction)
+        private void OnDamage(RaycastHit hit)
         {
-            MoveDirection = direction;
-            DirectionChangeEvent?.Invoke(MoveDirection);
+            _invincibleTimer = 0;
+            _stateMachine.ChangeToDamageState(hit);
         }
 
-        public void StartJump()  
-        {
-            JumpEvent?.Invoke();
-            _jumpKeep = true;
-        }
-
-        public void EndJump()
-        {
-            _jumpKeep = false;
-            JumpReleaseEvent?.Invoke();
-        }
-
-        public void StartAttack()
-        {
-            AttackEvent?.Invoke();
-        }
-
-        public void StopAttack() 
-        {
-            //unused, added for completition
-        }
-
-        //States Actions
         public void StartJumpAction(float jumpForce, bool ignoreGround = false)
         {
             _jumpActivated = true;
@@ -206,6 +234,41 @@ namespace Gameplay.Klonoa
             EndHoldingEvent?.Invoke();
         }
 
+        public void StartInvincibility(float extraTime)
+        {
+            _invincible = true;
+            _invincibleTimer = 0;
+        }
+
+        //Input Access Methods
+        public void SetMoveDirection(Vector2 direction)
+        {
+            MoveDirection = direction;
+            DirectionChangeEvent?.Invoke(MoveDirection);
+        }
+
+        public void StartJump()
+        {
+            JumpEvent?.Invoke();
+            _jumpKeep = true;
+        }
+
+        public void EndJump()
+        {
+            _jumpKeep = false;
+            JumpReleaseEvent?.Invoke();
+        }
+
+        public void StartAttack()
+        {
+            AttackEvent?.Invoke();
+        }
+
+        public void StopAttack()
+        {
+            //unused, added for completition
+        }
+
 #if UNITY_EDITOR
         void OnDrawGizmos()
         {
@@ -214,6 +277,17 @@ namespace Gameplay.Klonoa
             Gizmos.DrawLine(Vector3.zero, Vector3.down * (_maxGroundDistance + _groundCheckLength));
             Gizmos.DrawWireCube(Vector3.down * _maxGroundDistance, Vector3.right / 2 + Vector3.forward / 2);
             Gizmos.matrix = Matrix4x4.identity;
+            DrawCollisionGizmos();
+        }
+
+        void DrawCollisionGizmos()
+        {
+            if (_collider == null) return;
+            Vector3 displacement = 0.1f * checkDirection * Time.deltaTime;
+            Gizmos.color = Color.red;
+            Gizmos.DrawWireSphere(point1 + displacement, _collider.radius);
+            Gizmos.color = Color.blue;
+            Gizmos.DrawWireSphere(point2 + displacement, _collider.radius);
         }
 #endif
     }

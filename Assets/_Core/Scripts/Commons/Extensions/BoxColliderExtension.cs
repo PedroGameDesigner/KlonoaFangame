@@ -6,6 +6,7 @@ namespace Extensions
 {
     public static class BoxColliderExtension
     {
+        //BoxCollider
         public static int Cast(this BoxCollider collider, Vector3 direction, out RaycastHit[] results, float distance = Mathf.Infinity)
         {
             results = Physics.BoxCastAll(collider.transform.position + collider.center, collider.size * 0.5f, direction, collider.transform.rotation, distance);

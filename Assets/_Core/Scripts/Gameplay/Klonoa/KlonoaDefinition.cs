@@ -22,6 +22,11 @@ namespace Gameplay.Klonoa
         [Space()]
         [SerializeField] private CaptureProjectile _captureProjectile;
         [SerializeField] private float _captureRepositionTime = 0.2f;
+        [Space()]
+        [SerializeField] private float _stunnedTime = 0.5f;
+        [SerializeField] private float _knockbackForce = 2f;
+        [SerializeField] private Vector3 _knockbackDirection = new Vector3(0, 0.7f, 0.7f);
+        [SerializeField] private float _invincibilityTime = 5f;
 
         public SpeedData NotMoveSpeed => new SpeedData();
         public SpeedData MoveSpeed => _moveSpeed;
@@ -35,6 +40,10 @@ namespace Gameplay.Klonoa
         public float Gravity => _gravity;
         public CaptureProjectile CaptureProjectile => _captureProjectile;
         public float CaptureRepositionTime => _captureRepositionTime;
+        public float StunnedTime => _stunnedTime;
+        public float KnockbackForce => _knockbackForce;
+        public Vector3 KnockbackDirection => _knockbackDirection.normalized;
+        public float InvincibilityTime => _invincibilityTime;
     }
 
     [Serializable]
