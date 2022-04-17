@@ -2293,10 +2293,6 @@ PrefabInstance:
       propertyPath: m_Sprite
       value: 
       objectReference: {fileID: -4360651699206733200, guid: ff0bed1d3fd341f44a775e4f5413c40a, type: 3}
-    - target: {fileID: 9048982795073711757, guid: 7c9adb3bfb1539542bdd2a7d58e0e439, type: 3}
-      propertyPath: _damageParameter
-      value: Damage
-      objectReference: {fileID: 0}
     - target: {fileID: 9048982795958330324, guid: 7c9adb3bfb1539542bdd2a7d58e0e439, type: 3}
       propertyPath: m_Height
       value: 0.375

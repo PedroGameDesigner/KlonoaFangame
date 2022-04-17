@@ -30,4 +30,4 @@ MonoBehaviour:
   _stunnedTime: 0.5
   _knockbackForce: 4
   _knockbackDirection: {x: 0, y: 0.7, z: 0.7}
-  _invincibilityTime: 3
+  _invincibilityTime: 1.5
