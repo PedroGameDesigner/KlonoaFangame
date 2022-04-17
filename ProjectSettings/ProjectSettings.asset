@@ -587,7 +587,7 @@ PlayerSettings:
   webGLThreadsSupport: 0
   webGLDecompressionFallback: 0
   scriptingDefineSymbols:
-    1: DREAMTECK_SPLINES
+    1: DREAMTECK_SPLINES;ODIN_INSPECTOR;ODIN_INSPECTOR_3
   additionalCompilerArguments: {}
   platformArchitecture: {}
   scriptingBackend:
