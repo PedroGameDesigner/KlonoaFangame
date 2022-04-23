@@ -22,6 +22,7 @@ namespace Gameplay.UI
         {
             _textbox.text = string.Format(_baseText, _klonoa.Health);
             _klonoa.DamageEvent += OnKlonoaDamage;
+            _klonoa.DeathEvent += OnKlonoaDamage;
         }
 
         private void Start()

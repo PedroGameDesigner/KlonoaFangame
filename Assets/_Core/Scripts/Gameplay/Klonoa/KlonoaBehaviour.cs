@@ -16,6 +16,8 @@ namespace Gameplay.Klonoa
         [SerializeField] private float _groundCheckLength = 0.05f;
         [SerializeField] private LayerMask _groundLayer;
         [SerializeField] private LayerMask _enemyLayer;
+        [SerializeField] private string _enemyTag = "Enemy";
+        [SerializeField] private string _deathPlaneTag = "DeathPlane";
         [Space]
         [SerializeField] private float _minWalkSpeed = 0.1f;
         [Space]
@@ -164,7 +166,7 @@ namespace Gameplay.Klonoa
                         }
                     }
 
-                    OnDamage(_hits[nearIndex]);
+                    OnHit(_hits[nearIndex]);
                 }
             }
         }
@@ -172,6 +174,14 @@ namespace Gameplay.Klonoa
         private void LateUpdate()
         {
             _stateMachine.LateUpdate(Time.deltaTime);
+        }
+
+        private void OnHit(RaycastHit hit)
+        {
+            if (hit.collider.CompareTag(_enemyTag))
+                OnDamage(hit);
+            else if (hit.collider.CompareTag(_deathPlaneTag))
+                Death();
         }
 
         private void OnDamage(RaycastHit hit)
@@ -188,6 +198,13 @@ namespace Gameplay.Klonoa
                 _stateMachine.ChangeToDeathState();
                 DeathEvent?.Invoke();
             }
+        }
+
+        private void Death()
+        {
+            _health = 0;
+            _stateMachine.ChangeToDeathState();
+            DeathEvent?.Invoke();
         }
 
         public void StartJumpAction(float jumpForce, bool ignoreGround = false)
