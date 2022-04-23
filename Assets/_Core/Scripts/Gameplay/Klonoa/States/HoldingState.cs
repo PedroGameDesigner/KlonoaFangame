@@ -45,13 +45,16 @@ namespace Gameplay.Klonoa
             if (_behaviour.IsGrounded)
                 _behaviour.StartJumpAction(_definition.JumpSpeed);
             else
+            {
+                _behaviour.InvokeEndHoldingEvent();
                 ChangeState(_doubleJumpState);
+            }
         }
 
         public override void AttackAction()
         {
             _behaviour.ThrowHoldedEnemySideways();
-            ChangeState(_normalState);
+            OnEndHolding();
         }
 
         public override void Exit()

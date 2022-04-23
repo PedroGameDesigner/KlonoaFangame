@@ -63,6 +63,7 @@ namespace Gameplay.Klonoa
 
         private void OnEndHolding()
         {
+            Debug.Log("End Holding");
             _animator.SetTrigger(_endHoldingParameter);
             _animator.SetBool(_isHoldingParameter, false);
         }
