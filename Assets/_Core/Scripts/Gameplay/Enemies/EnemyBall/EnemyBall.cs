@@ -193,12 +193,12 @@ namespace Gameplay.Enemies.Ball
             StartTransitionEvent?.Invoke();
         }
 
-        public void ThrowSide(float direction)
+        public void ThrowSide(Vector3 direction)
         {
             TransitionFinishEvent?.Invoke();
             _lastPosition = transform.position;
             transform.parent = null;
-            _flyDirection = Vector3.forward * direction;
+            _flyDirection = direction;
             ThrownEvent?.Invoke(_flyDirection);
         }
 

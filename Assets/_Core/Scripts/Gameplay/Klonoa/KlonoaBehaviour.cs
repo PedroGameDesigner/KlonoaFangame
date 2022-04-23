@@ -58,10 +58,11 @@ namespace Gameplay.Klonoa
         public bool IsFloating => _stateMachine.IsFloatState;
         public bool IsInDoubleJump => _stateMachine.IsDoubleJumpState;
         public bool IsInDamage => _stateMachine.IsDamageState;
+        public bool IsHolding => HoldedBall != null;
         public bool IsInvincible => _invincible;
         public bool CaptureProjectileThrowed => _projectile != null;
         public Vector3 EffectiveSpeed => _mover.Velocity;
-        public float Facing { get; private set; } = 1;
+        public FaceDirection Facing { get; private set; } = FaceDirection.Right;
         public EnemyBall HoldedBall { get; private set; }
 
         //Events
@@ -141,14 +142,22 @@ namespace Gameplay.Klonoa
 
         private void UpdateFacing()
         {
-            if (IsWalking) Facing = Mathf.Sign(_mover.Velocity.z);
+            if (IsWalking)
+            {
+                float direction = Mathf.Sign(_mover.Velocity.z);
+                Facing = direction > 0 ? FaceDirection.Right : FaceDirection.Left;
+            }
+            else if (MoveDirection.y != 0)
+            {
+                Facing = MoveDirection.y > 0 ? FaceDirection.Front : FaceDirection.Back;
+            }
         }
 
         private void CheckEnemyCollision(float deltaTime)
         {
             if (!_invincible)
             {
-                checkDirection = -transform.forward * Facing;
+                checkDirection = -FacingDirection();
                 point1 = _collider.Points()[0];
                 point2 = _collider.Points()[1];
                 resultsCount = _collider.Cast(checkDirection, _enemyLayer, out _hits, 0.1f * deltaTime);
@@ -216,8 +225,9 @@ namespace Gameplay.Klonoa
 
         public CaptureProjectile InstantiateCapture()
         {
+            Vector3 throwDirection = transform.rotation * FacingDirection();
             _projectile = Instantiate(_definition.CaptureProjectile, _captureProjectileOrigin.position, Quaternion.identity);
-            _projectile.StartMovement(transform.forward * Facing, _mover.Velocity.z, _captureProjectileOrigin);
+            _projectile.StartMovement(throwDirection, _mover.Velocity.z, _captureProjectileOrigin);
             CaptureProjectileEvent?.Invoke();
 
             return _projectile;
@@ -244,7 +254,7 @@ namespace Gameplay.Klonoa
             if (HoldedBall == null) return;
 
             HoldedBall.transform.position = _enemyProjectileOrigin.position;
-            HoldedBall.ThrowSide(Facing);
+            HoldedBall.ThrowSide(FacingDirection());
             HoldedBall = null;
             SideThrowEnemyEvent?.Invoke();
         }
@@ -271,6 +281,23 @@ namespace Gameplay.Klonoa
         {
             _invincible = true;
             _invincibleTimer = 0;
+        }
+
+        private Vector3 FacingDirection()
+        {
+            switch (Facing)
+            {
+                case FaceDirection.Right:
+                    return Vector3.forward;
+                case FaceDirection.Left:
+                    return Vector3.back;
+                case FaceDirection.Front:
+                    return Vector3.left;
+                case FaceDirection.Back:
+                    return Vector3.right;
+                default:
+                    return Vector3.zero;
+            }
         }
 
         //Input Access Methods
@@ -300,6 +327,14 @@ namespace Gameplay.Klonoa
         public void StopAttack()
         {
             //unused, added for completition
+        }
+
+        public enum FaceDirection
+        {
+            Right = 0,
+            Back = 1,
+            Left = 2,
+            Front = 3
         }
 
 #if UNITY_EDITOR

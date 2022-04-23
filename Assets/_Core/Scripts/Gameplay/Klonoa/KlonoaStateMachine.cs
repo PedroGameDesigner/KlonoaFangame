@@ -36,7 +36,7 @@ namespace Gameplay.Klonoa
             _captureState.SetStates(_normalState, _holdingState);
             _holdingState.SetStates(_normalState, _doubleJumpState);
             _doubleJumpState.SetStates(_normalState);
-            _damageState.SetStates(_normalState);
+            _damageState.SetStates(_normalState, _holdingState);
 
             return _normalState;
         }

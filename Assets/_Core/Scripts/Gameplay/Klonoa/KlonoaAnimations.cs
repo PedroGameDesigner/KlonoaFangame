@@ -47,7 +47,23 @@ namespace Gameplay.Klonoa
             _animator.SetBool(_doubleJumpParameter, _behaviour.IsInDoubleJump);
             _animator.SetBool(_damageParameter, _behaviour.IsInDamage);
             _animator.SetBool(_invincibleParameter, _behaviour.IsInvincible);
-            _renderer.flipX = _behaviour.Facing < 0;
+            UpdateFacing(_behaviour.Facing);
+        }
+
+        private void UpdateFacing(KlonoaBehaviour.FaceDirection facing)
+        {
+            _renderer.flipX = facing == KlonoaBehaviour.FaceDirection.Left;
+            if (facing == KlonoaBehaviour.FaceDirection.Front)
+                _renderer.color = Color.red;
+            else if (facing == KlonoaBehaviour.FaceDirection.Back)
+            {
+                _renderer.color = Color.blue;
+            }
+            else
+            {
+                _renderer.color = Color.white;
+            }
+
         }
 
         private void OnCaptureProjectile()

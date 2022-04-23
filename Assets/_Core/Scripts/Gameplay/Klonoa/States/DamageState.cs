@@ -11,7 +11,8 @@ namespace Gameplay.Klonoa
         
         private float _timer;
         private RaycastHit _hit;
-        private KlonoaState _nextState;
+        private KlonoaState _normalState;
+        private KlonoaState _holdingState;
 
         protected override SpeedData MoveSpeed => new SpeedData();
         protected override float Gravity => _definition.Gravity;
@@ -19,9 +20,10 @@ namespace Gameplay.Klonoa
 
         public DamageState(KlonoaBehaviour behaviour) : base(behaviour) { }
 
-        public void SetStates(KlonoaState nextState)
+        public void SetStates(KlonoaState normalState, KlonoaState holdingState)
         {
-            _nextState = nextState;
+            _normalState = normalState;
+            _holdingState = holdingState;
         }
 
         public void SetDamageHit(RaycastHit hit)
@@ -55,7 +57,10 @@ namespace Gameplay.Klonoa
             _timer += deltaTime;
             if (_timer >= _definition.StunnedTime)
             {
-                ChangeState(_nextState);
+                if (_behaviour.IsHolding)
+                    ChangeState(_holdingState);
+                else
+                    ChangeState(_normalState);
             }
         }
 
