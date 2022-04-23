@@ -19,6 +19,7 @@ namespace Gameplay.Klonoa
         [SerializeField] private string _ySpeedParameter = "YSpeed";
         [SerializeField] private string _doubleJumpParameter = "DoubleJump";
         [SerializeField] private string _damageParameter = "Damage";
+        [SerializeField] private string _deathParameter = "Death";
         [SerializeField] private string _invincibleParameter = "Invincible";
 
         private SpriteRenderer _renderer = null;
@@ -33,6 +34,7 @@ namespace Gameplay.Klonoa
             _behaviour.BeginHoldingEvent += OnBeginHolding;
             _behaviour.EndHoldingEvent += OnEndHolding;
             _behaviour.SideThrowEnemyEvent += OnThrow;
+            _behaviour.DeathEvent += OnDeath;
         }
 
         // Update is called once per frame
@@ -68,6 +70,11 @@ namespace Gameplay.Klonoa
         private void OnThrow()
         {
             _animator.SetTrigger(_throwParameter);
+        }
+
+        private void OnDeath()
+        {
+            _animator.SetTrigger(_deathParameter);
         }
     }
 }
