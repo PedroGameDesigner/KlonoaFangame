@@ -13,6 +13,7 @@ namespace Gameplay.Klonoa
         private HoldingState _holdingState;
         private DoubleJumpState _doubleJumpState;
         private DamageState _damageState;
+        private DeathState _deathState;
 
         public bool IsFloatState => _currentState == _floatState;
         public bool IsDoubleJumpState => _currentState == _doubleJumpState;
@@ -28,6 +29,7 @@ namespace Gameplay.Klonoa
             _holdingState = new HoldingState(_behaviour);
             _doubleJumpState = new DoubleJumpState(_behaviour);
             _damageState = new DamageState(_behaviour);
+            _deathState = new DeathState(_behaviour);
 
             _normalState.SetStates(_floatState, _captureState);
             _floatState.SetStates(_normalState);
@@ -52,6 +54,11 @@ namespace Gameplay.Klonoa
         public void ChangeToDamageState(RaycastHit hit)
         {
             OnStateChange(_damageState);
+        }
+
+        public void ChangeToDeathState()
+        {
+            OnStateChange(_deathState);
         }
     }
 }

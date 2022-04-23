@@ -68,6 +68,7 @@ namespace Gameplay.Klonoa
         public event Action EndHoldingEvent;
         public event Action SideThrowEnemyEvent;
         public event Action DamageEvent;
+        public event Action DeathEvent;
 
         public event Action JumpEvent;
         public event Action JumpKeepEvent;
@@ -177,8 +178,16 @@ namespace Gameplay.Klonoa
         {
             _invincibleTimer = 0;
             _health -= 1;
-            _stateMachine.ChangeToDamageState(hit);
-            DamageEvent?.Invoke();
+            if (_health > 0)
+            {
+                _stateMachine.ChangeToDamageState(hit);
+                DamageEvent?.Invoke();
+            }
+            else
+            {
+                _stateMachine.ChangeToDeathState();
+                DeathEvent?.Invoke();
+            }
         }
 
         public void StartJumpAction(float jumpForce, bool ignoreGround = false)
