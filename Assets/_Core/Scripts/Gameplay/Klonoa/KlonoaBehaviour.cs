@@ -157,7 +157,7 @@ namespace Gameplay.Klonoa
         {
             if (!_invincible)
             {
-                checkDirection = -FacingDirection();
+                checkDirection = -Facing.GetVector();
                 point1 = _collider.Points()[0];
                 point2 = _collider.Points()[1];
                 resultsCount = _collider.Cast(checkDirection, _enemyLayer, out _hits, 0.1f * deltaTime);
@@ -225,7 +225,7 @@ namespace Gameplay.Klonoa
 
         public CaptureProjectile InstantiateCapture()
         {
-            Vector3 throwDirection = transform.rotation * FacingDirection();
+            Vector3 throwDirection = transform.rotation * Facing.GetVector();
             _projectile = Instantiate(_definition.CaptureProjectile, _captureProjectileOrigin.position, Quaternion.identity);
             _projectile.StartMovement(throwDirection, _mover.Velocity.z, _captureProjectileOrigin);
             CaptureProjectileEvent?.Invoke();
@@ -254,7 +254,7 @@ namespace Gameplay.Klonoa
             if (HoldedBall == null) return;
 
             HoldedBall.transform.position = _enemyProjectileOrigin.position;
-            HoldedBall.ThrowSide(FacingDirection());
+            HoldedBall.ThrowSide(Facing.GetVector());
             HoldedBall = null;
             SideThrowEnemyEvent?.Invoke();
         }
@@ -281,23 +281,6 @@ namespace Gameplay.Klonoa
         {
             _invincible = true;
             _invincibleTimer = 0;
-        }
-
-        private Vector3 FacingDirection()
-        {
-            switch (Facing)
-            {
-                case FaceDirection.Right:
-                    return Vector3.forward;
-                case FaceDirection.Left:
-                    return Vector3.back;
-                case FaceDirection.Front:
-                    return Vector3.left;
-                case FaceDirection.Back:
-                    return Vector3.right;
-                default:
-                    return Vector3.zero;
-            }
         }
 
         //Input Access Methods
@@ -327,14 +310,6 @@ namespace Gameplay.Klonoa
         public void StopAttack()
         {
             //unused, added for completition
-        }
-
-        public enum FaceDirection
-        {
-            Right = 0,
-            Back = 1,
-            Left = 2,
-            Front = 3
         }
 
 #if UNITY_EDITOR

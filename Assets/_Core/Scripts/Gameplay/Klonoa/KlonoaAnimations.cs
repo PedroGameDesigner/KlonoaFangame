@@ -50,12 +50,12 @@ namespace Gameplay.Klonoa
             UpdateFacing(_behaviour.Facing);
         }
 
-        private void UpdateFacing(KlonoaBehaviour.FaceDirection facing)
+        private void UpdateFacing(FaceDirection facing)
         {
-            _renderer.flipX = facing == KlonoaBehaviour.FaceDirection.Left;
-            if (facing == KlonoaBehaviour.FaceDirection.Front)
+            _renderer.flipX = facing == FaceDirection.Left;
+            if (facing == FaceDirection.Front)
                 _renderer.color = Color.red;
-            else if (facing == KlonoaBehaviour.FaceDirection.Back)
+            else if (facing == FaceDirection.Back)
             {
                 _renderer.color = Color.blue;
             }
