@@ -246,6 +246,7 @@ GameObject:
   - component: {fileID: 9048982795073711757}
   - component: {fileID: 9048982795073711756}
   - component: {fileID: 9048982795073711758}
+  - component: {fileID: 2170086136347141395}
   m_Layer: 9
   m_Name: Sprite
   m_TagString: Untagged
@@ -291,6 +292,7 @@ MonoBehaviour:
   _ySpeedParameter: YSpeed
   _doubleJumpParameter: DoubleJump
   _damageParameter: Damage
+  _deathParameter: Death
   _invincibleParameter: Invincible
 --- !u!212 &9048982795073711756
 SpriteRenderer:
@@ -362,6 +364,22 @@ Animator:
   m_HasTransformHierarchy: 1
   m_AllowConstantClipSamplingOptimization: 1
   m_KeepAnimatorControllerStateOnDisable: 0
+--- !u!114 &2170086136347141395
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 9048982795073711794}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f2ffe94506f08b44bb37907d2ff4bf60, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  spriteSheet: {fileID: 11400000, guid: 1e0cd3b5d24e39c4b9b8427d63e65bfe, type: 2}
+  renderer: {fileID: 9048982795073711756}
+  groupIndex: 0
+  spriteID: 0
 --- !u!1 &9048982795958330328
 GameObject:
   m_ObjectHideFlags: 0
@@ -436,6 +454,8 @@ MonoBehaviour:
   _enemyLayer:
     serializedVersion: 2
     m_Bits: 256
+  _enemyTag: Enemy
+  _deathPlaneTag: DeathPlane
   _minWalkSpeed: 0.2
   _captureProjectileOrigin: {fileID: 4440753262782048645}
   _enemyProjectileOrigin: {fileID: 7930583601812512931}
