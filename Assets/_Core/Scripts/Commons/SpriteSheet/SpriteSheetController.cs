@@ -27,6 +27,12 @@ namespace SpriteSheets
             AssignFirstSprite();
         }
 
+        public void ChangeSpriteSheet(SpriteSheet spriteSheet)
+        {
+            this.spriteSheet = spriteSheet;
+            Start();
+        }
+
         protected virtual void Initialize()
         {
             previousSheet = spriteSheet;

@@ -1,0 +1,108 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 9ac3b840818f8e44d9ddd9d73af80818, type: 3}
+  m_Name: Klonoa Back
+  m_EditorClassIdentifier: 
+  groups:
+  - _tag: Stand
+    _index: 1
+    _sprites:
+    - {fileID: -2130071400085548076, guid: 3e4b2ed2d26698b4d9325edf1cebba4a, type: 3}
+    - {fileID: 7256074184631407115, guid: 3e4b2ed2d26698b4d9325edf1cebba4a, type: 3}
+    - {fileID: -173815206786904283, guid: 3e4b2ed2d26698b4d9325edf1cebba4a, type: 3}
+    - {fileID: -3935408239339851708, guid: 3e4b2ed2d26698b4d9325edf1cebba4a, type: 3}
+  - _tag: Walk
+    _index: 2
+    _sprites:
+    - {fileID: -4482338308968665034, guid: 9c3f7bd460c744d47bb3fdcea42e1f05, type: 3}
+    - {fileID: 3683529262744574409, guid: 9c3f7bd460c744d47bb3fdcea42e1f05, type: 3}
+    - {fileID: 8583767751031092316, guid: 9c3f7bd460c744d47bb3fdcea42e1f05, type: 3}
+    - {fileID: -428638664674314606, guid: 9c3f7bd460c744d47bb3fdcea42e1f05, type: 3}
+    - {fileID: -4638596344940968521, guid: 9c3f7bd460c744d47bb3fdcea42e1f05, type: 3}
+    - {fileID: 8822545247632413072, guid: 9c3f7bd460c744d47bb3fdcea42e1f05, type: 3}
+    - {fileID: 3287439628223786382, guid: 9c3f7bd460c744d47bb3fdcea42e1f05, type: 3}
+    - {fileID: 5185114014423014106, guid: 9c3f7bd460c744d47bb3fdcea42e1f05, type: 3}
+  - _tag: Jump
+    _index: 3
+    _sprites:
+    - {fileID: -203622458290143596, guid: 0d40dbd011951e64f913b29c57b372c2, type: 3}
+    - {fileID: 8215833830227591986, guid: 0d40dbd011951e64f913b29c57b372c2, type: 3}
+    - {fileID: 2053069143635742097, guid: 0d40dbd011951e64f913b29c57b372c2, type: 3}
+    - {fileID: -8604962710550124927, guid: 0d40dbd011951e64f913b29c57b372c2, type: 3}
+  - _tag: Fall
+    _index: 4
+    _sprites:
+    - {fileID: 847348518753714629, guid: 41ad06c04babc18459741b84b9d9d33e, type: 3}
+    - {fileID: -77223681845550592, guid: 41ad06c04babc18459741b84b9d9d33e, type: 3}
+  - _tag: Float
+    _index: 5
+    _sprites:
+    - {fileID: -1431644173576647856, guid: 5cf30a4c9472647479d45a173d4cbd1c, type: 3}
+    - {fileID: 3687803307419564919, guid: 5cf30a4c9472647479d45a173d4cbd1c, type: 3}
+    - {fileID: 5260117911268827577, guid: 5cf30a4c9472647479d45a173d4cbd1c, type: 3}
+    - {fileID: -2819437441887553260, guid: 5cf30a4c9472647479d45a173d4cbd1c, type: 3}
+  - _tag: Capture
+    _index: 6
+    _sprites:
+    - {fileID: -2130071400085548076, guid: 3e4b2ed2d26698b4d9325edf1cebba4a, type: 3}
+    - {fileID: 7256074184631407115, guid: 3e4b2ed2d26698b4d9325edf1cebba4a, type: 3}
+    - {fileID: -173815206786904283, guid: 3e4b2ed2d26698b4d9325edf1cebba4a, type: 3}
+    - {fileID: -3935408239339851708, guid: 3e4b2ed2d26698b4d9325edf1cebba4a, type: 3}
+  - _tag: Hold Stand
+    _index: 11
+    _sprites:
+    - {fileID: 7568748376320047736, guid: 3238d66a834ca30449e5ac65699243c3, type: 3}
+    - {fileID: 8978400716178361601, guid: 3238d66a834ca30449e5ac65699243c3, type: 3}
+    - {fileID: 2015007135187353420, guid: 3238d66a834ca30449e5ac65699243c3, type: 3}
+    - {fileID: 8007581827060279310, guid: 3238d66a834ca30449e5ac65699243c3, type: 3}
+  - _tag: Hold Walk
+    _index: 12
+    _sprites:
+    - {fileID: -4848999361694482714, guid: 4cb0eefc38441304aae58c74c5ab43a0, type: 3}
+    - {fileID: -4305691251119539065, guid: 4cb0eefc38441304aae58c74c5ab43a0, type: 3}
+    - {fileID: 3634159256269324275, guid: 4cb0eefc38441304aae58c74c5ab43a0, type: 3}
+    - {fileID: 4188534165875242899, guid: 4cb0eefc38441304aae58c74c5ab43a0, type: 3}
+    - {fileID: -3435546016215456366, guid: 4cb0eefc38441304aae58c74c5ab43a0, type: 3}
+    - {fileID: -4030351627109655327, guid: 4cb0eefc38441304aae58c74c5ab43a0, type: 3}
+    - {fileID: 8201924857684500709, guid: 4cb0eefc38441304aae58c74c5ab43a0, type: 3}
+    - {fileID: 942427346081262875, guid: 4cb0eefc38441304aae58c74c5ab43a0, type: 3}
+  - _tag: Hold Jump
+    _index: 13
+    _sprites:
+    - {fileID: -4147493191662192194, guid: 30eae6fe9c41acf4c843ca33e4c45411, type: 3}
+    - {fileID: -55516564223536284, guid: 30eae6fe9c41acf4c843ca33e4c45411, type: 3}
+    - {fileID: -3992795232714687344, guid: 30eae6fe9c41acf4c843ca33e4c45411, type: 3}
+    - {fileID: -2978603390507588944, guid: 30eae6fe9c41acf4c843ca33e4c45411, type: 3}
+  - _tag: Hold Fall
+    _index: 14
+    _sprites:
+    - {fileID: -923594275442121997, guid: fe8363722fe11814db235cb5d1ac5538, type: 3}
+    - {fileID: 5693350907217701532, guid: fe8363722fe11814db235cb5d1ac5538, type: 3}
+  - _tag: Double Jump
+    _index: 15
+    _sprites:
+    - {fileID: -4618968360608732236, guid: da6b2fb9336e1d748a2d3102b0e36d27, type: 3}
+    - {fileID: -309195540415528225, guid: da6b2fb9336e1d748a2d3102b0e36d27, type: 3}
+    - {fileID: -5770914679501631654, guid: da6b2fb9336e1d748a2d3102b0e36d27, type: 3}
+    - {fileID: -8205033191502629896, guid: da6b2fb9336e1d748a2d3102b0e36d27, type: 3}
+  - _tag: Throw
+    _index: 16
+    _sprites:
+    - {fileID: -4488883025936703392, guid: 825597dffceb0c84c9f847febb174785, type: 3}
+    - {fileID: -1707460807276810388, guid: 825597dffceb0c84c9f847febb174785, type: 3}
+    - {fileID: 7266444520508101923, guid: 825597dffceb0c84c9f847febb174785, type: 3}
+    - {fileID: 2547465209831188773, guid: 825597dffceb0c84c9f847febb174785, type: 3}
+  - _tag: Damage
+    _index: 21
+    _sprites:
+    - {fileID: 21300000, guid: 8ba38e645797ebc4f9e9bb81ba68fa66, type: 3}
+  defaultTag: Stand

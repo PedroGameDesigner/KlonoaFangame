@@ -281,6 +281,10 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _behaviour: {fileID: 9048982795958330331}
+  _spriteController: {fileID: 2170086136347141395}
+  _sideSpriteSheet: {fileID: 11400000, guid: 1e0cd3b5d24e39c4b9b8427d63e65bfe, type: 2}
+  _frontSpriteSheet: {fileID: 11400000, guid: 78222f9a3fdb54a42833cbce81a24f30, type: 2}
+  _backSpriteSheet: {fileID: 11400000, guid: d90cf85ae9c7cfd4f9a36303e4e1a8ff, type: 2}
   _groundedParameter: Grounded
   _walkingParameter: Walking
   _captureProjectileParameter: CaptureProjectile
