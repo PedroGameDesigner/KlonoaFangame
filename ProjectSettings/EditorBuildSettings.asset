@@ -8,5 +8,8 @@ EditorBuildSettings:
   - enabled: 1
     path: Assets/_Core/Scenes/Concept/Game.unity
     guid: d1c3109bdb54ad54c8a2b2838528e640
+  - enabled: 1
+    path: Assets/_Core/Scenes/Testing/Test Throw.unity
+    guid: e12613d88cdb53544a9e1cf54f27124c
   m_configObjects:
     com.unity.input.settings: {fileID: 11400000, guid: cd88a2abb521e2049ab867074f06ea43, type: 2}
