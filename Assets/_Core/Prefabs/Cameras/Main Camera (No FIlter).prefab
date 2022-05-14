@@ -525,9 +525,8 @@ GameObject:
   - component: {fileID: 1029049967156874124}
   - component: {fileID: 1029049967156874127}
   - component: {fileID: 1029049967156874125}
-  - component: {fileID: 80968893}
   m_Layer: 0
-  m_Name: Main Camera 1
+  m_Name: Main Camera (No FIlter)
   m_TagString: MainCamera
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -599,23 +598,6 @@ AudioListener:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1029049967156874120}
   m_Enabled: 1
---- !u!114 &80968893
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1029049967156874120}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 433faa8b758afed4f9295b193c697276, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  colorDepth: {x: 64, y: 64, z: 64}
-  ditherDepth: {x: 32, y: 32, z: 32}
-  ditheringMatrixSize: 1
-  framerateLimit: 30
-  _Shader: {fileID: 4800000, guid: 364a79f75940cde409d6c07092dacd71, type: 3}
 --- !u!1 &1029049967290180578
 GameObject:
   m_ObjectHideFlags: 0
@@ -1035,7 +1017,6 @@ GameObject:
   m_Component:
   - component: {fileID: 1029049968124698745}
   - component: {fileID: 1029049968124698751}
-  - component: {fileID: 1583552331}
   m_Layer: 0
   m_Name: Background Camera
   m_TagString: MainCamera
@@ -1103,23 +1084,6 @@ Camera:
   m_OcclusionCulling: 0
   m_StereoConvergence: 10
   m_StereoSeparation: 0.022
---- !u!114 &1583552331
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1029049968124698746}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 433faa8b758afed4f9295b193c697276, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  colorDepth: {x: 64, y: 64, z: 64}
-  ditherDepth: {x: 32, y: 32, z: 32}
-  ditheringMatrixSize: 1
-  framerateLimit: 30
-  _Shader: {fileID: 4800000, guid: 364a79f75940cde409d6c07092dacd71, type: 3}
 --- !u!1 &1029049968212722473
 GameObject:
   m_ObjectHideFlags: 0
