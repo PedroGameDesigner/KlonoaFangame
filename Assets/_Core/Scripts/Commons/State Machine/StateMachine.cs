@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -8,6 +9,8 @@ namespace StateMachine
     {
         protected E _behaviour;
         protected State<E> _currentState;
+
+        public event Action StateChangeEvent;
 
         protected StateMachine(E behaviour)
         {
@@ -50,6 +53,7 @@ namespace StateMachine
             {
                 _currentState.StateChangeEvent += OnStateChange;
                 _currentState.Enter();
+                StateChangeEvent?.Invoke();
             }
         }
 

@@ -88,19 +88,19 @@ namespace Gameplay.Klonoa
         private void SubscribeToKlonoaEvent()
         {
             _behaviour.DirectionChangeEvent += DirectionAction;
-            _behaviour.JumpEvent += JumpAction;
-            _behaviour.JumpKeepEvent += JumpKeepAction;
-            _behaviour.JumpReleaseEvent += JumpReleaseAction;
-            _behaviour.AttackEvent += AttackAction;
+            _behaviour.JumpInputEvent += JumpAction;
+            _behaviour.JumpKeepInputEvent += JumpKeepAction;
+            _behaviour.JumpReleaseInputEvent += JumpReleaseAction;
+            _behaviour.AttackInputEvent += AttackAction;
         }
 
         private void UnsubscribeToKlonoaEvent()
         {
             _behaviour.DirectionChangeEvent -= DirectionAction;
-            _behaviour.JumpEvent -= JumpAction;
-            _behaviour.JumpKeepEvent -= JumpKeepAction;
-            _behaviour.JumpReleaseEvent -= JumpReleaseAction;
-            _behaviour.AttackEvent -= AttackAction;
+            _behaviour.JumpInputEvent -= JumpAction;
+            _behaviour.JumpKeepInputEvent -= JumpKeepAction;
+            _behaviour.JumpReleaseInputEvent -= JumpReleaseAction;
+            _behaviour.AttackInputEvent -= AttackAction;
         }
 
         public override void DrawGizmos() { }

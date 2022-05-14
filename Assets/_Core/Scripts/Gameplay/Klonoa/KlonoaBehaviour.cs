@@ -34,6 +34,7 @@ namespace Gameplay.Klonoa
         private float _invincibleTimer;
         private float _jumpForce;
         private float _floatYSpeed;
+        private bool _previousGrounded = false;
 
         KlonoaStateMachine _stateMachine;
         MoverOnRails _mover;
@@ -66,6 +67,9 @@ namespace Gameplay.Klonoa
         public EnemyBall HoldedBall { get; private set; }
 
         //Events
+        public event Action StateChangeEvent;
+        public event Action JumpEvent;
+        public event Action LandingEvent;
         public event Action CaptureProjectileEvent;
         public event Action BeginHoldingEvent;
         public event Action EndHoldingEvent;
@@ -73,10 +77,10 @@ namespace Gameplay.Klonoa
         public event Action DamageEvent;
         public event Action DeathEvent;
 
-        public event Action JumpEvent;
-        public event Action JumpKeepEvent;
-        public event Action JumpReleaseEvent;
-        public event Action AttackEvent;
+        public event Action JumpInputEvent;
+        public event Action JumpKeepInputEvent;
+        public event Action JumpReleaseInputEvent;
+        public event Action AttackInputEvent;
         public event Action<Vector2> DirectionChangeEvent;
 
         //Behaviour Methods
@@ -84,6 +88,7 @@ namespace Gameplay.Klonoa
         {
             _stateMachine = new KlonoaStateMachine(this);
             _stateMachine.StartMachine();
+            _stateMachine.StateChangeEvent += OnStateChange;
             _mover = GetComponent<MoverOnRails>();
             _rigidbody = GetComponent<Rigidbody>();
             _collider = GetComponent<CapsuleCollider>();
@@ -121,11 +126,12 @@ namespace Gameplay.Klonoa
 
             _stateMachine.FixedUpdate(deltaTime);
             if (_jumpKeep)
-                JumpKeepEvent?.Invoke();
+                JumpKeepInputEvent?.Invoke();
 
             JumpAction(deltaTime);
             UpdateFacing();
             CheckEnemyCollision(deltaTime);
+            CheckLandingEvent();
             _jumpActivated = false;
         }
 
@@ -137,6 +143,7 @@ namespace Gameplay.Klonoa
                 velocity.y = _jumpForce + Mathf.Max(0, (_maxGroundDistance - CollisionData.GroundDistance) / deltaTime);
                 Debug.Log("Klonoa: JUMP FORCE: " + velocity.y);
                 _mover.Velocity = velocity;
+                JumpEvent?.Invoke();
             }
         }
 
@@ -179,7 +186,17 @@ namespace Gameplay.Klonoa
                 }
             }
         }
-        
+
+        private void CheckLandingEvent()
+        {
+            if (IsGrounded && !_previousGrounded)
+            {
+                LandingEvent?.Invoke();
+            }
+            _previousGrounded = IsGrounded;
+        }
+
+
         private void LateUpdate()
         {
             _stateMachine.LateUpdate(Time.deltaTime);
@@ -283,6 +300,11 @@ namespace Gameplay.Klonoa
             _invincibleTimer = 0;
         }
 
+        private void OnStateChange()
+        {
+            StateChangeEvent?.Invoke();
+        }
+
         //Input Access Methods
         public void SetMoveDirection(Vector2 direction)
         {
@@ -292,19 +314,19 @@ namespace Gameplay.Klonoa
 
         public void StartJump()
         {
-            JumpEvent?.Invoke();
+            JumpInputEvent?.Invoke();
             _jumpKeep = true;
         }
 
         public void EndJump()
         {
             _jumpKeep = false;
-            JumpReleaseEvent?.Invoke();
+            JumpReleaseInputEvent?.Invoke();
         }
 
         public void StartAttack()
         {
-            AttackEvent?.Invoke();
+            AttackInputEvent?.Invoke();
         }
 
         public void StopAttack()

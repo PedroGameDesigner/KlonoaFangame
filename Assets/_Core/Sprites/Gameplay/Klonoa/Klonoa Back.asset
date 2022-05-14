@@ -16,10 +16,10 @@ MonoBehaviour:
   - _tag: Stand
     _index: 1
     _sprites:
-    - {fileID: -2130071400085548076, guid: 3e4b2ed2d26698b4d9325edf1cebba4a, type: 3}
-    - {fileID: 7256074184631407115, guid: 3e4b2ed2d26698b4d9325edf1cebba4a, type: 3}
-    - {fileID: -173815206786904283, guid: 3e4b2ed2d26698b4d9325edf1cebba4a, type: 3}
-    - {fileID: -3935408239339851708, guid: 3e4b2ed2d26698b4d9325edf1cebba4a, type: 3}
+    - {fileID: -169778995393626595, guid: 64aa56ef8cdeecb42af17b6b8c4d9842, type: 3}
+    - {fileID: -2195630369175558360, guid: 64aa56ef8cdeecb42af17b6b8c4d9842, type: 3}
+    - {fileID: 6078994364705568231, guid: 64aa56ef8cdeecb42af17b6b8c4d9842, type: 3}
+    - {fileID: 5434219220722059243, guid: 64aa56ef8cdeecb42af17b6b8c4d9842, type: 3}
   - _tag: Walk
     _index: 2
     _sprites:
