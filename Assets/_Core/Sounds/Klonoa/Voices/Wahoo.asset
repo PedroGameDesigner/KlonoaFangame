@@ -10,9 +10,9 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 704c8700a6e9f1a4cba5b7887ad22b12, type: 3}
-  m_Name: ThrowVoice
+  m_Name: Wahoo
   m_EditorClassIdentifier: 
-  _audioClip: {fileID: 8300000, guid: febd0d2e8b5c7b347ad080a460489228, type: 3}
+  _audioClip: {fileID: 8300000, guid: a907487606934a242a3b180b0e50ccd3, type: 3}
   _loop: 0
   _loopCount: 0
   _betweenLoopsTime: 0

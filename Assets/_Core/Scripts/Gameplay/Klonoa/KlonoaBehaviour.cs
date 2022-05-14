@@ -59,6 +59,7 @@ namespace Gameplay.Klonoa
         public bool IsFloating => _stateMachine.IsFloatState;
         public bool IsInDoubleJump => _stateMachine.IsDoubleJumpState;
         public bool IsInDamage => _stateMachine.IsDamageState;
+        public bool IsDead => _stateMachine.IsDeathState;
         public bool IsHolding => HoldedBall != null;
         public bool IsInvincible => _invincible;
         public bool CaptureProjectileThrowed => _projectile != null;

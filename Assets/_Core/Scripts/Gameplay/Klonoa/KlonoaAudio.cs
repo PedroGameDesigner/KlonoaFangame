@@ -23,33 +23,68 @@ namespace Gameplay.Klonoa
         [FoldoutGroup(CLIPS_GROUP), SerializeField] private SoundClip _doubleJumpSound;
 
         [FoldoutGroup(CLIPS_GROUP), SerializeField] private SoundClip _shotCaptureSound;
-        [FoldoutGroup(CLIPS_GROUP), SerializeField] private SoundClip _captureeSound;
+        [FoldoutGroup(CLIPS_GROUP), SerializeField] private SoundClip _capturedSound;
         [FoldoutGroup(CLIPS_GROUP), SerializeField] private SoundClip _throwSound;
         [FoldoutGroup(CLIPS_GROUP), SerializeField] private SoundClip _throwVoiceSound;
 
         [FoldoutGroup(CLIPS_GROUP), SerializeField] private SoundClip _damageSound;
         [FoldoutGroup(CLIPS_GROUP), SerializeField] private SoundClip _deathSound;
-        
+
+        private SoundSource _forStateSource;
+        private bool _inDoubleJump = false;
+
         private void Awake()
         {
             _behaviour.JumpEvent += () => PlaySound(_jumpSound);
             _behaviour.LandingEvent += () => PlaySound(_landingSound);
+            _behaviour.CaptureProjectileEvent += () => PlaySound(_shotCaptureSound);
+            _behaviour.BeginHoldingEvent += () => PlaySound(_capturedSound);
+            _behaviour.SideThrowEnemyEvent += PlayThrowSounds;
             _behaviour.StateChangeEvent += OnStateChange;
         }
 
         private void OnStateChange()
         {
-            StopSound();
+            StopForStateSound();
+
             if (_behaviour.IsFloating)
             {
-                PlaySound(_floatSound);
+                PlaySoundForState(_floatSound);
+            }
+            
+            if (_behaviour.IsInDoubleJump)
+            {
+                PlaySound(_jumpSound);
+                _inDoubleJump = true;
+            }
+
+            if (_inDoubleJump)
+            {
+                _inDoubleJump = false;
+                PlaySound(_doubleJumpSound);
+            }
+
+            if (_behaviour.IsInDamage)
+            {
+                PlaySound(_damageSound);
+            }
+
+            if (_behaviour.IsDead)
+            {
+                PlaySound(_deathSound);
             }
         }
 
         private void PlaySound(SoundClip clip)
         {
-            Debug.Log("Play Sound: " + clip.name);
             GetOldestSoundSource().PlaySound(clip);
+        }
+
+        private void PlaySoundForState(SoundClip clip)
+        {
+            if (_forStateSource != null) _forStateSource.Stop();
+            _forStateSource = GetOldestSoundSource();
+            _forStateSource.PlaySound(clip);
         }
 
         private void StopSound()
@@ -58,6 +93,21 @@ namespace Gameplay.Klonoa
             {
                 source.Stop();
             }
+        }
+
+        private void StopForStateSound()
+        {
+            if (_forStateSource != null)
+            {
+                _forStateSource.Stop();
+                _forStateSource = null;
+            }
+        }
+
+        private void PlayThrowSounds()
+        {
+            PlaySound(_throwSound);
+            PlaySound(_throwVoiceSound);
         }
 
         private SoundSource GetOldestSoundSource()
@@ -73,7 +123,6 @@ namespace Gameplay.Klonoa
                 }
             }
 
-            Debug.Log("Source is: " + _soundSources[selectedIndex].name);
             return _soundSources[selectedIndex];
         }
     }

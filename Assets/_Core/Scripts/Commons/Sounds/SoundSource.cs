@@ -51,11 +51,13 @@ namespace Sounds
 
         public void Stop()
         {
+            _audioSource.Stop();
             FinishSound();
         }
 
         private void StartSound()
         {
+            Debug.Log(transform.name + " Play: " + _instanceClip.Clip.name);
             if (_instanceClip == null) return;
             _audioSource.PlayOneShot(_instanceClip.Clip);
         }
@@ -63,7 +65,6 @@ namespace Sounds
         private void FinishSound()
         {
             if (_instanceClip == null) return;
-            _audioSource.Stop();
             _instanceClip = null;
         }
 
@@ -77,7 +78,7 @@ namespace Sounds
             public AudioClip Clip => _soundClip.AudioClip;
             public int LoopCount => _loopCounter;
             private bool FirstLoop => _loopCounter < 1;
-            private bool ExceedLoopCount => _loopCounter > _soundClip.LoopCount;
+            private bool ExceedLoopCount => _loopCounter >= _soundClip.LoopCount;
             public bool Finished => !_soundClip.InfiniteLoops &&
                                         ((!_soundClip.Loop && !FirstLoop) ||
                                         ExceedLoopCount);

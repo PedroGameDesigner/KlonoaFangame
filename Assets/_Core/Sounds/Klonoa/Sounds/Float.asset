@@ -15,4 +15,4 @@ MonoBehaviour:
   _audioClip: {fileID: 8300000, guid: 4cdc1da3e53d56546af53e34139c9a63, type: 3}
   _loop: 1
   _loopCount: 2
-  _betweenLoopsTime: 0.1
+  _betweenLoopsTime: 0.22
