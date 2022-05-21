@@ -10,6 +10,7 @@ namespace Gameplay.Enemies.Ball
         private readonly float _travelTime;
 
         private float _traveledTime = 0;
+        private bool _destroyed = false;
 
         public FreeFlyState(EnemyBall behaviour, float travelTime) : base(behaviour) 
         {
@@ -30,9 +31,10 @@ namespace Gameplay.Enemies.Ball
         {
             _traveledTime += _behaviour.FlySpeed * deltaTime;
 
-            if (_traveledTime >= _travelTime)
+            if (_traveledTime >= _travelTime && !_destroyed)
             {
                 _behaviour.DestroySelf();
+                _destroyed = true;
             }
         }
 

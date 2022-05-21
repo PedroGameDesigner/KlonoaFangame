@@ -47,8 +47,6 @@ namespace Gameplay.Enemies.Ball
 
         public override void DrawGizmos()
         {
-            Gizmos.color = Color.blue;
-            Gizmos.DrawWireSphere(_behaviour.Position, 0.5f);
         }
     }
 }

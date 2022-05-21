@@ -34,15 +34,15 @@ MonoBehaviour:
   - _tag: Jump
     _index: 3
     _sprites:
-    - {fileID: -203622458290143596, guid: 812f531cecfe02f458f884ec5688e526, type: 3}
-    - {fileID: 8215833830227591986, guid: 812f531cecfe02f458f884ec5688e526, type: 3}
-    - {fileID: 2053069143635742097, guid: 812f531cecfe02f458f884ec5688e526, type: 3}
-    - {fileID: -8604962710550124927, guid: 812f531cecfe02f458f884ec5688e526, type: 3}
+    - {fileID: -6932154913523044475, guid: 9ec0e4883527523429b1da89ee1faf60, type: 3}
+    - {fileID: -8125061782027231888, guid: 9ec0e4883527523429b1da89ee1faf60, type: 3}
+    - {fileID: 4955388227529080375, guid: 9ec0e4883527523429b1da89ee1faf60, type: 3}
+    - {fileID: 3936668636593052082, guid: 9ec0e4883527523429b1da89ee1faf60, type: 3}
   - _tag: Fall
     _index: 4
     _sprites:
-    - {fileID: 847348518753714629, guid: ca5e19e6a3814c342a9f0763c9e70602, type: 3}
-    - {fileID: -77223681845550592, guid: ca5e19e6a3814c342a9f0763c9e70602, type: 3}
+    - {fileID: 1133787144327079742, guid: 0984cfb553ee7944f9eabbff5f61ebe9, type: 3}
+    - {fileID: 4053128716931267959, guid: 0984cfb553ee7944f9eabbff5f61ebe9, type: 3}
   - _tag: Float
     _index: 5
     _sprites:
@@ -60,10 +60,9 @@ MonoBehaviour:
   - _tag: Hold Stand
     _index: 11
     _sprites:
-    - {fileID: 7568748376320047736, guid: 78acc19c07fd936479a4c66a3d9cadc1, type: 3}
-    - {fileID: 8978400716178361601, guid: 78acc19c07fd936479a4c66a3d9cadc1, type: 3}
-    - {fileID: 2015007135187353420, guid: 78acc19c07fd936479a4c66a3d9cadc1, type: 3}
-    - {fileID: 8007581827060279310, guid: 78acc19c07fd936479a4c66a3d9cadc1, type: 3}
+    - {fileID: 6865055470819977749, guid: 8920ee31aac544b4f8e399dab176e5ae, type: 3}
+    - {fileID: -3137216726699722596, guid: 8920ee31aac544b4f8e399dab176e5ae, type: 3}
+    - {fileID: -676230143238042108, guid: 8920ee31aac544b4f8e399dab176e5ae, type: 3}
   - _tag: Hold Walk
     _index: 12
     _sprites:
@@ -78,15 +77,15 @@ MonoBehaviour:
   - _tag: Hold Jump
     _index: 13
     _sprites:
-    - {fileID: -4147493191662192194, guid: 32d63946811493941aa956504da81abd, type: 3}
-    - {fileID: -55516564223536284, guid: 32d63946811493941aa956504da81abd, type: 3}
-    - {fileID: -3992795232714687344, guid: 32d63946811493941aa956504da81abd, type: 3}
-    - {fileID: -2978603390507588944, guid: 32d63946811493941aa956504da81abd, type: 3}
+    - {fileID: 5303324368652787103, guid: b017b2a644623224184abde1712b517f, type: 3}
+    - {fileID: -5622993676553380245, guid: b017b2a644623224184abde1712b517f, type: 3}
+    - {fileID: -6082040609341126205, guid: b017b2a644623224184abde1712b517f, type: 3}
+    - {fileID: 2561967226439530042, guid: b017b2a644623224184abde1712b517f, type: 3}
   - _tag: Hold Fall
     _index: 14
     _sprites:
-    - {fileID: -923594275442121997, guid: dbea32831edca63458d7a325d72d58e5, type: 3}
-    - {fileID: 5693350907217701532, guid: dbea32831edca63458d7a325d72d58e5, type: 3}
+    - {fileID: -56990981700402358, guid: d59998a57417783419212cec75f7cf58, type: 3}
+    - {fileID: -4629211827072749907, guid: d59998a57417783419212cec75f7cf58, type: 3}
   - _tag: Double Jump
     _index: 15
     _sprites:

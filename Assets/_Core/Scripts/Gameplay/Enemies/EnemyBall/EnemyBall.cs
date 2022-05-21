@@ -22,6 +22,7 @@ namespace Gameplay.Enemies.Ball
         [SerializeField] private float _flySpeed = 4;
         [SerializeField] private float _followPathTime = 1.5f;
         [SerializeField] private float _freeFlyTime = 6;
+        [SerializeField] private float _destroyDelay = 0.25f;
         [SerializeField] private float _maxGroundDistance;
         [SerializeField] private float _groundCheckLength;
 
@@ -84,6 +85,7 @@ namespace Gameplay.Enemies.Ball
         private float RayLength => BaseSize.y + RAY_EXTRA_LENGTH;
         private Vector3 ColliderCenter => transform.position + _collider.center;
 
+        public event Action BounceEvent;
         public event Action DestroyEvent;
         public event Action StartTransitionEvent;
         public event Action TransitionFinishEvent;
@@ -249,10 +251,14 @@ namespace Gameplay.Enemies.Ball
         
         public void DestroySelf()
         {
+            if (!_collider.enabled) return;
             Debug.Log("EnemyBall Destroy Self");
             DestroyEvent?.Invoke();
             transform.parent = null;
-            Destroy(gameObject);
+            _collider.enabled = false;
+            SetVelocity(0);
+            CollisionEnabled = false;
+            Destroy(gameObject, _destroyDelay);
         }
 
         private void OnDrawGizmos()

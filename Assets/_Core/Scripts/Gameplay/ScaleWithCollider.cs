@@ -30,6 +30,7 @@ namespace Gameplay
                     _collider.size.z / _baseSize.z + deform);
             }
             _proxySize = _collider.bounds.size;
+            gameObject.SetActive(_collider.enabled);
         }
     }
 }
