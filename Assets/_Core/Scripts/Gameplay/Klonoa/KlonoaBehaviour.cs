@@ -62,6 +62,7 @@ namespace Gameplay.Klonoa
         public bool IsDead => _stateMachine.IsDeathState;
         public bool IsHolding => HoldedBall != null;
         public bool IsInvincible => _invincible;
+        public bool IsInNormalState => _stateMachine.IsNormalState;
         public bool CaptureProjectileThrowed => _projectile != null;
         public Vector3 EffectiveSpeed => _mover.Velocity;
         public FaceDirection Facing { get; private set; } = FaceDirection.Right;

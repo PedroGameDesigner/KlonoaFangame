@@ -1,5 +1,6 @@
 using Sirenix.OdinInspector;
 using Sounds;
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -36,11 +37,19 @@ namespace Gameplay.Klonoa
         private void Awake()
         {
             _behaviour.JumpEvent += () => PlaySound(_jumpSound);
-            _behaviour.LandingEvent += () => PlaySound(_landingSound);
+            _behaviour.LandingEvent += PlayLandingSound;
             _behaviour.CaptureProjectileEvent += () => PlaySound(_shotCaptureSound);
             _behaviour.BeginHoldingEvent += () => PlaySound(_capturedSound);
             _behaviour.SideThrowEnemyEvent += PlayThrowSounds;
             _behaviour.StateChangeEvent += OnStateChange;
+        }
+
+        private void PlayLandingSound()
+        {
+            if (_behaviour.IsInNormalState) 
+            {
+                PlaySound(_landingSound);
+            }
         }
 
         private void OnStateChange()

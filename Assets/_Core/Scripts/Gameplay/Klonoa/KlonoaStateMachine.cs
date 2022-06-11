@@ -19,6 +19,7 @@ namespace Gameplay.Klonoa
         public bool IsDoubleJumpState => _currentState == _doubleJumpState;
         public bool IsDamageState => _currentState == _damageState;
         public bool IsDeathState => _currentState == _deathState;
+        public bool IsNormalState => _currentState == _normalState || _currentState == _holdingState;
 
         public KlonoaStateMachine(KlonoaBehaviour behaviour) : base(behaviour) { }
 
