@@ -99,7 +99,7 @@ namespace Gameplay.Projectile
             if (_collisionMask.CheckLayer(collision.gameObject.layer))
             {
                 EnemyBehaviour enemy = collision.gameObject.GetComponent<EnemyBehaviour>();
-                enemy.Kill();
+                enemy.Capture();
                 if (enemy.IsCapturable)
                 {
                     EnemyCapturedEvent?.Invoke(enemy);

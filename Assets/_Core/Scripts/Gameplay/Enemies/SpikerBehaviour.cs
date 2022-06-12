@@ -13,5 +13,10 @@ namespace Gameplay.Enemies
         {
             // Method intentionally left empty.
         }
+
+        public override void Capture()
+        {
+            // Method intentionally left empty.
+        }
     }
 }

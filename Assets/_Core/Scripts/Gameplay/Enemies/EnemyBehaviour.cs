@@ -12,12 +12,27 @@ namespace Gameplay.Enemies
 
         [SerializeField] protected EnemyBall _ballPrefab = null;
 
+        protected Collider _collider;
+
         public abstract bool IsCapturable { get; }
         protected EnemyBall SpawnedBall { get; set; }
 
+        public event Action DeathEvent;
+
+        protected virtual void Awake()
+        {
+            _collider = GetComponent<Collider>();
+        }
+
         public virtual void Kill()
         {
-            gameObject.SetActive(false);
+            Enable(false);
+            DeathEvent?.Invoke();
+        }
+
+        public virtual void Capture()
+        {
+            Enable(false);
         }
 
         internal EnemyBall InstantiateBall(Transform holderTransform, Rigidbody holderRigidbody)
@@ -31,7 +46,13 @@ namespace Gameplay.Enemies
         protected void OnBallDestroyed()
         {
             SpawnedBall = null;
-            gameObject.SetActive(true); 
+            Enable(true); 
+        }
+
+        protected void Enable(bool value)
+        {
+            enabled = value;
+            _collider.enabled = value;
         }
     }
 }
