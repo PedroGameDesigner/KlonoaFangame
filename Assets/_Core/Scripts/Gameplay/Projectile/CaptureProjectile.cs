@@ -11,12 +11,14 @@ namespace Gameplay.Projectile
         [SerializeField] private float _reach;
         [SerializeField] private float _advanceTime;
         [SerializeField] private float _returnTime;
+        [SerializeField] private float _waitFinalTime;
 
         private Vector3 _direction;
         private float _extraSpeed;
         private Transform _origin;
         private float _timer;
         private Vector3 _movingFinal;
+        private Collider _collider;
 
         public bool Moving { get; private set; }
         public bool Returning { get; private set; }
@@ -25,6 +27,11 @@ namespace Gameplay.Projectile
         public event Action MovingFinishEvent;
         public event Action ReturnFinishEvent;
         public event Action<EnemyBehaviour> EnemyCapturedEvent;
+
+        private void Awake()
+        {
+            _collider = GetComponent<Collider>();
+        }
 
         public void StartMovement(Vector3 direction, float extraSpeed, Transform origin)
         {
@@ -82,7 +89,9 @@ namespace Gameplay.Projectile
 
         private void Finish()
         {
-            Destroy(gameObject);
+            enabled = false;
+            _collider.enabled = false;
+            Destroy(gameObject, _waitFinalTime);
         }
 
         private void OnCollisionEnter(Collision collision)
