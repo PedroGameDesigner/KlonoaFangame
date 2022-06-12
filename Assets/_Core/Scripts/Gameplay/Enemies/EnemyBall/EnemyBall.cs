@@ -57,6 +57,7 @@ namespace Gameplay.Enemies.Ball
         public float FreeFlyTime => _freeFlyTime;
         public float FullFlyTime => _followPathTime + _freeFlyTime;
         public float FlySpeed => _flySpeed;
+        public float DestroyDelay => _destroyDelay;
         public CollisionType SelectedCollisionType { get; set; } = CollisionType.None;
         public LayerMask CollisionMask
         {
@@ -76,6 +77,7 @@ namespace Gameplay.Enemies.Ball
             }
         }
 
+        public Collider Collider => _collider;
         private Vector3 Velocity => FollowPath ? _mover.Velocity : _velocity;
         private Vector3 InnerColliderSize => _collider.size - Vector3.one * SKIN_SIZE;
         private Vector3 RaysOrigin => ColliderCenter + Vector3.down * _collider.size.y * 0.5f +
@@ -145,7 +147,7 @@ namespace Gameplay.Enemies.Ball
 
         private void DetectCollision()
         {
-            if (!CollisionEnabled) return;
+            if (!CollisionEnabled || !_collider.enabled) return;
 
             _speed = Position - _lastPosition;
             Vector3 speed;
@@ -177,11 +179,11 @@ namespace Gameplay.Enemies.Ball
         {
             if (FollowPath)
             {
-                _mover.Velocity = _flyDirection * _flySpeed;
+                _mover.Velocity = _flyDirection * speed;
             }
             else
             {
-                _velocity = _flyDirection * _flySpeed;
+                _velocity = _flyDirection * speed;
             }
         }
 
@@ -228,7 +230,7 @@ namespace Gameplay.Enemies.Ball
             }
             return collisionDistance - RAY_EXTRA_LENGTH;
         }
-
+        
         private Vector3 GenerateRayOrigin(int xIndex, int zIndex)
         {
             return RaysOrigin + RotateVector(
@@ -251,14 +253,7 @@ namespace Gameplay.Enemies.Ball
         
         public void DestroySelf()
         {
-            if (!_collider.enabled) return;
-            Debug.Log("EnemyBall Destroy Self");
             DestroyEvent?.Invoke();
-            transform.parent = null;
-            _collider.enabled = false;
-            SetVelocity(0);
-            CollisionEnabled = false;
-            Destroy(gameObject, _destroyDelay);
         }
 
         private void OnDrawGizmos()

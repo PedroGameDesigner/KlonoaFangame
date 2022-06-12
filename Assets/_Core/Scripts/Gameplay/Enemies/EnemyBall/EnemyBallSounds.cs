@@ -8,7 +8,6 @@ namespace Gameplay.Enemies.Ball
 {
     public class EnemyBallSounds : MonoBehaviour
     {
-
         //Constants
         private const string REFERENCES_GROUP = "References";
         private const string CLIPS_GROUP = "Audio Clips";
@@ -19,7 +18,6 @@ namespace Gameplay.Enemies.Ball
 
         [FoldoutGroup(CLIPS_GROUP), SerializeField] private SoundClip _destroySound;
         [FoldoutGroup(CLIPS_GROUP), SerializeField] private SoundClip _bounceSound;
-
 
         private void Awake()
         {
