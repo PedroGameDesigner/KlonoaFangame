@@ -1,0 +1,8 @@
+User manual
+http://wiki.azuritetechs.com:8090/display/CGF
+
+API reference
+http://chloroplastgames.com/wp-content/documentation/cgf/
+
+Contact us to suggest new features
+info@chloroplastgames.com
