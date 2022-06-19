@@ -5,7 +5,7 @@ using UnityEngine;
 
 namespace Gameplay.Rails
 {
-    public class TranslatorOnRails : MonoBehaviour
+    public class TranslatorOnRails : MonoBehaviour, IMovile
     {
         [SerializeField] private RailBehaviour railBehaviour;
         [SerializeField] private Vector3 velocity;

@@ -4908,6 +4908,7 @@ GameObject:
   - component: {fileID: 660523593332564575}
   - component: {fileID: 9104247304211681217}
   - component: {fileID: 5594316189465431086}
+  - component: {fileID: 6153232097470841094}
   m_Layer: 10
   m_Name: Sprite
   m_TagString: Untagged
@@ -5007,3 +5008,18 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _referenceBehaviour: {fileID: 5373462825906385168}
   _behaviourToDisable: {fileID: 660523593332564575}
+--- !u!114 &6153232097470841094
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4544120101785900625}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 32b77867250234b4c81541e4df4884e0, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _velocityReference: {fileID: 5373462825906385168}
+  _maxVelocity: 5
+  _scaleRange: {x: 0.8, y: 1.5}
