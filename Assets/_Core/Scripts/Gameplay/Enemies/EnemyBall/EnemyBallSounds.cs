@@ -21,8 +21,16 @@ namespace Gameplay.Enemies.Ball
 
         private void Awake()
         {
-            _behaviour.BounceEvent += () => _soundSource.PlaySound(_bounceSound);
+            _behaviour.GrowStateChange += OnGrowStateChange;
             _behaviour.DestroyEvent += () => _soundSource.PlaySound(_destroySound);
+        }
+
+        private void OnGrowStateChange(GrowState state)
+        {
+            if (state == GrowState.Reduce && !_soundSource.IsPlaying)
+            {
+                _soundSource.PlaySound(_bounceSound);
+            }
         }
     }
 }

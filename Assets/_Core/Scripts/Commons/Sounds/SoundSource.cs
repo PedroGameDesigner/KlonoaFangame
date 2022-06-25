@@ -13,6 +13,7 @@ namespace Sounds
         private float _totalTime;
 
         public float TotalTime => _totalTime;
+        public bool IsPlaying => _audioSource.isPlaying;
 
         private void Awake()
         {

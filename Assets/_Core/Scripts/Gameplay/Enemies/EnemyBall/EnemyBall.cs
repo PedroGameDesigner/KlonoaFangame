@@ -23,6 +23,7 @@ namespace Gameplay.Enemies.Ball
         [SerializeField] private float _followPathTime = 1.5f;
         [SerializeField] private float _freeFlyTime = 6;
         [SerializeField] private float _destroyDelay = 0.25f;
+        [SerializeField] private float _growStateInertia = 0.1f;
         [SerializeField] private float _maxGroundDistance;
         [SerializeField] private float _groundCheckLength;
 
@@ -35,6 +36,8 @@ namespace Gameplay.Enemies.Ball
         protected Vector3 _flyDirection;
         protected Vector3 _velocity;
         protected CollisionData _collisionData;
+        protected GrowState _growState = GrowState.Inert;
+        protected float _growStateTimer;
 
         public Vector3 Position => transform.position;
         public Vector3 ColliderSize => _collider.size;
@@ -87,7 +90,7 @@ namespace Gameplay.Enemies.Ball
         private float RayLength => BaseSize.y + RAY_EXTRA_LENGTH;
         private Vector3 ColliderCenter => transform.position + _collider.center;
 
-        public event Action BounceEvent;
+        public event Action<GrowState> GrowStateChange;
         public event Action DestroyEvent;
         public event Action StartTransitionEvent;
         public event Action TransitionFinishEvent;
@@ -110,6 +113,7 @@ namespace Gameplay.Enemies.Ball
             _collisionData.CheckGround(transform);
             UpdateSlopeClimb(Time.fixedDeltaTime);
             UpdateFreeMovement();
+            _growStateTimer += Time.fixedDeltaTime;
         }
 
         private void UpdateFreeMovement()
@@ -246,11 +250,36 @@ namespace Gameplay.Enemies.Ball
         public void ChangeColliderHeight(float newHeight)
         {
             Vector3 size = ColliderSize;
+            float previousSize = size.y;
             _collider.center = Vector3.down * (BaseSize.y - newHeight) * 0.5f;
             size.y = newHeight;
             _collider.size = size;
+
+            if (previousSize > _collider.size.y)
+            {
+                ChangeGrowState(GrowState.Reduce);
+            }
+            else if (previousSize < _collider.size.y)
+            {
+                ChangeGrowState(GrowState.Grow);
+            }
+            else
+            {
+                ChangeGrowState(GrowState.Inert);
+            }
         }
-        
+
+        private void ChangeGrowState(GrowState newState)
+        {
+            if (_growState != newState &&
+                (newState != GrowState.Inert && _growStateTimer > _growStateInertia))
+            {
+                _growState = newState;
+                GrowStateChange?.Invoke(_growState);
+                _growStateTimer = 0;
+            }
+        }
+
         public void DestroySelf()
         {
             DestroyEvent?.Invoke();
@@ -282,5 +311,12 @@ namespace Gameplay.Enemies.Ball
             Ground,
             Enemies
         }
+    }
+
+    public enum GrowState
+    {
+        Inert,
+        Grow,
+        Reduce
     }
 }

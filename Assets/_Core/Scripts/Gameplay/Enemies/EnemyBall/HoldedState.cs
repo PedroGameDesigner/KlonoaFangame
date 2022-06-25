@@ -60,7 +60,7 @@ namespace Gameplay.Enemies.Ball
             float regrowAmount = Mathf.Min(sizeDiference, _behaviour.RegrowSpeed * Time.deltaTime);
             float actualHeight = size.y + regrowAmount;
             _behaviour.ChangeColliderHeight(actualHeight);
-        }        
+        }
 
         private void OnThrown(Vector3 direction)
         {
