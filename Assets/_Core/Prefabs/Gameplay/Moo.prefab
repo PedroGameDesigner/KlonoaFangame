@@ -359,26 +359,10 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 68933782417069271, guid: ed5945340c7785941b46e99a5ecc760f, type: 3}
       propertyPath: m_LocalPosition.y
-      value: 0.5
+      value: 0.03
       objectReference: {fileID: 0}
     - target: {fileID: 68933782417069271, guid: ed5945340c7785941b46e99a5ecc760f, type: 3}
       propertyPath: m_LocalPosition.z
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 68933782417069271, guid: ed5945340c7785941b46e99a5ecc760f, type: 3}
-      propertyPath: m_LocalRotation.w
-      value: 0.7071068
-      objectReference: {fileID: 0}
-    - target: {fileID: 68933782417069271, guid: ed5945340c7785941b46e99a5ecc760f, type: 3}
-      propertyPath: m_LocalRotation.x
-      value: 0.7071068
-      objectReference: {fileID: 0}
-    - target: {fileID: 68933782417069271, guid: ed5945340c7785941b46e99a5ecc760f, type: 3}
-      propertyPath: m_LocalRotation.y
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 68933782417069271, guid: ed5945340c7785941b46e99a5ecc760f, type: 3}
-      propertyPath: m_LocalRotation.z
       value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 68933782417069271, guid: ed5945340c7785941b46e99a5ecc760f, type: 3}
@@ -395,11 +379,19 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 1198161245600211103, guid: ed5945340c7785941b46e99a5ecc760f, type: 3}
       propertyPath: m_AspectRatio
-      value: 1.13
+      value: 0.75
       objectReference: {fileID: 0}
     - target: {fileID: 1198161245600211103, guid: ed5945340c7785941b46e99a5ecc760f, type: 3}
       propertyPath: m_OrthographicSize
-      value: 0.35
+      value: 0.39200002
+      objectReference: {fileID: 0}
+    - target: {fileID: 4276787999123193625, guid: ed5945340c7785941b46e99a5ecc760f, type: 3}
+      propertyPath: _baseSize
+      value: 0.4
+      objectReference: {fileID: 0}
+    - target: {fileID: 4276787999123193625, guid: ed5945340c7785941b46e99a5ecc760f, type: 3}
+      propertyPath: _maxDistance
+      value: 1.5
       objectReference: {fileID: 0}
     - target: {fileID: 7023459677983326558, guid: ed5945340c7785941b46e99a5ecc760f, type: 3}
       propertyPath: m_Name

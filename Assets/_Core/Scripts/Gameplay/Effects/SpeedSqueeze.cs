@@ -3,7 +3,8 @@ using System.Collections.Generic;
 using UnityEngine;
 using Sirenix.OdinInspector;
 
-namespace Gameplay.Effects {
+namespace Gameplay.Effects 
+{
     public class SpeedSqueeze : MonoBehaviour
     {
         [ValidateInput("MustBeIMovile", "TMust be IMovile.", InfoMessageType.Error)]
