@@ -39774,6 +39774,8 @@ MonoBehaviour:
   _definition: {fileID: 11400000, guid: 680bdc05022a86a4793778bd2179b41a, type: 2}
   _maxGroundDistance: 0.5
   _groundCheckLength: 0.05
+  _maxCeilingDistance: 0.4
+  _ceilingCheckLength: 0.05
   _groundLayer:
     serializedVersion: 2
     m_Bits: 128

@@ -34,7 +34,8 @@ namespace Gameplay.Klonoa
         public override void FixedUpdate(float deltaTime)
         {            
             UpdateMove(deltaTime);
-            UpdateGravity( deltaTime);
+            UpdateGravity(deltaTime);
+            UpdateCeiling(deltaTime);
         }
 
         protected void UpdateMove(float deltaTime)
@@ -62,6 +63,19 @@ namespace Gameplay.Klonoa
                 velocity.y -= Gravity * deltaTime;
 
             _mover.Velocity = velocity;
+        }
+
+        public void UpdateCeiling(float deltaTime)
+        {
+            if (_mover.Velocity.y <= 0) return;
+
+            if (_behaviour.CollisionData.TouchingCeiling)
+            {
+                Vector3 velocity = _mover.Velocity;
+                velocity.y = 0;
+                _mover.Velocity = velocity;
+            }
+
         }
 
         public override void LateUpdate(float deltaTime) { }

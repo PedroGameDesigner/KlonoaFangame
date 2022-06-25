@@ -38,6 +38,7 @@ namespace Gameplay.Klonoa
         {
             _behaviour.JumpEvent += () => PlaySound(_jumpSound);
             _behaviour.LandingEvent += PlayLandingSound;
+            _behaviour.TouchCeilingEvent += PlayCeilingHitEvent;
             _behaviour.CaptureProjectileEvent += () => PlaySound(_shotCaptureSound);
             _behaviour.BeginHoldingEvent += () => PlaySound(_capturedSound);
             _behaviour.SideThrowEnemyEvent += PlayThrowSounds;
@@ -49,6 +50,14 @@ namespace Gameplay.Klonoa
             if (_behaviour.IsInNormalState) 
             {
                 PlaySound(_landingSound);
+            }
+        }
+
+        private void PlayCeilingHitEvent()
+        {
+            if (_behaviour.IsInNormalState)
+            {
+                PlaySound(_hitCeilSound);
             }
         }
 

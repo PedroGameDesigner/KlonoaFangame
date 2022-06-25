@@ -14,6 +14,8 @@ namespace Gameplay.Klonoa
         [Space]
         [SerializeField] private float _maxGroundDistance = 0.5f;
         [SerializeField] private float _groundCheckLength = 0.05f;
+        [SerializeField] private float _maxCeilingDistance = 0.25f;
+        [SerializeField] private float _ceilingCheckLength = 0.05f;
         [SerializeField] private LayerMask _groundLayer;
         [SerializeField] private LayerMask _enemyLayer;
         [SerializeField] private string _enemyTag = "Enemy";
@@ -35,6 +37,7 @@ namespace Gameplay.Klonoa
         private float _jumpForce;
         private float _floatYSpeed;
         private bool _previousGrounded = false;
+        private bool _previousTouchingCeiling = false;
 
         KlonoaStateMachine _stateMachine;
         MoverOnRails _mover;
@@ -55,6 +58,7 @@ namespace Gameplay.Klonoa
         private Vector2 MoveDirection { set;  get; }
         public CollisionData CollisionData { get; private set; } 
         public bool IsGrounded => CollisionData.Grounded;
+        public bool IsTouchingCeiling => CollisionData.TouchingCeiling;
         public bool IsWalking => Mathf.Abs(EffectiveSpeed.z) > _minWalkSpeed && Mathf.Abs(MoveDirection.x) > 0;
         public bool IsFloating => _stateMachine.IsFloatState;
         public bool IsInDoubleJump => _stateMachine.IsDoubleJumpState;
@@ -72,6 +76,7 @@ namespace Gameplay.Klonoa
         public event Action StateChangeEvent;
         public event Action JumpEvent;
         public event Action LandingEvent;
+        public event Action TouchCeilingEvent;
         public event Action CaptureProjectileEvent;
         public event Action BeginHoldingEvent;
         public event Action EndHoldingEvent;
@@ -94,8 +99,9 @@ namespace Gameplay.Klonoa
             _mover = GetComponent<MoverOnRails>();
             _rigidbody = GetComponent<Rigidbody>();
             _collider = GetComponent<CapsuleCollider>();
-            CollisionData = new CollisionData(_maxGroundDistance, _groundCheckLength, _groundLayer);
-            _health = _definition.MaxHealth;
+            CollisionData = new CollisionData(_maxGroundDistance, _groundCheckLength, 
+                _maxCeilingDistance, _ceilingCheckLength, _groundLayer);
+            _health = _definition.MaxHealth;                                         
         }
         
         private void Update()
@@ -125,6 +131,7 @@ namespace Gameplay.Klonoa
             velocity.x = -_mover.Position.x * 5f;
             _mover.Velocity = velocity;
             CollisionData.CheckGround(transform);
+            CollisionData.CheckCeiling(transform);
 
             _stateMachine.FixedUpdate(deltaTime);
             if (_jumpKeep)
@@ -134,6 +141,7 @@ namespace Gameplay.Klonoa
             UpdateFacing();
             CheckEnemyCollision(deltaTime);
             CheckLandingEvent();
+            CheckCeilingEvent();
             _jumpActivated = false;
         }
 
@@ -198,6 +206,14 @@ namespace Gameplay.Klonoa
             _previousGrounded = IsGrounded;
         }
 
+        private void CheckCeilingEvent()
+        {
+            if (IsTouchingCeiling && !_previousTouchingCeiling)
+            {
+                TouchCeilingEvent?.Invoke();
+            }
+            _previousTouchingCeiling = IsTouchingCeiling;
+        }
 
         private void LateUpdate()
         {

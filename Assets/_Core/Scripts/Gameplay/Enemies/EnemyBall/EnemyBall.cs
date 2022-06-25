@@ -97,7 +97,7 @@ namespace Gameplay.Enemies.Ball
         {
             _collider = GetComponent<BoxCollider>();
             _mover = GetComponent<TranslatorOnRails>();
-            _collisionData = new CollisionData(_maxGroundDistance, _groundCheckLength, _groundLayer);
+            _collisionData = new CollisionData(_maxGroundDistance, _groundCheckLength, 0, 0, _groundLayer);
 
             BaseSize = _collider.size;
             RegrowSpeed = BaseSize.y / _fullRegrowTime;

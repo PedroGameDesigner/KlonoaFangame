@@ -8,17 +8,26 @@ namespace Gameplay.Klonoa
     public class CollisionData
     {
         private float _groundCheckLength;
+        private float _ceilingCheckLength;
         private LayerMask _layer;
 
         private float? _groundDistance;
-        public bool Grounded => _groundDistance != null;
-        public float MaxGroundDistance { get; private set; }
-        public float GroundDistance => _groundDistance.HasValue ? _groundDistance.Value : MaxGroundDistance;
+        private float? _ceilingDistance;
 
-        public CollisionData(float maxGroundDistance, float groundCheckLength, LayerMask layer)
+        public bool Grounded => _groundDistance != null;
+        public bool TouchingCeiling => _ceilingDistance != null;
+
+        public float MaxGroundDistance { get; private set; }
+        public float MaxCeilingDistance { get; private set; }
+        public float GroundDistance => _groundDistance.HasValue ? _groundDistance.Value : MaxGroundDistance;
+        public float CeilingDistance => _ceilingDistance.HasValue ? _ceilingDistance.Value : MaxCeilingDistance;
+
+        public CollisionData(float maxGroundDistance, float groundCheckLength, float maxCeilingDistance, float ceilingCheckLength, LayerMask layer)
         {
             MaxGroundDistance = maxGroundDistance;
+            MaxCeilingDistance = maxCeilingDistance;
             _groundCheckLength = groundCheckLength;
+            _ceilingCheckLength = ceilingCheckLength;
             _layer = layer;
         }
 
@@ -33,6 +42,20 @@ namespace Gameplay.Klonoa
             else
             {
                 _groundDistance = null;
+            }
+        }
+
+        public void CheckCeiling(Transform transform)
+        {
+            RaycastHit info;
+            var hit = Physics.Raycast(transform.position, transform.up, out info, MaxCeilingDistance + _ceilingCheckLength, _layer);
+            if (hit)
+            {
+                _ceilingDistance = info.distance;
+            }
+            else
+            {
+                _ceilingDistance = null;
             }
         }
     }
