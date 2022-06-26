@@ -20,6 +20,7 @@ namespace Gameplay.Klonoa
         [SerializeField] private LayerMask _enemyLayer;
         [SerializeField] private string _enemyTag = "Enemy";
         [SerializeField] private string _deathPlaneTag = "DeathPlane";
+        [SerializeField] private float _jumpTimeMarging = 0.15f;
         [Space]
         [SerializeField] private float _minWalkSpeed = 0.1f;
         [Space]
@@ -49,6 +50,7 @@ namespace Gameplay.Klonoa
         RaycastHit[] _hits = new RaycastHit[10];
         float resultsCount;
         int _health;
+        private float _airTime = 0;
         Vector3 point1;
         Vector3 point2;
         Vector3 checkDirection;
@@ -142,19 +144,33 @@ namespace Gameplay.Klonoa
             CheckEnemyCollision(deltaTime);
             CheckLandingEvent();
             CheckCeilingEvent();
+            UpdateAirTime(deltaTime);
             _jumpActivated = false;
         }
 
         private void JumpAction(float deltaTime)
         {
-            if ((IsGrounded || _ignoreGround ) && _jumpActivated)
+            if (CanJump() && _jumpActivated)
             {
                 Vector3 velocity = _mover.Velocity;
                 velocity.y = _jumpForce + Mathf.Max(0, (_maxGroundDistance - CollisionData.GroundDistance) / deltaTime);
-                Debug.Log("Klonoa: JUMP FORCE: " + velocity.y);
+                Debug.Log("Jump.JumpForce: " + velocity.y);
                 _mover.Velocity = velocity;
+                _airTime += _jumpTimeMarging * 1.1f;
                 JumpEvent?.Invoke();
             }
+        }
+
+        public bool CanJump()
+        {
+            Debug.LogFormat("Jump.CanJump: {0}, {1}, ({2}, {3} <= {4})",
+                _ignoreGround,
+                IsGrounded,
+                _mover.Velocity.y <= 0,
+                _airTime, _jumpTimeMarging);
+
+            return (_ignoreGround || IsGrounded || 
+                (_mover.Velocity.y <= 0 && _airTime <= _jumpTimeMarging));
         }
 
         private void UpdateFacing()
@@ -201,6 +217,7 @@ namespace Gameplay.Klonoa
         {
             if (IsGrounded && !_previousGrounded)
             {
+                _airTime = 0;
                 LandingEvent?.Invoke();
             }
             _previousGrounded = IsGrounded;
@@ -213,6 +230,14 @@ namespace Gameplay.Klonoa
                 TouchCeilingEvent?.Invoke();
             }
             _previousTouchingCeiling = IsTouchingCeiling;
+        }
+
+        private void UpdateAirTime(float deltaTime)
+        {
+            if (!IsGrounded)
+            {
+                _airTime += deltaTime;
+            }
         }
 
         private void LateUpdate()

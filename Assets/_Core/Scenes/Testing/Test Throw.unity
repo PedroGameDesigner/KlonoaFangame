@@ -2852,10 +2852,6 @@ PrefabInstance:
       propertyPath: railBehaviour
       value: 
       objectReference: {fileID: 0}
-    - target: {fileID: 9048982795958330331, guid: 7c9adb3bfb1539542bdd2a7d58e0e439, type: 3}
-      propertyPath: _maxCeilingDistance
-      value: 0.5
-      objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 7c9adb3bfb1539542bdd2a7d58e0e439, type: 3}
 --- !u!4 &664916784 stripped
