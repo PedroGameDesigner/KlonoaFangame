@@ -163,12 +163,6 @@ namespace Gameplay.Klonoa
 
         public bool CanJump()
         {
-            Debug.LogFormat("Jump.CanJump: {0}, {1}, ({2}, {3} <= {4})",
-                _ignoreGround,
-                IsGrounded,
-                _mover.Velocity.y <= 0,
-                _airTime, _jumpTimeMarging);
-
             return (_ignoreGround || IsGrounded || 
                 (_mover.Velocity.y <= 0 && _airTime <= _jumpTimeMarging));
         }
