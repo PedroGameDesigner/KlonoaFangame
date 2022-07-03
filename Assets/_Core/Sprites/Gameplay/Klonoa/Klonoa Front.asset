@@ -46,17 +46,17 @@ MonoBehaviour:
   - _tag: Float
     _index: 5
     _sprites:
-    - {fileID: -1431644173576647856, guid: b586c5061ea5a3b4c91a46b6bedf6950, type: 3}
-    - {fileID: 3687803307419564919, guid: b586c5061ea5a3b4c91a46b6bedf6950, type: 3}
-    - {fileID: 5260117911268827577, guid: b586c5061ea5a3b4c91a46b6bedf6950, type: 3}
-    - {fileID: -2819437441887553260, guid: b586c5061ea5a3b4c91a46b6bedf6950, type: 3}
+    - {fileID: -6021436941372033466, guid: 9f0dc8f0f0317d94294b0ba00c321a92, type: 3}
+    - {fileID: -4844179053038369162, guid: 9f0dc8f0f0317d94294b0ba00c321a92, type: 3}
+    - {fileID: 6583349600164452624, guid: 9f0dc8f0f0317d94294b0ba00c321a92, type: 3}
+    - {fileID: 5265699792503096670, guid: 9f0dc8f0f0317d94294b0ba00c321a92, type: 3}
   - _tag: Capture
     _index: 6
     _sprites:
-    - {fileID: -2130071400085548076, guid: a8c4f63eff897234e94ba1bc21a80fc0, type: 3}
-    - {fileID: 7256074184631407115, guid: a8c4f63eff897234e94ba1bc21a80fc0, type: 3}
-    - {fileID: -173815206786904283, guid: a8c4f63eff897234e94ba1bc21a80fc0, type: 3}
-    - {fileID: -3935408239339851708, guid: a8c4f63eff897234e94ba1bc21a80fc0, type: 3}
+    - {fileID: 4169190916382009868, guid: abe075698e50b4b4283cfd345f45a940, type: 3}
+    - {fileID: -1239254810882089512, guid: abe075698e50b4b4283cfd345f45a940, type: 3}
+    - {fileID: 7007198884851191502, guid: abe075698e50b4b4283cfd345f45a940, type: 3}
+    - {fileID: -818520195178025046, guid: abe075698e50b4b4283cfd345f45a940, type: 3}
   - _tag: Hold Stand
     _index: 11
     _sprites:
@@ -96,10 +96,10 @@ MonoBehaviour:
   - _tag: Throw
     _index: 16
     _sprites:
-    - {fileID: -4488883025936703392, guid: 79d8f5b3689f9f14ab5ba2d80ce53a74, type: 3}
-    - {fileID: -1707460807276810388, guid: 79d8f5b3689f9f14ab5ba2d80ce53a74, type: 3}
-    - {fileID: 7266444520508101923, guid: 79d8f5b3689f9f14ab5ba2d80ce53a74, type: 3}
-    - {fileID: 2547465209831188773, guid: 79d8f5b3689f9f14ab5ba2d80ce53a74, type: 3}
+    - {fileID: 5401234794301502150, guid: 88a2ed2892c0ff94a955c98c4c932e1f, type: 3}
+    - {fileID: 3927460352645532443, guid: 88a2ed2892c0ff94a955c98c4c932e1f, type: 3}
+    - {fileID: 5231148576581944716, guid: 88a2ed2892c0ff94a955c98c4c932e1f, type: 3}
+    - {fileID: 6035696269591556565, guid: 88a2ed2892c0ff94a955c98c4c932e1f, type: 3}
   - _tag: Damage
     _index: 21
     _sprites:

@@ -11,27 +11,44 @@ namespace Cameras
         private const int LOW_PRIORITY = 0;
 
         [SerializeField] private CameraChangeDollyWithPath _pathCamera;
+        [SerializeField] private CameraStatic[] _staticCameras;
+        [Space]
         [SerializeField] private CinemachineVirtualCamera _firstCamera;
 
         private CameraType _currentCameraType = CameraType.Dolly;
+        private CinemachineVirtualCamera _currentCamera;
         private CinemachineVirtualCamera _currentDollyCamera;
+        private CameraStatic _currentStaticCamera;
 
         private void Awake()
         {
             _pathCamera.CameraChangeEvent += OnPathCameraChange;
+            foreach(CameraStatic camera in _staticCameras)
+            {
+                camera.EnterAreaEvent += OnEnterStaticCameraArea;
+            }
 
             _currentDollyCamera = _firstCamera;
             _currentDollyCamera.Priority = HIGH_PRIORITY;
         }
 
-        private void UpdateActiveCamera()
+        private void OnEnterStaticCameraArea(CameraStatic newCamera)
         {
-            switch (_currentCameraType)
+            if (_currentStaticCamera != null)
             {
-                case CameraType.Dolly:
-                    _currentDollyCamera.Priority = HIGH_PRIORITY;
-                    break;
+                _currentStaticCamera.ExitAreaEvent -= OnExitStaticCameraArea;
             }
+
+            _currentStaticCamera = newCamera;
+            _currentStaticCamera.ExitAreaEvent += OnExitStaticCameraArea;
+            _currentCameraType = CameraType.Static;
+            UpdateActiveCamera();
+        }
+
+        private void OnExitStaticCameraArea(CameraStatic newCamera)
+        {
+            _currentCameraType = CameraType.Dolly;
+            UpdateActiveCamera();
         }
 
         private void OnPathCameraChange(CinemachineVirtualCamera newCamera)
@@ -43,6 +60,24 @@ namespace Cameras
                 _currentDollyCamera = newCamera;
                 UpdateActiveCamera();
             }
+        }
+
+        private void UpdateActiveCamera()
+        {
+            if (_currentCamera != null)
+                _currentCamera.Priority = LOW_PRIORITY;
+
+            switch (_currentCameraType)
+            {
+                case CameraType.Dolly:
+                    _currentCamera = _currentDollyCamera;
+                    break;
+                case CameraType.Static:
+                    _currentCamera = _currentStaticCamera.Camera;
+                    break;
+            }
+
+            _currentCamera.Priority = HIGH_PRIORITY;
         }
 
         private enum CameraType
