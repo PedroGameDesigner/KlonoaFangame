@@ -13,6 +13,9 @@ namespace PlatformerRails
 
         IRail rail;
         Rigidbody rigidbody;
+        IRail currentSingleRail;
+
+        public System.Action<IRail> RailChangeEvent;
 
         void Reset()
         {
@@ -45,7 +48,8 @@ namespace PlatformerRails
         void FixedUpdate()
         {
             Position += Velocity * Time.fixedDeltaTime;
-            rigidbody.MovePosition(rail.Local2World(Position));
+            Vector3 worldPosition = rail.Local2World(Position);
+            rigidbody.MovePosition(worldPosition);
         }
 
         void LateFixedUpdate()
@@ -55,7 +59,8 @@ namespace PlatformerRails
 
         void UpdateLocalPosition()
         {
-            var w2l = rail.World2Local(transform.position);
+            IRail usedRail;
+            var w2l = rail.World2Local(transform.position, out usedRail);
             if (w2l == null)
             {
                 Destroy(gameObject);
@@ -68,6 +73,7 @@ namespace PlatformerRails
             if (Quaternion.Angle(transform.rotation, newrot) > 30f)
                 Velocity = Quaternion.Inverse(newrot) * transform.rotation * Velocity;
             transform.rotation = newrot;
+            CheckUsedRail(usedRail);
         }
 
         IEnumerator RunLateFixedUpdate()
@@ -77,6 +83,15 @@ namespace PlatformerRails
             {
                 yield return wait;
                 LateFixedUpdate();
+            }
+        }
+
+        private void CheckUsedRail(IRail usedRail)
+        {
+            if (usedRail != currentSingleRail)
+            {
+                RailChangeEvent?.Invoke(usedRail);
+                currentSingleRail = usedRail;
             }
         }
     }
