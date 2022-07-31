@@ -39536,8 +39536,8 @@ Transform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 9048982795073711794}
-  m_LocalRotation: {x: -0, y: -0.7071068, z: -0, w: 0.7071068}
-  m_LocalPosition: {x: 0, y: -0.5, z: 0}
+  m_LocalRotation: {x: 0, y: -0.7071068, z: 0, w: 0.7071068}
+  m_LocalPosition: {x: 0.09, y: -0.5, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:
   - {fileID: 1086441301593037146}
@@ -39689,7 +39689,7 @@ GameObject:
   - component: {fileID: 9048982795958330330}
   m_Layer: 9
   m_Name: Klonoa
-  m_TagString: Untagged
+  m_TagString: Player
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -44822,7 +44822,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 1198161245600211103, guid: ed5945340c7785941b46e99a5ecc760f, type: 3}
       propertyPath: m_OrthographicSize
-      value: 0.26800007
+      value: 0.00000001
       objectReference: {fileID: 0}
     - target: {fileID: 4276787999123193625, guid: ed5945340c7785941b46e99a5ecc760f, type: 3}
       propertyPath: _maxDistance

@@ -19,10 +19,12 @@ namespace Gameplay.Klonoa
         [FoldoutGroup(GENERAL_GROUP), SerializeField] private SpeedData _moveSpeed;
         [FoldoutGroup(GENERAL_GROUP), SerializeField] private int _maxHealth = 6;
 
-        [FoldoutGroup(JUMP_GROUP), SerializeField] private float _jumpSpeed = 5f;
-        [FoldoutGroup(JUMP_GROUP), SerializeField] private float _doubleJumpSpeed = 10f;
-        [FoldoutGroup(JUMP_GROUP), SerializeField] private float _doubleJumpPreparationTime = 0.3f;
-        [FoldoutGroup(JUMP_GROUP), SerializeField] private float _gravity = 15f;
+        [FoldoutGroup(JUMP_GROUP), SerializeField] private float _terminalVelocity;
+        [FoldoutGroup(JUMP_GROUP), SerializeField] private float _jumpHeight;
+        [FoldoutGroup(JUMP_GROUP), SerializeField] private float _doubleJumpHeight;
+        [FoldoutGroup(JUMP_GROUP), SerializeField] private float _timeToJumpApex;
+        [FoldoutGroup(JUMP_GROUP), SerializeField] private float _doubleJumpPreparationTime;
+
 
         [FoldoutGroup(FLOAT_GROUP), SerializeField] private SpeedData _floatMoveSpeed;
         [FoldoutGroup(FLOAT_GROUP), SerializeField] private float _floatStartSpeed;
@@ -36,6 +38,10 @@ namespace Gameplay.Klonoa
         [FoldoutGroup(DAMAGE_GROUP), SerializeField] private float _knockbackForce = 2f;
         [FoldoutGroup(DAMAGE_GROUP), SerializeField] private Vector3 _knockbackDirection = new Vector3(0, 0.7f, 0.7f);
         [FoldoutGroup(DAMAGE_GROUP), SerializeField] private float _invincibilityTime = 5f;
+
+        private float _gravity;
+        private float _jumpSpeed;
+        private float _doubleJumpSpeed;
 
         //Accessors
         public SpeedData NotMoveSpeed => new SpeedData();
@@ -51,7 +57,8 @@ namespace Gameplay.Klonoa
         public float FloatStartSpeed => _floatStartSpeed;
         public float FloatAcceleration => 2 * (_floatHeight - _floatStartSpeed) / _floatTime;
         public float FloatTime => _floatTime;
-        
+        public float TerminalVelocity => _terminalVelocity;
+
         public CaptureProjectile CaptureProjectile => _captureProjectile;
         public float CaptureRepositionTime => _captureRepositionTime;
 
@@ -59,6 +66,22 @@ namespace Gameplay.Klonoa
         public float KnockbackForce => _knockbackForce;
         public Vector3 KnockbackDirection => _knockbackDirection.normalized;
         public float InvincibilityTime => _invincibilityTime;
+        private void Awake()
+        {
+            InitializeDerivatedValue();
+        }
+
+        private void OnValidate()
+        {
+            InitializeDerivatedValue();
+        }
+
+        private void InitializeDerivatedValue()
+        {
+            _gravity = (2 * _jumpHeight) / Mathf.Pow(_timeToJumpApex, 2);
+            _jumpSpeed = Mathf.Sqrt(2 * _jumpHeight * Gravity);
+            _doubleJumpSpeed = Mathf.Sqrt(2 * _doubleJumpHeight * Gravity);
+        }
     }
 
     [Serializable]

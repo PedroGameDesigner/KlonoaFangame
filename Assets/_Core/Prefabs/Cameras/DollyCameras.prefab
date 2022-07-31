@@ -50,15 +50,9 @@ MonoBehaviour:
     width: 0.2
   m_Looped: 0
   m_Waypoints:
-  - position: {x: -1.02, y: 0.8, z: -7.55}
+  - position: {x: 0, y: 0, z: 0}
     roll: 0
-  - position: {x: 14.688856, y: 0.8, z: -7.8203864}
-    roll: 0
-  - position: {x: 22.140524, y: 0.8, z: -4.784306}
-    roll: 0
-  - position: {x: 24, y: 0.8, z: 0.97083974}
-    roll: 0
-  - position: {x: 24, y: 0.8, z: 11.486072}
+  - position: {x: 1, y: 0, z: 0}
     roll: 0
 --- !u!1 &3233935579931178375
 GameObject:
@@ -118,7 +112,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_Path: {fileID: 3233935579907866464}
-  m_PathPosition: 1.1641201
+  m_PathPosition: 1
   m_PositionUnits: 0
   m_PathOffset: {x: 0, y: 0, z: 0}
   m_XDamping: 0
@@ -172,8 +166,8 @@ Transform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 3233935580554199518}
-  m_LocalRotation: {x: 0.06355358, y: -0.0806762, z: 0.0051545873, w: 0.9946988}
-  m_LocalPosition: {x: 16.516384, y: 0.8, z: -7.5497065}
+  m_LocalRotation: {x: 0.014015331, y: 0.76497126, z: -0.01665587, w: 0.6436965}
+  m_LocalPosition: {x: 1, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:
   - {fileID: 3233935580602278095}
@@ -301,7 +295,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_Path: {fileID: 3233935579907866464}
-  m_PathPosition: 1.1641201
+  m_PathPosition: 1
   m_PositionUnits: 0
   m_PathOffset: {x: 0, y: 0, z: 0}
   m_XDamping: 0
@@ -355,8 +349,8 @@ Transform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 3233935581048594529}
-  m_LocalRotation: {x: 0.06355358, y: -0.0806762, z: 0.0051545873, w: 0.9946988}
-  m_LocalPosition: {x: 16.516384, y: 0.8, z: -7.5497065}
+  m_LocalRotation: {x: 0.014015331, y: 0.76497126, z: -0.01665587, w: 0.6436965}
+  m_LocalPosition: {x: 1, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:
   - {fileID: 3233935579931178374}
@@ -478,5 +472,3 @@ MonoBehaviour:
   _pairList:
   - _path: {fileID: 0}
     _dollyTrack: {fileID: 3233935579907866464}
-  - _path: {fileID: 0}
-    _dollyTrack: {fileID: 0}

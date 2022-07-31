@@ -17,6 +17,7 @@ namespace Gameplay.Klonoa
         protected abstract SpeedData MoveSpeed { get; }
         protected abstract float Gravity { get; }
         protected abstract bool CanTurn { get; }
+        protected float TerminalVelocity => _definition.TerminalVelocity;
 
         protected KlonoaState(KlonoaBehaviour behaviour) : base(behaviour) 
         {
@@ -61,6 +62,9 @@ namespace Gameplay.Klonoa
             }
             else
                 velocity.y -= Gravity * deltaTime;
+
+            if (velocity.y < -TerminalVelocity)
+                velocity.y = -TerminalVelocity;
 
             _mover.Velocity = velocity;
         }

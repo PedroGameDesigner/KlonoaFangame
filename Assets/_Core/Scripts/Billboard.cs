@@ -28,6 +28,7 @@ namespace HoloToolkit.Unity
         /// Overrides the cached value of the GameObject's default rotation.
         /// </summary>
         public Quaternion DefaultRotation { get; private set; }
+        public Camera MainCamera => Camera.main;
 
         private void Awake()
         {
@@ -51,21 +52,21 @@ namespace HoloToolkit.Unity
                 // the plane defined by the fixed axis and using that as the new forward.
                 case PivotAxis.X:
                     Vector3 right = transform.right; // Fixed right
-                    forward = Vector3.ProjectOnPlane(Camera.main.transform.forward, right).normalized;
+                    forward = Vector3.ProjectOnPlane(MainCamera.transform.forward, right).normalized;
                     up = Vector3.Cross(forward, right); // Compute the up vector
                     break;
 
                 case PivotAxis.Y:
                     up = transform.up; // Fixed up
-                    forward = Vector3.ProjectOnPlane(Camera.main.transform.forward, up).normalized;
+                    forward = Vector3.ProjectOnPlane(MainCamera.transform.forward, up).normalized;
                     break;
 
                 // If the axes are free then we're simply aligning the forward and up vectors
                 // of the object with those of the camera. 
                 case PivotAxis.Free:
                 default:
-                    forward = Camera.main.transform.forward;
-                    up = Camera.main.transform.up;
+                    forward = MainCamera.transform.forward;
+                    up = MainCamera.transform.up;
                     break;
             }
 
