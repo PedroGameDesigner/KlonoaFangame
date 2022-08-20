@@ -17,8 +17,8 @@ MonoBehaviour:
     _drag: 5
   _maxHealth: 6
   _terminalVelocity: 10
-  _jumpHeight: 2.2
-  _doubleJumpHeight: 3
+  _jumpHeight: 1.2
+  _doubleJumpHeight: 2.5
   _timeToJumpApex: 0.33
   _doubleJumpPreparationTime: 0.3
   _floatMoveSpeed:
