@@ -3,12 +3,13 @@ using System.Collections.Generic;
 using UnityEngine;
 using TMPro;
 using Gameplay.Klonoa;
+using Gameplay.Controller;
 
 namespace Gameplay.UI
 {
     public class PlaceholderHealthUI : MonoBehaviour
     {
-        [SerializeField] private KlonoaBehaviour _klonoa;
+        [SerializeField] private ResourcesController _resources;
         [SerializeField] private TextMeshProUGUI _textbox;
 
         private string _baseText;
@@ -20,24 +21,23 @@ namespace Gameplay.UI
 
         private void OnEnable()
         {
-            _textbox.text = string.Format(_baseText, _klonoa.Health);
-            _klonoa.DamageEvent += OnKlonoaDamage;
-            _klonoa.DeathEvent += OnKlonoaDamage;
+            _textbox.text = string.Format(_baseText, _resources.Health);
+            _resources.HealthChangeEvent += OnHealthChange;
         }
 
         private void Start()
         {
-            _textbox.text = string.Format(_baseText, _klonoa.Health);
+            _textbox.text = string.Format(_baseText, _resources.Health);
         }
 
-        private void OnKlonoaDamage()
+        private void OnHealthChange()
         {
-            _textbox.text = string.Format(_baseText, _klonoa.Health);
+            _textbox.text = string.Format(_baseText, _resources.Health);
         }
 
         private void OnDisable()
         {
-            _klonoa.DamageEvent -= OnKlonoaDamage;
+            _resources.HealthChangeEvent -= OnHealthChange;
         }
     }
 }

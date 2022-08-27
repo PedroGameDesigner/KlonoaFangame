@@ -17,7 +17,6 @@ namespace Gameplay.Klonoa
 
         //Attributes
         [FoldoutGroup(GENERAL_GROUP), SerializeField] private SpeedData _moveSpeed;
-        [FoldoutGroup(GENERAL_GROUP), SerializeField] private int _maxHealth = 6;
 
         [FoldoutGroup(JUMP_GROUP), SerializeField] private float _terminalVelocity;
         [FoldoutGroup(JUMP_GROUP), SerializeField] private float _jumpHeight;
@@ -46,7 +45,6 @@ namespace Gameplay.Klonoa
         //Accessors
         public SpeedData NotMoveSpeed => new SpeedData();
         public SpeedData MoveSpeed => _moveSpeed;
-        public int MaxHealth => _maxHealth;
 
         public float JumpSpeed => _jumpSpeed;
         public float DoubleJumpSpeed => _doubleJumpSpeed;

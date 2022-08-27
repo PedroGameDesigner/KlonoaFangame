@@ -51,14 +51,12 @@ namespace Gameplay.Klonoa
         RaycastHit _damageHit;
         RaycastHit[] _hits = new RaycastHit[10];
         float resultsCount;
-        int _health;
         private float _airTime = 0;
         Vector3 point1;
         Vector3 point2;
         Vector3 checkDirection;
 
         public KlonoaDefinition Definition => _definition;
-        public int Health => _health;
         private Vector2 MoveDirection { set;  get; }
         public CollisionData CollisionData { get; private set; } 
         public bool IsGrounded => CollisionData.Grounded;
@@ -85,7 +83,7 @@ namespace Gameplay.Klonoa
         public event Action BeginHoldingEvent;
         public event Action EndHoldingEvent;
         public event Action SideThrowEnemyEvent;
-        public event Action DamageEvent;
+        public event Action<int> DamageEvent;
         public event Action DeathEvent;
 
         public event Action JumpInputEvent;
@@ -104,8 +102,7 @@ namespace Gameplay.Klonoa
             _rigidbody = GetComponent<Rigidbody>();
             _collider = GetComponent<CapsuleCollider>();
             CollisionData = new CollisionData(_maxGroundDistance, _groundCheckLength, 
-                _maxCeilingDistance, _ceilingCheckLength, _groundLayer);
-            _health = _definition.MaxHealth;                                         
+                _maxCeilingDistance, _ceilingCheckLength, _groundLayer);      
         }
         
         private void Update()
@@ -251,22 +248,18 @@ namespace Gameplay.Klonoa
         private void OnDamage(RaycastHit hit)
         {
             _invincibleTimer = 0;
-            _health -= 1;
-            if (_health > 0)
-            {
-                _stateMachine.ChangeToDamageState(hit);
-                DamageEvent?.Invoke();
-            }
-            else
+            _stateMachine.ChangeToDamageState(hit);
+            DamageEvent?.Invoke(1);
+            
+            /*else
             {
                 _stateMachine.ChangeToDeathState();
                 DeathEvent?.Invoke();
-            }
+            }*/
         }
 
-        private void Death()
+        public void Death()
         {
-            _health = 0;
             _stateMachine.ChangeToDeathState();
             DeathEvent?.Invoke();
         }
