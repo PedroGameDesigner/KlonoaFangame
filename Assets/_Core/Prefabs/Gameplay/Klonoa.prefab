@@ -39748,11 +39748,12 @@ MonoBehaviour:
   _groundLayer:
     serializedVersion: 2
     m_Bits: 128
-  _enemyLayer:
+  _collisionLayer:
     serializedVersion: 2
-    m_Bits: 256
+    m_Bits: 2304
   _enemyTag: Enemy
   _deathPlaneTag: DeathPlane
+  _collectableTag: Collectable
   _jumpTimeMarging: 0.15
   _minWalkSpeed: 0.2
   _captureProjectileOrigin: {fileID: 4440753262782048645}

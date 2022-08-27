@@ -409,6 +409,7 @@ GameObject:
   m_Component:
   - component: {fileID: 7801395982852984308}
   - component: {fileID: 1783625144026914740}
+  - component: {fileID: 5945509575152486338}
   m_Layer: 0
   m_Name: Gameplay Controller
   m_TagString: Untagged
@@ -443,7 +444,21 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _klonoa: {fileID: 2039934468006787981}
+  _resourcesController: {fileID: 5945509575152486338}
   _restartTime: 2.5
+--- !u!114 &5945509575152486338
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3266342013604478572}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 18748f77b64a2a047af8c04e42bdaba9, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _klonoa: {fileID: 2039934468006787981}
 --- !u!1 &3683768978109868717
 GameObject:
   m_ObjectHideFlags: 0
@@ -825,7 +840,7 @@ Camera:
   m_Depth: 9.32
   m_CullingMask:
     serializedVersion: 2
-    m_Bits: 1975
+    m_Bits: 4023
   m_RenderingPath: -1
   m_TargetTexture: {fileID: 8400000, guid: f40a46e122eb3f24bb6ad778b44555b3, type: 2}
   m_TargetDisplay: 0

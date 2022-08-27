@@ -5,6 +5,7 @@ using PlatformerRails;
 using System;
 using Extensions;
 using UnityEngine;
+using Gameplay.Collectables;
 
 namespace Gameplay.Klonoa
 {
@@ -17,9 +18,10 @@ namespace Gameplay.Klonoa
         [SerializeField] private float _maxCeilingDistance = 0.25f;
         [SerializeField] private float _ceilingCheckLength = 0.05f;
         [SerializeField] private LayerMask _groundLayer;
-        [SerializeField] private LayerMask _enemyLayer;
+        [SerializeField] private LayerMask _collisionLayer;
         [SerializeField] private string _enemyTag = "Enemy";
         [SerializeField] private string _deathPlaneTag = "DeathPlane";
+        [SerializeField] private string _collectableTag = "Collectable";
         [SerializeField] private float _jumpTimeMarging = 0.15f;
         [Space]
         [SerializeField] private float _minWalkSpeed = 0.1f;
@@ -141,7 +143,7 @@ namespace Gameplay.Klonoa
 
             JumpAction(deltaTime);
             UpdateFacing();
-            CheckEnemyCollision(deltaTime);
+            CheckCollision(deltaTime);
             CheckLandingEvent();
             CheckCeilingEvent();
             UpdateAirTime(deltaTime);
@@ -180,31 +182,28 @@ namespace Gameplay.Klonoa
             }
         }
 
-        private void CheckEnemyCollision(float deltaTime)
+        private void CheckCollision(float deltaTime)
         {
-            if (!_invincible)
+            checkDirection = -Facing.GetVector();
+            point1 = _collider.Points()[0];
+            point2 = _collider.Points()[1];
+            resultsCount = _collider.Cast(checkDirection, _collisionLayer, out _hits, 0.1f * deltaTime);
+
+            if (resultsCount > 0)
             {
-                checkDirection = -Facing.GetVector();
-                point1 = _collider.Points()[0];
-                point2 = _collider.Points()[1];
-                resultsCount = _collider.Cast(checkDirection, _enemyLayer, out _hits, 0.1f * deltaTime);
-
-                if (resultsCount > 0)
+                float nearDistance = float.PositiveInfinity;
+                int nearIndex = 0;
+                for (int i = 0; i < resultsCount; i++)
                 {
-                    float nearDistance = float.PositiveInfinity;
-                    int nearIndex = 0;
-                    for (int i = 0; i < resultsCount; i++)
+                    if (_hits[i].distance < nearDistance)
                     {
-                        if (_hits[i].distance < nearDistance)
-                        {
-                            nearDistance = _hits[i].distance;
-                            nearIndex = i;
-                        }
+                        nearDistance = _hits[i].distance;
+                        nearIndex = i;
                     }
-
-                    OnHit(_hits[nearIndex]);
                 }
-            }
+
+                OnHit(_hits[nearIndex]);
+            }            
         }
 
         private void CheckLandingEvent()
@@ -241,8 +240,10 @@ namespace Gameplay.Klonoa
 
         private void OnHit(RaycastHit hit)
         {
-            if (hit.collider.CompareTag(_enemyTag))
+            if (hit.collider.CompareTag(_enemyTag) && !_invincible)
                 OnDamage(hit);
+            else if (hit.collider.CompareTag(_collectableTag))
+                OnCollectableDetected(hit);
             else if (hit.collider.CompareTag(_deathPlaneTag))
                 Death();
         }
@@ -268,6 +269,15 @@ namespace Gameplay.Klonoa
             _health = 0;
             _stateMachine.ChangeToDeathState();
             DeathEvent?.Invoke();
+        }
+
+        private void OnCollectableDetected(RaycastHit hit)
+        {
+            Collectable collectable = hit.collider.GetComponent<Collectable>();
+            if (collectable != null)
+            {
+                collectable.Collect();
+            }
         }
 
         public void StartJumpAction(float jumpForce, bool ignoreGround = false)
