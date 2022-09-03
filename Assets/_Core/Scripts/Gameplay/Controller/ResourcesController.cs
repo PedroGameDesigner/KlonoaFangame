@@ -26,6 +26,7 @@ namespace Gameplay.Controller
             _klonoa.DamageEvent += OnKlonoaDamage;
             _klonoa.DeathEvent += OnKlonoaDeath;
             DreamStone.StoneCollectedEvent += OnStoneCollected;
+            HealthPickup.HealthCollectedEvent += OnHealthCollected;
         }
 
         public void StartLevel(int maxHealth, int totalStones, bool[] shards)
@@ -62,6 +63,16 @@ namespace Gameplay.Controller
         {
             Stones += stone.Value;
             StonesChangeEvent?.Invoke();
+        }
+
+        private void OnHealthCollected(HealthPickup healthPickup)
+        {
+            int newHealth = Health + Mathf.Min(MaxHealth, healthPickup.Value);
+            if (newHealth != Health) 
+            {
+                Health = newHealth;
+                StonesChangeEvent?.Invoke();
+            }
         }
     }
 }
