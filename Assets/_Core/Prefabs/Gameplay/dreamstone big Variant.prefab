@@ -47,6 +47,10 @@ PrefabInstance:
       propertyPath: _value
       value: 5
       objectReference: {fileID: 0}
+    - target: {fileID: 3066911331718493387, guid: b08582cbde0b99e46b223d26bf27a6cf, type: 3}
+      propertyPath: _collectedSound
+      value: 
+      objectReference: {fileID: 8300000, guid: 213fb8c2b93061747bc7ebc474630174, type: 3}
     - target: {fileID: 3425426110440305351, guid: b08582cbde0b99e46b223d26bf27a6cf, type: 3}
       propertyPath: m_Controller
       value: 

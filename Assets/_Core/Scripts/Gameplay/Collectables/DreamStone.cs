@@ -15,6 +15,9 @@ namespace Gameplay.Collectables
         [SerializeField] SpriteRenderer _renderer = null;
         [SerializeField] ParticleSystem _collectParticles = null;
         [Space]
+        [SerializeField] AudioClip _collectedSound = null;
+        [SerializeField] AudioSource _audioSource = null;
+        [Space]
         [SerializeField] private float _animationDuration = 1;
         [SerializeField] private float _rotationSpeed = 1;
 
@@ -30,9 +33,11 @@ namespace Gameplay.Collectables
         {
             _collider.enabled = false;
             _renderer.enabled = false;
+
             _collectParticles.Play();
-            Destroy(gameObject, CollectionDuration);
-            
+            _audioSource.PlayOneShot(_collectedSound);
+
+            Destroy(gameObject, CollectionDuration);            
         }
     }
 }
