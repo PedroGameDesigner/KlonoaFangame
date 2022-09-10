@@ -39,7 +39,7 @@ namespace Gameplay.Klonoa
         private void OnBallInPosition()
         {
             _behaviour.ThrowHoldedEnemyDownwards();
-            _behaviour.StartJumpAction(_definition.DoubleJumpSpeed, true);
+            _behaviour.StartJumpAction(_definition.DoubleJumpSpeed, true, false);
             _ballInPosition = true;
         }
 

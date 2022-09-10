@@ -34,6 +34,7 @@ namespace Gameplay.Klonoa
 
         private bool _jumpKeep;
         private bool _jumpActivated;
+        private bool _invokeJumpEvent;
         private bool _ignoreGround;
         private bool _invincible;
         private float _invincibleTimer;
@@ -156,7 +157,7 @@ namespace Gameplay.Klonoa
                 Debug.Log("Jump.JumpForce: " + velocity.y);
                 _mover.Velocity = velocity;
                 _airTime += _jumpTimeMarging * 1.1f;
-                JumpEvent?.Invoke();
+                if (_invokeJumpEvent) JumpEvent?.Invoke();
             }
         }
 
@@ -273,9 +274,10 @@ namespace Gameplay.Klonoa
             }
         }
 
-        public void StartJumpAction(float jumpForce, bool ignoreGround = false)
+        public void StartJumpAction(float jumpForce, bool ignoreGround = false, bool invokeJumpEvent = true)
         {
             _jumpActivated = true;
+            _invokeJumpEvent = invokeJumpEvent;
             _jumpForce = jumpForce;
             _ignoreGround = ignoreGround;
         }        
