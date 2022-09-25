@@ -12,6 +12,7 @@ namespace Gameplay.Klonoa
 
         protected KlonoaState _normalState;
         protected KlonoaState _holdingState;
+        protected KlonoaState _hangingState;
         protected CaptureProjectile _projectile;
 
         protected override SpeedData MoveSpeed => _definition.NotMoveSpeed;
@@ -20,10 +21,11 @@ namespace Gameplay.Klonoa
 
         public CaptureState(KlonoaBehaviour behaviour) : base(behaviour) { }
 
-        public void SetStates(KlonoaState normalState, KlonoaState holdingState)
+        public void SetStates(KlonoaState normalState, KlonoaState holdingState, KlonoaState hangingState)
         {
             _normalState = normalState;
             _holdingState = holdingState;
+            _hangingState = hangingState;
         }
 
         public override void Enter()
@@ -32,7 +34,7 @@ namespace Gameplay.Klonoa
             _projectile = _behaviour.InstantiateCapture();
             _projectile.MovingFinishEvent += OnCaptureEventFinish;
             _projectile.ReturnFinishEvent += OnReturnEventFinish;
-            _projectile.EnemyCapturedEvent += OnEnemyCaptured;
+            _projectile.CapturedEvent += OnObjectCaptured;
         }
 
         private void OnCaptureEventFinish()
@@ -54,18 +56,27 @@ namespace Gameplay.Klonoa
             ChangeState(_normalState);
         }
 
-        private void OnEnemyCaptured(EnemyBehaviour enemy)
+        private void OnObjectCaptured(ICapturable capturedObject)
         {
             UnsubscribeEvents();
-            _behaviour.HoldEnemy(enemy);
-            ChangeState(_holdingState);
+            switch (capturedObject)
+            {
+                case HoldableObject holdableObject:
+                    _behaviour.HoldObject(holdableObject);
+                    ChangeState(_holdingState);
+                    break;
+                case HangeableObject hangeableObject:
+                    _behaviour.HangFromObject(hangeableObject);
+                    ChangeState(_hangingState);
+                    break;
+            }            
         }
 
         private void UnsubscribeEvents()
         {
             _projectile.MovingFinishEvent -= OnCaptureEventFinish;
             _projectile.ReturnFinishEvent -= OnReturnEventFinish;
-            _projectile.EnemyCapturedEvent -= OnEnemyCaptured;
+            _projectile.CapturedEvent -= OnObjectCaptured;
         }
 
         public override void AttackAction() { }

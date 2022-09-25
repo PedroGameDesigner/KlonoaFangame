@@ -165,7 +165,6 @@ namespace Gameplay.Enemies.Ball
 
             if (results.Length > 0)
             {
-                Debug.Log("Enemy hit: " + results[0].transform.name);
                 EnemyBehaviour enemy = results[0].collider.GetComponent<EnemyBehaviour>();
                 if (enemy != null)
                     enemy.Kill();

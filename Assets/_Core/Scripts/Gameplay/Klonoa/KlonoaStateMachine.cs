@@ -11,6 +11,7 @@ namespace Gameplay.Klonoa
         private FloatState _floatState;
         private CaptureState _captureState;
         private HoldingState _holdingState;
+        private HangingState _hangingState;
         private DoubleJumpState _doubleJumpState;
         private DamageState _damageState;
         private DeathState _deathState;
@@ -29,14 +30,16 @@ namespace Gameplay.Klonoa
             _floatState = new FloatState(_behaviour);
             _captureState = new CaptureState(_behaviour);
             _holdingState = new HoldingState(_behaviour);
+            _hangingState = new HangingState(_behaviour);
             _doubleJumpState = new DoubleJumpState(_behaviour);
             _damageState = new DamageState(_behaviour);
             _deathState = new DeathState(_behaviour);
 
             _normalState.SetStates(_floatState, _captureState);
             _floatState.SetStates(_normalState);
-            _captureState.SetStates(_normalState, _holdingState);
+            _captureState.SetStates(_normalState, _holdingState, _hangingState);
             _holdingState.SetStates(_normalState, _doubleJumpState);
+            _hangingState.SetStates(_doubleJumpState);
             _doubleJumpState.SetStates(_normalState);
             _damageState.SetStates(_normalState, _holdingState);
 

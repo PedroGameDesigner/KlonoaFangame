@@ -7,7 +7,7 @@ namespace Gameplay.Projectile
 {
     public class CaptureProjectile : MonoBehaviour, IMovile
     {
-        [SerializeField] private LayerMask _collisionMask;
+        [SerializeField] private LayerMask _captureLayer;
         [SerializeField] private float _reach;
         [SerializeField] private float _advanceTime;
         [SerializeField] private float _returnTime;
@@ -28,7 +28,8 @@ namespace Gameplay.Projectile
 
         public event Action MovingFinishEvent;
         public event Action ReturnFinishEvent;
-        public event Action<EnemyBehaviour> EnemyCapturedEvent;
+        public delegate void CapturableDelegate(ICapturable capturedObject);
+        public event CapturableDelegate CapturedEvent;
 
         private void Awake()
         {
@@ -38,8 +39,6 @@ namespace Gameplay.Projectile
         public void StartMovement(Vector3 direction, float extraSpeed, Transform origin)
         {
             if (Moving || Returning) return;
-            Debug.Log("SPEED: " + MovementSpeed);
-            Debug.Log("DIRECTION: " + direction);
             gameObject.SetActive(true);
             _extraSpeed = Mathf.Abs(extraSpeed);
             _direction = direction;
@@ -103,17 +102,20 @@ namespace Gameplay.Projectile
 
         private void OnCollisionEnter(Collision collision)
         {
-            if (_collisionMask.CheckLayer(collision.gameObject.layer))
+            if (_captureLayer.CheckLayer(collision.gameObject.layer))
             {
-                EnemyBehaviour enemy = collision.gameObject.GetComponent<EnemyBehaviour>();
-                enemy.Capture();
-                if (enemy.IsCapturable)
+                ICapturable capturable = collision.gameObject.GetComponent<ICapturable>();
+                capturable.Capture();
+
+                if (capturable.CanBeCaptured)
                 {
-                    EnemyCapturedEvent?.Invoke(enemy);
+                    CapturedEvent?.Invoke(capturable);
                     Finish();
                 }
                 else
+                {
                     FinishMovement();
+                }                    
             }
         }
 

@@ -58,7 +58,6 @@ namespace Sounds
 
         private void StartSound()
         {
-            Debug.Log(transform.name + " Play: " + _instanceClip.Clip.name);
             if (_instanceClip == null) return;
             _audioSource.PlayOneShot(_instanceClip.Clip);
         }

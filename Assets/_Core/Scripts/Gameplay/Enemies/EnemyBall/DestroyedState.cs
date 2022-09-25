@@ -11,7 +11,6 @@ namespace Gameplay.Enemies.Ball
 
         public override void Enter()
         {
-            Debug.Log("EnemyBall Destroy Self");
             _behaviour.SetVelocity(0);
             _behaviour.transform.parent = null;
             _behaviour.Collider.enabled = false;

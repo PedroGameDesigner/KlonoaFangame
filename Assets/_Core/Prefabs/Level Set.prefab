@@ -1734,6 +1734,10 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 8620560969879801833}
     m_Modifications:
+    - target: {fileID: 9048982795073711757, guid: 7c9adb3bfb1539542bdd2a7d58e0e439, type: 3}
+      propertyPath: _beginHangingParameter
+      value: BeginHanging
+      objectReference: {fileID: 0}
     - target: {fileID: 9048982795958330325, guid: 7c9adb3bfb1539542bdd2a7d58e0e439, type: 3}
       propertyPath: m_RootOrder
       value: 0

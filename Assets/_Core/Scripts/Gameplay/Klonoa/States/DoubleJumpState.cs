@@ -23,7 +23,9 @@ namespace Gameplay.Klonoa
         public override void Enter()
         {
             base.Enter();
-            _behaviour.MoveBallToFeet(OnBallInPosition);
+            _mover.Velocity = Vector3.zero;
+            _mover.enabled = false;
+            _behaviour.MoveBeforeDoubleJump(OnDoubleJumpPosition);
             _ballInPosition = false;
         }
 
@@ -36,8 +38,9 @@ namespace Gameplay.Klonoa
             }
         }
 
-        private void OnBallInPosition()
+        private void OnDoubleJumpPosition()
         {
+            _mover.enabled = true;
             _behaviour.ThrowHoldedEnemyDownwards();
             _behaviour.StartJumpAction(_definition.DoubleJumpSpeed, true, false);
             _ballInPosition = true;

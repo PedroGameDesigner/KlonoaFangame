@@ -37,7 +37,6 @@ public class EntranceTrigger : MonoBehaviour
             _hasObjectInside = false;
             if (newSide != _planeSide)
             {
-                Debug.Log("Entrance Crossed");
                 _entranceCrossedEvent?.Invoke(this);
             }
         }

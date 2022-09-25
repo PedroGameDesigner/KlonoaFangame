@@ -100,6 +100,13 @@ MonoBehaviour:
     - {fileID: 3927460352645532443, guid: 88a2ed2892c0ff94a955c98c4c932e1f, type: 3}
     - {fileID: 5231148576581944716, guid: 88a2ed2892c0ff94a955c98c4c932e1f, type: 3}
     - {fileID: 6035696269591556565, guid: 88a2ed2892c0ff94a955c98c4c932e1f, type: 3}
+  - _tag: Hang
+    _index: 17
+    _sprites:
+    - {fileID: -5627986178374287551, guid: 12be8a399b2a5f044b4f640ee260d65b, type: 3}
+    - {fileID: -2143070364578670238, guid: 12be8a399b2a5f044b4f640ee260d65b, type: 3}
+    - {fileID: 2134815935158376635, guid: 12be8a399b2a5f044b4f640ee260d65b, type: 3}
+    - {fileID: 8692922743694669701, guid: 12be8a399b2a5f044b4f640ee260d65b, type: 3}
   - _tag: Damage
     _index: 21
     _sprites:

@@ -19,6 +19,7 @@ namespace Gameplay.Klonoa
         private bool _moving = false;
         private float _timer = 0;
 
+        public bool HasBall => _holdedBall != null;
         private Transform Parent => transform.parent;
 
         private void Start()

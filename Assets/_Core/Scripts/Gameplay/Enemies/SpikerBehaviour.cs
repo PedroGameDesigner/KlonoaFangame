@@ -6,15 +6,9 @@ namespace Gameplay.Enemies
 {
     public class SpikerBehaviour : EnemyBehaviour
     {
-        private const bool IS_CAPTURABLE = false;
-        public override bool IsCapturable => IS_CAPTURABLE;
+        public override bool CanBeCaptured => false;
 
         public override void Kill()
-        {
-            // Method intentionally left empty.
-        }
-
-        public override void Capture()
         {
             // Method intentionally left empty.
         }

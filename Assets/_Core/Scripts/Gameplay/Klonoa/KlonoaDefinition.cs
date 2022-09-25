@@ -2,6 +2,7 @@ using System;
 using UnityEngine;
 using Gameplay.Projectile;
 using Sirenix.OdinInspector;
+using Extensions;
 
 namespace Gameplay.Klonoa
 {
@@ -24,7 +25,6 @@ namespace Gameplay.Klonoa
         [FoldoutGroup(JUMP_GROUP), SerializeField] private float _timeToJumpApex;
         [FoldoutGroup(JUMP_GROUP), SerializeField] private float _doubleJumpPreparationTime;
 
-
         [FoldoutGroup(FLOAT_GROUP), SerializeField] private SpeedData _floatMoveSpeed;
         [FoldoutGroup(FLOAT_GROUP), SerializeField] private float _floatStartSpeed;
         [FoldoutGroup(FLOAT_GROUP), SerializeField] private float _floatHeight;
@@ -32,6 +32,7 @@ namespace Gameplay.Klonoa
 
         [FoldoutGroup(CAPTURE_GROUP), SerializeField] private CaptureProjectile _captureProjectile;
         [FoldoutGroup(CAPTURE_GROUP), SerializeField] private float _captureRepositionTime = 0.2f;
+        [FoldoutGroup(CAPTURE_GROUP), SerializeField] private float _hangingRepositionTime = 0.2f;
 
         [FoldoutGroup(DAMAGE_GROUP), SerializeField] private float _stunnedTime = 0.5f;
         [FoldoutGroup(DAMAGE_GROUP), SerializeField] private float _knockbackForce = 2f;
@@ -59,6 +60,7 @@ namespace Gameplay.Klonoa
 
         public CaptureProjectile CaptureProjectile => _captureProjectile;
         public float CaptureRepositionTime => _captureRepositionTime;
+        public float HangingRepositionTime => _hangingRepositionTime;
 
         public float StunnedTime => _stunnedTime;
         public float KnockbackForce => _knockbackForce;

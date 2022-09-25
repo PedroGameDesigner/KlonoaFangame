@@ -6,6 +6,7 @@ using System;
 using Extensions;
 using UnityEngine;
 using Gameplay.Collectables;
+using Gameplay.Mechanics;
 
 namespace Gameplay.Klonoa
 {
@@ -43,19 +44,20 @@ namespace Gameplay.Klonoa
         private bool _previousGrounded = false;
         private bool _previousTouchingCeiling = false;
 
-        KlonoaStateMachine _stateMachine;
-        MoverOnRails _mover;
-        Rigidbody _rigidbody;
-        CapsuleCollider _collider;
+        private KlonoaStateMachine _stateMachine;
+        private MoverOnRails _mover;
+        private Rigidbody _rigidbody;
+        private CapsuleCollider _collider;
+        private Transform _originalParent;
+        private CaptureProjectile _projectile;
 
-        CaptureProjectile _projectile;
-        RaycastHit _damageHit;
-        RaycastHit[] _hits = new RaycastHit[10];
-        float resultsCount;
+        private RaycastHit _damageHit;
+        private RaycastHit[] _hits = new RaycastHit[10];
+        private float resultsCount;
         private float _airTime = 0;
-        Vector3 point1;
-        Vector3 point2;
-        Vector3 checkDirection;
+        private Vector3 point1;
+        private Vector3 point2;
+        private Vector3 checkDirection;
 
         public KlonoaDefinition Definition => _definition;
         private Vector2 MoveDirection { set;  get; }
@@ -68,12 +70,14 @@ namespace Gameplay.Klonoa
         public bool IsInDamage => _stateMachine.IsDamageState;
         public bool IsDead => _stateMachine.IsDeathState;
         public bool IsHolding => HoldedBall != null;
+        public bool IsHanging => HangingObject != null;
         public bool IsInvincible => _invincible;
         public bool IsInNormalState => _stateMachine.IsNormalState;
         public bool CaptureProjectileThrowed => _projectile != null;
         public Vector3 EffectiveSpeed => _mover.Velocity;
         public FaceDirection Facing { get; private set; } = FaceDirection.Right;
         public EnemyBall HoldedBall { get; private set; }
+        public HangeableObject HangingObject { get; private set; }
 
         //Events
         public event Action StateChangeEvent;
@@ -83,6 +87,8 @@ namespace Gameplay.Klonoa
         public event Action CaptureProjectileEvent;
         public event Action BeginHoldingEvent;
         public event Action EndHoldingEvent;
+        public event Action BeginHangingEvent;
+        public event Action EndHangingEvent;
         public event Action SideThrowEnemyEvent;
         public event Action<int> DamageEvent;
         public event Action DeathEvent;
@@ -96,6 +102,7 @@ namespace Gameplay.Klonoa
         //Behaviour Methods
         void Awake()
         {
+            _originalParent = transform.parent;
             _stateMachine = new KlonoaStateMachine(this);
             _stateMachine.StartMachine();
             _stateMachine.StateChangeEvent += OnStateChange;
@@ -292,20 +299,45 @@ namespace Gameplay.Klonoa
             return _projectile;
         }
         
-        public void HoldEnemy(EnemyBehaviour enemy)
+        public void HoldObject(HoldableObject captureObject)
         {
-            HoldedBall = enemy.InstantiateBall(_ballHolder.transform, _rigidbody);
+            HoldedBall = captureObject.GetHoldedVersion(_ballHolder.transform);
             _ballHolder.SetHoldedBall(HoldedBall);
             _ballHolder.RestoreOriginPosition();
-            _ballHolder.MoveFromPosition(enemy.transform.position, _definition.CaptureRepositionTime);
+            _ballHolder.MoveFromPosition(captureObject.transform.position, _definition.CaptureRepositionTime);
         }
 
-        public void MoveBallToFeet(Action finishAction)
+        public void MoveBeforeDoubleJump(Action finishAction)
         {
-            _ballHolder.MoveToPosition(
-                _feetPosition.position,
-                _definition.DoubleJumpPreparationTime,
-                finishAction);
+            if (IsHolding)
+            {
+                _ballHolder.MoveToPosition(
+                    _feetPosition.position,
+                    _definition.DoubleJumpPreparationTime,
+                    finishAction);
+            }
+            else if (IsHanging)
+            {
+                HangingObject.MoveToJumpPosition(
+                    _definition.DoubleJumpPreparationTime,
+                    finishAction);
+            }
+        }
+
+        public void HangFromObject(HangeableObject hangeable)
+        {
+            transform.parent = hangeable.transform;
+            HangingObject = hangeable;
+            HangingObject.SetHangedObject(transform);
+            BeginHangingEvent?.Invoke();
+        }
+
+        public void FinishHanging()
+        {
+            transform.parent = _originalParent;
+            HangingObject.SetHangedObject(null);
+            HangingObject = null;
+            EndHangingEvent?.Invoke();
         }
 
         public void ThrowHoldedEnemySideways()

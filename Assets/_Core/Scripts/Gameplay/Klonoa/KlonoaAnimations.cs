@@ -25,6 +25,8 @@ namespace Gameplay.Klonoa
         [FoldoutGroup(PARAMETERS_GROUP), SerializeField] private string _beginHoldingParameter = "BeginHolding";
         [FoldoutGroup(PARAMETERS_GROUP), SerializeField] private string _isHoldingParameter = "isHolding";
         [FoldoutGroup(PARAMETERS_GROUP), SerializeField] private string _endHoldingParameter = "EndHolding";
+        [FoldoutGroup(PARAMETERS_GROUP), SerializeField] private string _beginHangingParameter = "BeginHanging";
+        [FoldoutGroup(PARAMETERS_GROUP), SerializeField] private string _endHangingParameter = "EndHanging";
         [FoldoutGroup(PARAMETERS_GROUP), SerializeField] private string _throwParameter = "Throw";
         [FoldoutGroup(PARAMETERS_GROUP), SerializeField] private string _floatParameter = "Floating";
         [FoldoutGroup(PARAMETERS_GROUP), SerializeField] private string _ySpeedParameter = "YSpeed";
@@ -46,6 +48,10 @@ namespace Gameplay.Klonoa
             _behaviour.CaptureProjectileEvent += OnCaptureProjectile;
             _behaviour.BeginHoldingEvent += OnBeginHolding;
             _behaviour.EndHoldingEvent += OnEndHolding;
+            _behaviour.BeginHoldingEvent += OnBeginHolding;
+            _behaviour.EndHoldingEvent += OnEndHolding;
+            _behaviour.BeginHangingEvent += OnBeginHanging;
+            _behaviour.EndHangingEvent += OnEndHanging;
             _behaviour.SideThrowEnemyEvent += OnThrow;
             _behaviour.DeathEvent += OnDeath;
         }
@@ -102,9 +108,18 @@ namespace Gameplay.Klonoa
 
         private void OnEndHolding()
         {
-            Debug.Log("End Holding");
             _animator.SetTrigger(_endHoldingParameter);
             _animator.SetBool(_isHoldingParameter, false);
+        }
+
+        private void OnBeginHanging()
+        {
+            _animator.SetTrigger(_beginHangingParameter);
+        }
+
+        private void OnEndHanging()
+        {
+            _animator.SetTrigger(_endHangingParameter);
         }
 
         private void OnThrow()
