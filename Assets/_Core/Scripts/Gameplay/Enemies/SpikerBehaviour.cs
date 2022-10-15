@@ -8,7 +8,7 @@ namespace Gameplay.Enemies
     {
         public override bool CanBeCaptured => false;
 
-        public override void Kill()
+        public override void DoDamage()
         {
             // Method intentionally left empty.
         }

@@ -165,10 +165,10 @@ namespace Gameplay.Enemies.Ball
 
             if (results.Length > 0)
             {
-                EnemyBehaviour enemy = results[0].collider.GetComponent<EnemyBehaviour>();
-                if (enemy != null)
-                    enemy.Kill();
-                
+                IDamageable damageable = results[0].collider.GetComponent<IDamageable>();
+                if (damageable != null)
+                    damageable.DoDamage();
+
                 DestroySelf();
             }
 

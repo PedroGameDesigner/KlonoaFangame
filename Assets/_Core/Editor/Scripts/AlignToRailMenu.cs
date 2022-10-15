@@ -38,5 +38,29 @@ namespace EditorTools
                 transform.position = _rail.Local2World(localPosition);
             }
         }
+
+        [Button(ButtonSizes.Large)]
+        public void RotateSelectedToRail()
+        {
+            foreach (Transform selected in Selection.transforms)
+            {
+                if (selected != _rail.transform)
+                    RotateObjectToRail(selected);
+            }
+        }
+
+        private void RotateObjectToRail(Transform transform)
+        {
+            Vector3? localPositionNullable = _rail.World2Local(transform.position);
+            if (localPositionNullable != null)
+            {
+                Vector3 localPosition = localPositionNullable.Value;
+                localPosition = new Vector3(0, localPosition.y, localPosition.z);
+                Vector3 advancement = localPosition + Vector3.forward;
+                localPosition = _rail.Local2World(localPosition);
+                advancement = _rail.Local2World(advancement);
+                transform.rotation = Quaternion.LookRotation(advancement - localPosition, Vector3.up);
+            }
+        }
     }
 }

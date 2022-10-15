@@ -6,7 +6,7 @@ using UnityEngine;
 
 namespace Gameplay.Enemies
 {
-    public abstract class EnemyBehaviour : HoldableObject
+    public abstract class EnemyBehaviour : HoldableObject, IDamageable
     {
         protected const float RESPAWN_TIME = 0.5f;
 
@@ -24,7 +24,12 @@ namespace Gameplay.Enemies
             return SpawnedBall;
         }
 
-        public virtual void Kill()
+        public virtual void DoDamage()
+        {
+            Kill();
+        }
+
+        protected void Kill()
         {
             Enable(false);
             DeathEvent?.Invoke();
