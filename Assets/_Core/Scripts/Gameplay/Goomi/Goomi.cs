@@ -8,8 +8,11 @@ namespace Gameplay.Mechanics
 {
     public class Goomi : HangeableObject
     {
+        private const string HANG_ANIMATION = "Hanged";
+
         [SerializeField] private Transform _hangPosition;
         [SerializeField] private Transform _jumpPosition;
+        [SerializeField] private Animator _animator;
 
         private bool _moving;
         private float _moveTime;
@@ -21,11 +24,13 @@ namespace Gameplay.Mechanics
         public override void MoveToHangingPosition(float time, Action finishAction)
         {
             StartMovement(time, _hangPosition.localPosition, finishAction);
+            ChangeHangAnimation(true);
         }
 
         public override void MoveToJumpPosition(float time, Action finishAction)
         {
             StartMovement(time, _jumpPosition.localPosition, finishAction);
+            ChangeHangAnimation(false);
         }
 
         private void StartMovement(float time, Vector3 endPosition, Action finishAction)
@@ -56,6 +61,11 @@ namespace Gameplay.Mechanics
                 _hangedObject.localPosition = _endPosition;
                 _finishAction?.Invoke();
             }
+        }
+
+        private void ChangeHangAnimation(bool value)
+        {
+            _animator.SetBool(HANG_ANIMATION, value);
         }
     }
 }

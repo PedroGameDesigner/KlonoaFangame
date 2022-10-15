@@ -161,7 +161,6 @@ namespace Gameplay.Klonoa
             {
                 Vector3 velocity = _mover.Velocity;
                 velocity.y = _jumpForce + Mathf.Max(0, (_maxGroundDistance - CollisionData.GroundDistance) / deltaTime);
-                Debug.Log("Jump.JumpForce: " + velocity.y);
                 _mover.Velocity = velocity;
                 _airTime += _jumpTimeMarging * 1.1f;
                 if (_invokeJumpEvent) JumpEvent?.Invoke();
