@@ -10,6 +10,7 @@ namespace Gameplay.Enemies
     {
         protected const float RESPAWN_TIME = 0.5f;
 
+        [SerializeField] protected EnemyDefinition _definition = null;
         [SerializeField] protected EnemyBall _ballPrefab = null;
 
         protected EnemyBall SpawnedBall { get; set; }

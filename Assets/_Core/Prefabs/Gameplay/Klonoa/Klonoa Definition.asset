@@ -1,0 +1,85 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 19a575994eef94c47a3446edb4515930, type: 3}
+  m_Name: Klonoa Definition
+  m_EditorClassIdentifier: 
+  _moveSpeed:
+    _accelaration: 20
+    _drag: 5
+  _terminalVelocity: 10
+  _jumpHeight: 1.2
+  _doubleJumpHeight: 2.5
+  _timeToJumpApex: 0.33
+  _doubleJumpPreparationTime: 0.3
+  _floatMoveSpeed:
+    _accelaration: 5
+    _drag: 5
+  _floatStartSpeed: -1
+  _floatHeight: 0.5
+  _floatTime: 1
+  _captureProjectile: {fileID: 5373462825906385168, guid: e1f30890edb6bf743847ad1bbdaf1a56, type: 3}
+  _captureRepositionTime: 0.1
+  _hangingRepositionCurve:
+    serializedVersion: 2
+    m_Curve:
+    - serializedVersion: 3
+      time: 0
+      value: 0
+      inSlope: 12.70466
+      outSlope: 12.70466
+      tangentMode: 34
+      weightedMode: 0
+      inWeight: 0
+      outWeight: 0.33333334
+    - serializedVersion: 3
+      time: 0.08217976
+      value: 1.044066
+      inSlope: 3.0573168
+      outSlope: 3.0573168
+      tangentMode: 34
+      weightedMode: 0
+      inWeight: 0.33333334
+      outWeight: 0.33333334
+    - serializedVersion: 3
+      time: 0.09439328
+      value: 0.9635785
+      inSlope: 9.064284
+      outSlope: 9.064284
+      tangentMode: 34
+      weightedMode: 0
+      inWeight: 0.33333334
+      outWeight: 0.33333334
+    - serializedVersion: 3
+      time: 0.096528396
+      value: 1.0163555
+      inSlope: 10.003685
+      outSlope: 10.003685
+      tangentMode: 34
+      weightedMode: 0
+      inWeight: 0.33333334
+      outWeight: 0.33333334
+    - serializedVersion: 3
+      time: 0.1
+      value: 1
+      inSlope: -4.711225
+      outSlope: -4.711225
+      tangentMode: 34
+      weightedMode: 0
+      inWeight: 0.33333334
+      outWeight: 0
+    m_PreInfinity: 2
+    m_PostInfinity: 2
+    m_RotationOrder: 4
+  _stunnedTime: 0.5
+  _knockbackForce: 4
+  _knockbackDirection: {x: 0, y: 0.7, z: 0.7}
+  _invincibilityTime: 1.5

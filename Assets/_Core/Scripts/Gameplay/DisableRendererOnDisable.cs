@@ -7,7 +7,7 @@ namespace Gameplay
     public class DisableRendererOnDisable : MonoBehaviour
     {
         [SerializeField] private MonoBehaviour _referenceBehaviour;
-        [SerializeField] private Renderer _behaviourToDisable;
+        [SerializeField] private Component[] _behavioursToDisable;
 
         private bool _stateProxy;
 
@@ -20,7 +20,8 @@ namespace Gameplay
         {
             if (_stateProxy != _referenceBehaviour.enabled)
             {
-                _behaviourToDisable.enabled = _referenceBehaviour.enabled;
+                foreach(Component component in _behavioursToDisable)
+                    component.SendMessage("enabled", _referenceBehaviour.enabled, SendMessageOptions.DontRequireReceiver);
                 _stateProxy = _referenceBehaviour.enabled;
             }
         }
