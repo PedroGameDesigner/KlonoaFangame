@@ -15,7 +15,7 @@ namespace Gameplay.Enemies
             _behaviour.DeathEvent += OnDeath;
         }
 
-        private void OnDeath()
+        private void OnDeath(EnemyBehaviour caller)
         {
             _deathParticles.Play(true);
         }

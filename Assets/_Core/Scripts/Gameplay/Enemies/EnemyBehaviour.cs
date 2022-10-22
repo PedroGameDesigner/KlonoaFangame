@@ -13,9 +13,90 @@ namespace Gameplay.Enemies
         [SerializeField] protected EnemyDefinition _definition = null;
         [SerializeField] protected EnemyBall _ballPrefab = null;
 
-        protected EnemyBall SpawnedBall { get; set; }
+        protected State _state = State.Active;
+        protected Vector3 _originPosition;
+        protected Vector3 _spawnPosition;
+        protected float _spawnTime;
+        protected AnimationCurve _repositionCurve;
+        protected float _spawnTimer;
 
-        public event Action DeathEvent;
+        protected EnemyBall SpawnedBall { get; set; }
+        protected bool IsActive => _state == State.Active;
+
+        public delegate void EnemyEvent(EnemyBehaviour caller);
+        public event EnemyEvent DeathEvent;
+        public event Action StateChangeEvent;
+
+        protected override void Awake()
+        {
+            base.Awake();
+            _originPosition = transform.position;
+            Debug.Log("_originPosition = " + _originPosition);
+        }
+
+        private void Update()
+        {
+            float deltaTime = Time.deltaTime;
+            switch (_state)
+            {
+                case State.Active: UpdateActiveState(deltaTime); return;
+                case State.Spawning: UpdateSpawningState(deltaTime); return;
+                case State.Disable: return;
+            }
+        }
+
+        protected virtual void UpdateActiveState(float deltaTime)
+        {
+
+        }
+
+        protected virtual void UpdateSpawningState(float deltaTime)
+        {
+            _spawnTimer += deltaTime;
+            float timerNormal = _spawnTimer / _spawnTime;
+            transform.position = Vector3.Lerp(_spawnPosition, _originPosition, timerNormal);
+            transform.position += Vector3.up * _repositionCurve.Evaluate(timerNormal);
+
+            if (_spawnTimer >= _spawnTime)
+            {
+                transform.position = _originPosition;
+                ChangeToActiveState();
+            }
+        }
+
+        protected virtual void ChangeToActiveState()
+        {
+            _state = State.Active;
+            InvokeStateChangeEvent();
+        }
+
+        protected virtual void ChangeToSpawningState(Vector3 spawnPosition, float spawnTime, AnimationCurve repositionCurve)
+        {
+            _spawnTimer = 0;
+            _spawnPosition = spawnPosition;
+            _spawnTime = spawnTime;
+            _repositionCurve = repositionCurve;
+            _state = State.Spawning;
+            InvokeStateChangeEvent();
+        }
+
+        protected virtual void ChangeToDisableState()
+        {
+            _state = State.Disable;
+            InvokeStateChangeEvent();
+        }
+
+        protected void InvokeStateChangeEvent()
+        {
+            StateChangeEvent?.Invoke();
+            Debug.Log($"Enemy {name} change state: {_state}"); ;
+        }
+
+        protected void ChangeToDisable()
+        {
+            _state = State.Disable;
+            StateChangeEvent?.Invoke();
+        }
 
         public override EnemyBall GetHoldedVersion(Transform holderTransform)
         {
@@ -25,21 +106,38 @@ namespace Gameplay.Enemies
             return SpawnedBall;
         }
 
+        public override void Capture()
+        {
+            gameObject.SetActive(false);
+        }
+
         public virtual void DoDamage()
         {
             Kill();
         }
 
-        protected void Kill()
+        public virtual void Respawn(Vector3 spawnPosition, float spawnTime, AnimationCurve repositionCurve)
         {
-            Enable(false);
-            DeathEvent?.Invoke();
+            gameObject.SetActive(true);
+            ChangeToSpawningState(spawnPosition, spawnTime, repositionCurve);
+        }
+
+        protected virtual void Kill()
+        {
+            DeathEvent?.Invoke(this);
+            gameObject.SetActive(false);
         }
 
         protected void OnBallDestroyed()
         {
-            SpawnedBall = null;
-            Enable(true); 
+            Kill();
+        }
+
+        protected enum State
+        {
+            Disable,
+            Spawning,
+            Active
         }
     }
 }

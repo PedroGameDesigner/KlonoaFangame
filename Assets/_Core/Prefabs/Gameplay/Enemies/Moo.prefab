@@ -232,9 +232,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _referenceBehaviour: {fileID: 5600298607983526250}
-  _behavioursToDisable:
-  - {fileID: 726757905310178693}
-  - {fileID: 8155019463362861369}
+  _rendererToDisable: {fileID: 726757905310178693}
 --- !u!114 &247188290652792964
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -408,7 +406,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 1198161245600211103, guid: ed5945340c7785941b46e99a5ecc760f, type: 3}
       propertyPath: m_OrthographicSize
-      value: 0.39200005
+      value: 0.00000001
       objectReference: {fileID: 0}
     - target: {fileID: 4276787999123193625, guid: ed5945340c7785941b46e99a5ecc760f, type: 3}
       propertyPath: _baseSize
@@ -429,14 +427,3 @@ Transform:
   m_CorrespondingSourceObject: {fileID: 68933782417069271, guid: ed5945340c7785941b46e99a5ecc760f, type: 3}
   m_PrefabInstance: {fileID: 5365554037851153952}
   m_PrefabAsset: {fileID: 0}
---- !u!114 &8155019463362861369 stripped
-MonoBehaviour:
-  m_CorrespondingSourceObject: {fileID: 4276787999123193625, guid: ed5945340c7785941b46e99a5ecc760f, type: 3}
-  m_PrefabInstance: {fileID: 5365554037851153952}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 0}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 00792caaf906b1049a55e12251ef5e62, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 

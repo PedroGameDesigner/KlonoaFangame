@@ -8,6 +8,7 @@ TagManager:
   - DeathPlane
   - Collectable
   - Hanger
+  - Damageable
   layers:
   - Default
   - TransparentFX

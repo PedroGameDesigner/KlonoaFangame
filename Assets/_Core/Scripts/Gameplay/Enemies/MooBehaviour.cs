@@ -15,7 +15,7 @@ namespace Gameplay.Enemies
         [Space]
         [SerializeField] private RailBehaviour _DebugRail;
 
-        private State _state;
+        private MooState _mooState;
 
         private float _firstStopDistance;
         private Direction _walkDirection;
@@ -25,29 +25,32 @@ namespace Gameplay.Enemies
 
         public override bool CanBeCaptured => true;
         public int Facing => (int) _walkDirection;
-        public bool IsWalking => _state == State.Move;
+        public bool IsWalking => IsActive && _mooState == MooState.Move;
         public float Speed => _definition.MoveSpeed;
         private float StopDistance => Mathf.Abs(_rightStopDistance) + Mathf.Abs(_leftStopDistance);
         private Vector3 Velocity => Speed * Vector3.forward * (int) _walkDirection;
 
-        public event Action StateChangeEvent;
-
-        private void Start()
+        protected override void Awake()
         {
-            _state = State.Move;
+            base.Awake();
+            Initialize();
+        }
+
+        private void Initialize()
+        {
+            _mooState = MooState.Move;
             _walkDirection = _startDirection;
             _firstStopDistance = _walkDirection == Direction.Left ?
                 _leftStopDistance : _rightStopDistance;
             _distanceToWalk = _firstStopDistance;
         }
 
-        private void Update()
+        protected override void UpdateActiveState(float deltaTime)
         {            
-            float deltaTime = Time.deltaTime;
-            switch (_state)
+            switch (_mooState)
             {
-                case State.Move: UpdateMove(deltaTime); return;
-                case State.Stop: UpdateStop(deltaTime); return;
+                case MooState.Move: UpdateMove(deltaTime); return;
+                case MooState.Stop: UpdateStop(deltaTime); return;
             }
         }
 
@@ -73,21 +76,34 @@ namespace Gameplay.Enemies
                 ChangeToMove();
             }
         }
+        protected override void ChangeToActiveState()
+        {
+            base.ChangeToActiveState();
+            _mover.enabled = true;
+            Initialize();
+        }
 
         private void ChangeToMove()
         {
             _walkDirection = _walkDirection == Direction.Rigth ?
                 Direction.Left : Direction.Rigth;
             _distanceToWalk = StopDistance;
-            _state = State.Move;
-            StateChangeEvent?.Invoke();
+            _mooState = MooState.Move;
+            InvokeStateChangeEvent();
         }
 
         private void ChangeToStop()
         {
             _stopTimer = 0;
-            _state = State.Stop;
-            StateChangeEvent?.Invoke();
+            _mooState = MooState.Stop;
+            InvokeStateChangeEvent();
+        }
+
+        protected override void Kill()
+        {
+            _mover.enabled = false;
+
+            base.Kill();
         }
 
         private void OnDisable()
@@ -112,7 +128,7 @@ namespace Gameplay.Enemies
             }
         }
 
-        private enum State
+        private enum MooState
         {
             Move,
             Stop
