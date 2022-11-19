@@ -10,13 +10,17 @@ namespace Gameplay.Enemies
         [SerializeField] private List<EnemyBehaviour> _enemies;
         [SerializeField] private float _respawnTime = 5f;
         [SerializeField] private float _repositionTime = 2f;
+        [SerializeField] private AnimationCurve _verticalRepositionCurve;
         [SerializeField] private AnimationCurve _repositionCurve;
-        [SerializeField] private GameObject _animationContainer;
 
         private List<SpawnTimer> _spawnTimers = new List<SpawnTimer>();
         private List<SpawnTimer> _finishedTimers = new List<SpawnTimer>();
 
         private bool HasTimers => _spawnTimers.Count > 0;
+
+        public event Action StartSpawnEvent;
+        public event Action EndSpawnEvent;
+
 
         private void Awake()
         {
@@ -34,7 +38,7 @@ namespace Gameplay.Enemies
                 _finishedTimers.Clear();
                 foreach (var timer in _spawnTimers)
                 {
-                    timer.Update(transform.position, deltaTime, _repositionTime, _repositionCurve);
+                    timer.Update(transform.position, deltaTime, _repositionTime, _repositionCurve, _verticalRepositionCurve);
                     if (timer.Finished)
                         _finishedTimers.Add(timer);
                 }
@@ -46,7 +50,7 @@ namespace Gameplay.Enemies
 
                 if (!HasTimers)
                 {
-                    _animationContainer.SetActive(false);
+                    EndSpawnEvent?.Invoke();
                 }
             }
         }
@@ -54,9 +58,10 @@ namespace Gameplay.Enemies
         private void OnEnemyDeath(EnemyBehaviour caller)
         {
             caller.transform.position = transform.position;
+            if (!HasTimers)
+                StartSpawnEvent?.Invoke();
+
             _spawnTimers.Add(new SpawnTimer(caller, _respawnTime));
-            if (!_animationContainer.activeSelf)
-                _animationContainer.SetActive(true);
         }
 
         private class SpawnTimer
@@ -75,7 +80,7 @@ namespace Gameplay.Enemies
                 _time = time;
             }
 
-            public void Update (Vector3 spawnPosition, float deltaTime, float repositiontime, AnimationCurve repositionCurve)
+            public void Update (Vector3 spawnPosition, float deltaTime, float repositiontime, AnimationCurve repositionCurve, AnimationCurve verticalCurve)
             {
                 if (!Finished)
                 {
@@ -83,7 +88,7 @@ namespace Gameplay.Enemies
 
                     if (_timer >= _time)
                     {
-                        _enemy.Respawn(spawnPosition, repositiontime, repositionCurve);
+                        _enemy.Respawn(spawnPosition, repositiontime, repositionCurve, verticalCurve);
                         Finished = true;
                     }
                 }

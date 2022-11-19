@@ -16,8 +16,12 @@ namespace Gameplay.Enemies
         protected State _state = State.Active;
         protected Vector3 _originPosition;
         protected Vector3 _spawnPosition;
-        protected float _spawnTime;
+        protected Vector3 _spawnDirection;
         protected AnimationCurve _repositionCurve;
+        protected AnimationCurve _repositionVerticalCurve;
+        protected float _spawnHeight;
+        protected float _spawnTime;
+        protected float _gravity;
         protected float _spawnTimer;
 
         protected EnemyBall SpawnedBall { get; set; }
@@ -55,7 +59,7 @@ namespace Gameplay.Enemies
             _spawnTimer += deltaTime;
             float timerNormal = _spawnTimer / _spawnTime;
             transform.position = Vector3.Lerp(_spawnPosition, _originPosition, timerNormal);
-            transform.position += Vector3.up * _repositionCurve.Evaluate(timerNormal);
+            transform.position += Vector3.up * _repositionVerticalCurve.Evaluate(timerNormal);
 
             if (_spawnTimer >= _spawnTime)
             {
@@ -70,12 +74,13 @@ namespace Gameplay.Enemies
             InvokeStateChangeEvent();
         }
 
-        protected virtual void ChangeToSpawningState(Vector3 spawnPosition, float spawnTime, AnimationCurve repositionCurve)
+        protected virtual void ChangeToSpawningState(Vector3 spawnPosition, float spawnTime, AnimationCurve repositionCurve, AnimationCurve verticalCurve)
         {
             _spawnTimer = 0;
             _spawnPosition = spawnPosition;
             _spawnTime = spawnTime;
             _repositionCurve = repositionCurve;
+            _repositionVerticalCurve = verticalCurve;
             _state = State.Spawning;
             InvokeStateChangeEvent();
         }
@@ -116,10 +121,10 @@ namespace Gameplay.Enemies
             Kill();
         }
 
-        public virtual void Respawn(Vector3 spawnPosition, float spawnTime, AnimationCurve repositionCurve)
+        public virtual void Respawn(Vector3 spawnPosition, float spawnTime, AnimationCurve repositionCurve, AnimationCurve verticalCurve)
         {
             gameObject.SetActive(true);
-            ChangeToSpawningState(spawnPosition, spawnTime, repositionCurve);
+            ChangeToSpawningState(spawnPosition, spawnTime, repositionCurve, verticalCurve);
         }
 
         protected virtual void Kill()
