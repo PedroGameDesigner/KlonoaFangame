@@ -1271,7 +1271,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: ac4a431362dc02d4ab10eac316cc235f, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _resources: {fileID: 0}
+  _resources: {fileID: 5945509575152486338}
   _textbox: {fileID: 7360748001815914050}
 --- !u!114 &7360748001815914050
 MonoBehaviour:
@@ -1449,6 +1449,22 @@ PrefabInstance:
       propertyPath: m_LookAt
       value: 
       objectReference: {fileID: 2039934468006787971}
+    - target: {fileID: 3233935581048594528, guid: 1e2dc7e22e1453146b1e1e4c8cc7719b, type: 3}
+      propertyPath: m_LocalRotation.w
+      value: 0.64379126
+      objectReference: {fileID: 0}
+    - target: {fileID: 3233935581048594528, guid: 1e2dc7e22e1453146b1e1e4c8cc7719b, type: 3}
+      propertyPath: m_LocalRotation.x
+      value: 0.008628631
+      objectReference: {fileID: 0}
+    - target: {fileID: 3233935581048594528, guid: 1e2dc7e22e1453146b1e1e4c8cc7719b, type: 3}
+      propertyPath: m_LocalRotation.y
+      value: 0.76508385
+      objectReference: {fileID: 0}
+    - target: {fileID: 3233935581048594528, guid: 1e2dc7e22e1453146b1e1e4c8cc7719b, type: 3}
+      propertyPath: m_LocalRotation.z
+      value: -0.0102542965
+      objectReference: {fileID: 0}
     - target: {fileID: 3233935581048594530, guid: 1e2dc7e22e1453146b1e1e4c8cc7719b, type: 3}
       propertyPath: m_Offset.y
       value: 0.4
@@ -1734,6 +1750,10 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 8620560969879801833}
     m_Modifications:
+    - target: {fileID: 2253927632365792530, guid: 7c9adb3bfb1539542bdd2a7d58e0e439, type: 3}
+      propertyPath: m_OrthographicSize
+      value: 0.00000001
+      objectReference: {fileID: 0}
     - target: {fileID: 9048982795073711757, guid: 7c9adb3bfb1539542bdd2a7d58e0e439, type: 3}
       propertyPath: _beginHangingParameter
       value: BeginHanging

@@ -6,10 +6,16 @@ EditorBuildSettings:
   serializedVersion: 2
   m_Scenes:
   - enabled: 1
+    path: Assets/_Core/Scenes/Testing/All Mechanics Test.unity
+    guid: ff2e5321565cf7842a3602b171962149
+  - enabled: 0
     path: Assets/_Core/Scenes/Testing/Test Throw.unity
     guid: e12613d88cdb53544a9e1cf54f27124c
   - enabled: 1
     path: Assets/_Core/Scenes/Concept/Game.unity
     guid: d1c3109bdb54ad54c8a2b2838528e640
+  - enabled: 0
+    path: Assets/_Core/Scenes/Levels/Level1-1.unity
+    guid: d12f102dd71803549a31345ffb46d64b
   m_configObjects:
     com.unity.input.settings: {fileID: 11400000, guid: cd88a2abb521e2049ab867074f06ea43, type: 2}
