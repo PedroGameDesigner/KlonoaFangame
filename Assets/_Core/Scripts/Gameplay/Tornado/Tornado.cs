@@ -32,6 +32,7 @@ namespace Gameplay.Mechanics
             float impulse = CalculateImpulse(klonoa.Definition.Gravity);
             
             klonoa.transform.position = transform.position;
+            klonoa.ReturnToNormalState();
             klonoa.StartJumpAction(impulse, true, false);
             BounceEvent?.Invoke();
         }

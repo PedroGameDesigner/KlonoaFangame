@@ -15,6 +15,8 @@ namespace Gameplay.Klonoa
         protected KlonoaState _hangingState;
         protected CaptureProjectile _projectile;
 
+        public override bool IsNormalState => false;
+
         protected override SpeedData MoveSpeed => _definition.NotMoveSpeed;
         protected override float Gravity => _definition.Gravity;
         protected override bool CanTurn => CANT_TURN;

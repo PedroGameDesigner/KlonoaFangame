@@ -12,6 +12,8 @@ namespace Gameplay.Klonoa
         private float _YSpeed;
         private float _timer;
 
+        public override bool IsNormalState => false;
+
         protected override SpeedData MoveSpeed => _definition.FloatMoveSpeed;
         protected override float Gravity => 0;
         protected override bool CanTurn => CAN_TURN;

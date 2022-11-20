@@ -14,6 +14,8 @@ namespace Gameplay.Klonoa
         private KlonoaState _normalState;
         private KlonoaState _holdingState;
 
+        public override bool IsNormalState => false;
+
         protected override SpeedData MoveSpeed => new SpeedData();
         protected override float Gravity => _definition.Gravity;
         protected override bool CanTurn => CANT_TURN;

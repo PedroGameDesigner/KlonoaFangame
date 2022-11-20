@@ -280,6 +280,11 @@ namespace Gameplay.Klonoa
             }
         }
 
+        public void ReturnToNormalState()
+        {
+            _stateMachine.ReturnToNormalState();
+        }
+
         public void StartJumpAction(float jumpForce, bool ignoreGround = false, bool invokeJumpEvent = true)
         {
             _jumpActivated = true;

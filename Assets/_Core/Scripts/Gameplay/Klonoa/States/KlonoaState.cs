@@ -14,6 +14,8 @@ namespace Gameplay.Klonoa
         protected readonly KlonoaDefinition _definition;
         protected readonly MoverOnRails _mover;
 
+        public abstract bool IsNormalState { get; }
+
         protected abstract SpeedData MoveSpeed { get; }
         protected abstract float Gravity { get; }
         protected abstract bool CanTurn { get; }
@@ -84,6 +86,7 @@ namespace Gameplay.Klonoa
 
         public override void LateUpdate(float deltaTime) { }
 
+        public virtual void Reset() { }
 
         public override void Exit()
         {

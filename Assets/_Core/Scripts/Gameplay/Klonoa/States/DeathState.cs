@@ -8,6 +8,8 @@ namespace Gameplay.Klonoa
     {
         private const bool CANT_TURN = false;
 
+        public override bool IsNormalState => true;
+
         protected override SpeedData MoveSpeed => new SpeedData();
         protected override float Gravity => _definition.Gravity;
         protected override bool CanTurn => CANT_TURN;

@@ -16,6 +16,8 @@ namespace Gameplay.Klonoa
         private DamageState _damageState;
         private DeathState _deathState;
 
+        private KlonoaState _lastNormalState;
+
         public bool IsFloatState => _currentState == _floatState;
         public bool IsDoubleJumpState => _currentState == _doubleJumpState;
         public bool IsDamageState => _currentState == _damageState;
@@ -54,6 +56,19 @@ namespace Gameplay.Klonoa
                 Debug.LogFormat("Klonoa: first state: {0}", nextState.GetType());
 
             base.OnStateChange(nextState);
+            
+            if (nextState is KlonoaState state &&
+                state.IsNormalState &&
+                state != _lastNormalState)
+            {
+                _lastNormalState = state;
+            }
+        }
+
+        public void ReturnToNormalState()
+        {
+            _lastNormalState.Reset();
+            OnStateChange(_lastNormalState);
         }
 
         public void ChangeToDamageState(RaycastHit hit)

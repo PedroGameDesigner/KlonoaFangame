@@ -14,7 +14,10 @@ namespace Gameplay.Klonoa
 
         private bool _floatUsed;
         private bool _previousGrounded;
+        private float _lastYVelocity;
         private float _timer;
+
+        public override bool IsNormalState => true;
 
         protected override SpeedData MoveSpeed => _definition.MoveSpeed;
         protected override float Gravity => _definition.Gravity;
@@ -56,6 +59,13 @@ namespace Gameplay.Klonoa
             }
 
             _previousGrounded = _behaviour.CollisionData.Grounded;
+            _lastYVelocity = _mover.Velocity.y;
+        }
+
+        public override void Reset()
+        {
+            _timer = 0;
+            _floatUsed = false;
         }
 
         public override void JumpAction()
