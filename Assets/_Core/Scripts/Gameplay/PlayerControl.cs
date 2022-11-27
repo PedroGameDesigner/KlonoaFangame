@@ -124,6 +124,33 @@ namespace InputControl
                     ""isPartOfComposite"": false
                 }
             ]
+        },
+        {
+            ""name"": ""Menu"",
+            ""id"": ""d6e8cfd6-9d7d-4d61-bb02-64108b76cf2b"",
+            ""actions"": [
+                {
+                    ""name"": ""Exit"",
+                    ""type"": ""Button"",
+                    ""id"": ""cc114443-9013-43d5-8b2c-f3a7a60106cd"",
+                    ""expectedControlType"": ""Button"",
+                    ""processors"": """",
+                    ""interactions"": """"
+                }
+            ],
+            ""bindings"": [
+                {
+                    ""name"": """",
+                    ""id"": ""7e518dfe-04bb-4b4b-804a-d83de2013cac"",
+                    ""path"": ""<Keyboard>/escape"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""Exit"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                }
+            ]
         }
     ],
     ""controlSchemes"": []
@@ -133,6 +160,9 @@ namespace InputControl
             m_Player_Move = m_Player.FindAction("Move", throwIfNotFound: true);
             m_Player_Jump = m_Player.FindAction("Jump", throwIfNotFound: true);
             m_Player_Attack = m_Player.FindAction("Attack", throwIfNotFound: true);
+            // Menu
+            m_Menu = asset.FindActionMap("Menu", throwIfNotFound: true);
+            m_Menu_Exit = m_Menu.FindAction("Exit", throwIfNotFound: true);
         }
 
         public void Dispose()
@@ -227,11 +257,48 @@ namespace InputControl
             }
         }
         public PlayerActions @Player => new PlayerActions(this);
+
+        // Menu
+        private readonly InputActionMap m_Menu;
+        private IMenuActions m_MenuActionsCallbackInterface;
+        private readonly InputAction m_Menu_Exit;
+        public struct MenuActions
+        {
+            private @PlayerControl m_Wrapper;
+            public MenuActions(@PlayerControl wrapper) { m_Wrapper = wrapper; }
+            public InputAction @Exit => m_Wrapper.m_Menu_Exit;
+            public InputActionMap Get() { return m_Wrapper.m_Menu; }
+            public void Enable() { Get().Enable(); }
+            public void Disable() { Get().Disable(); }
+            public bool enabled => Get().enabled;
+            public static implicit operator InputActionMap(MenuActions set) { return set.Get(); }
+            public void SetCallbacks(IMenuActions instance)
+            {
+                if (m_Wrapper.m_MenuActionsCallbackInterface != null)
+                {
+                    @Exit.started -= m_Wrapper.m_MenuActionsCallbackInterface.OnExit;
+                    @Exit.performed -= m_Wrapper.m_MenuActionsCallbackInterface.OnExit;
+                    @Exit.canceled -= m_Wrapper.m_MenuActionsCallbackInterface.OnExit;
+                }
+                m_Wrapper.m_MenuActionsCallbackInterface = instance;
+                if (instance != null)
+                {
+                    @Exit.started += instance.OnExit;
+                    @Exit.performed += instance.OnExit;
+                    @Exit.canceled += instance.OnExit;
+                }
+            }
+        }
+        public MenuActions @Menu => new MenuActions(this);
         public interface IPlayerActions
         {
             void OnMove(InputAction.CallbackContext context);
             void OnJump(InputAction.CallbackContext context);
             void OnAttack(InputAction.CallbackContext context);
+        }
+        public interface IMenuActions
+        {
+            void OnExit(InputAction.CallbackContext context);
         }
     }
 }
