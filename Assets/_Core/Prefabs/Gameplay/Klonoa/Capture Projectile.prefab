@@ -49,7 +49,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _captureLayer:
     serializedVersion: 2
-    m_Bits: 256
+    m_Bits: 4352
   _reach: 0.5
   _advanceTime: 0.1
   _returnTime: 0.1

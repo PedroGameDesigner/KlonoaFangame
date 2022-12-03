@@ -13,6 +13,8 @@ namespace Gameplay.Mechanics
         [SerializeField] private Transform _hangPosition;
         [SerializeField] private Transform _jumpPosition;
         [SerializeField] private Animator _animator;
+        [SerializeField] private AudioClip _bounceClip;
+        [SerializeField] private AudioSource _audioSource;
 
         private bool _moving;
         private float _moveTime;
@@ -29,8 +31,12 @@ namespace Gameplay.Mechanics
 
         public override void MoveToJumpPosition(float time, Action finishAction)
         {
-            StartMovement(time, _jumpPosition.localPosition, finishAction);
-            ChangeHangAnimation(false);
+            StartMovement(time, _jumpPosition.localPosition, () =>
+            {
+                ChangeHangAnimation(false);
+                _audioSource.PlayOneShot(_bounceClip);
+                finishAction.Invoke();
+            });
         }
 
         private void StartMovement(float time, Vector3 endPosition, Action finishAction)

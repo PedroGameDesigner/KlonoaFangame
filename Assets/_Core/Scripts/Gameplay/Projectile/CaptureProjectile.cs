@@ -119,6 +119,25 @@ namespace Gameplay.Projectile
             }
         }
 
+        private void OnTriggerEnter(Collider other)
+        {
+            if (_captureLayer.CheckLayer(other.gameObject.layer))
+            {
+                ICapturable capturable = other.gameObject.GetComponent<ICapturable>();
+                capturable.Capture();
+
+                if (capturable.CanBeCaptured)
+                {
+                    CapturedEvent?.Invoke(capturable);
+                    Finish();
+                }
+                else
+                {
+                    FinishMovement();
+                }
+            }
+        }
+
         private Vector3 CalculateVelocity()
         {
             float xValue = Mathf.Sqrt(Mathf.Pow(_velocity.x, 2) + Mathf.Pow(_velocity.z, 2));
