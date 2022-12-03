@@ -190,7 +190,7 @@ MonoBehaviour:
     m_Curve:
     - serializedVersion: 3
       time: 0
-      value: 1
+      value: 0.35
       inSlope: 0
       outSlope: 0
       tangentMode: 136
@@ -199,19 +199,19 @@ MonoBehaviour:
       outWeight: 0.33333334
     - serializedVersion: 3
       time: 1
-      value: 0
-      inSlope: 0
-      outSlope: 0
-      tangentMode: 136
+      value: 1
+      inSlope: 1.0592839
+      outSlope: 1.0592839
+      tangentMode: 0
       weightedMode: 0
-      inWeight: 0.33333334
+      inWeight: 0.0912863
       outWeight: 0.33333334
     m_PreInfinity: 2
     m_PostInfinity: 2
     m_RotationOrder: 4
   _defaultFacing: 1
-  _startAccelerationArea: 0.1
-  _endAccelerationArea: 0.9
+  _startAccelerationArea: 0.2
+  _endAccelerationArea: 0.8
 --- !u!136 &250266076857772854
 CapsuleCollider:
   m_ObjectHideFlags: 0
@@ -249,7 +249,7 @@ MonoBehaviour:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 250266076857772848}
-  m_Enabled: 1
+  m_Enabled: 0
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 4ddc1a2536715a24095c464a2c394d5d, type: 3}
   m_Name: 

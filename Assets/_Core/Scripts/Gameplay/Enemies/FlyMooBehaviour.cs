@@ -17,7 +17,7 @@ namespace Gameplay.Enemies
         [SerializeField] private double _endAccelerationArea;
 
         public override bool CanBeCaptured => true;
-        private float MinSpeed => _definition.MoveSpeed * 0.1f;
+        private float MinSpeed => _definition.MoveSpeed * 0.35f;
         public float Facing 
         {
             get
@@ -39,7 +39,6 @@ namespace Gameplay.Enemies
         {
             if (_splineFollower != null)
             {
-                Debug.Log($"{name}: spline={_splineFollower.followSpeed}");
                 _splineFollower.followSpeed = _definition.MoveSpeed;
                 _splineFollower.SetPercent(0);
 
