@@ -51,6 +51,14 @@ MonoBehaviour:
   _ballPrefab: {fileID: 1020939667055835225, guid: 1876a74c652221745829815bdf0ceb5c, type: 3}
   _rightStopDistance: 1
   _leftStopDistance: 1
+  _gravity: 10
+  _maxGroundDistance: 0.5
+  _groundCheckLength: 0.05
+  _maxCeilingDistance: 0.25
+  _ceilingCheckLength: 0.05
+  _groundLayer:
+    serializedVersion: 2
+    m_Bits: 128
   _startDirection: 1
   _mover: {fileID: 726757904358176940}
   _DebugRail: {fileID: 0}
@@ -79,9 +87,9 @@ CapsuleCollider:
   m_IsTrigger: 0
   m_Enabled: 1
   m_Radius: 0.25
-  m_Height: 0.4
+  m_Height: 0.6
   m_Direction: 1
-  m_Center: {x: 0, y: -0.1, z: 0}
+  m_Center: {x: 0, y: -0.2, z: 0}
 --- !u!54 &726757904358176938
 Rigidbody:
   m_ObjectHideFlags: 0
@@ -107,9 +115,9 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 726757905310178691}
+  - component: {fileID: 5036001395358528473}
   - component: {fileID: 726757905310178693}
   - component: {fileID: 726757905310178690}
-  - component: {fileID: 5036001395358528473}
   - component: {fileID: 4088879473063449728}
   m_Layer: 8
   m_Name: Sprite
@@ -133,6 +141,22 @@ Transform:
   m_Father: {fileID: 1695699243865316352}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &5036001395358528473
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 726757905310178688}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 25fcba14cec7d084b8973fb94415415d, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _behaviour: {fileID: 5600298607983526250}
+  _renderer: {fileID: 726757905310178693}
+  _animator: {fileID: 726757905310178690}
+  _defaultSpeed: 1.5
 --- !u!212 &726757905310178693
 SpriteRenderer:
   m_ObjectHideFlags: 0
@@ -203,22 +227,6 @@ Animator:
   m_HasTransformHierarchy: 1
   m_AllowConstantClipSamplingOptimization: 1
   m_KeepAnimatorControllerStateOnDisable: 0
---- !u!114 &5036001395358528473
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 726757905310178688}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 25fcba14cec7d084b8973fb94415415d, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  _behaviour: {fileID: 5600298607983526250}
-  _renderer: {fileID: 726757905310178693}
-  _animator: {fileID: 726757905310178690}
-  _defaultSpeed: 1.5
 --- !u!114 &4088879473063449728
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -406,7 +414,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 1198161245600211103, guid: ed5945340c7785941b46e99a5ecc760f, type: 3}
       propertyPath: m_OrthographicSize
-      value: 0.00000001
+      value: 0.39200002
       objectReference: {fileID: 0}
     - target: {fileID: 4276787999123193625, guid: ed5945340c7785941b46e99a5ecc760f, type: 3}
       propertyPath: _baseSize

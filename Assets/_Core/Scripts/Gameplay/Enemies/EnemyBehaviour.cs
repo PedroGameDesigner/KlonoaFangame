@@ -21,7 +21,6 @@ namespace Gameplay.Enemies
         protected AnimationCurve _repositionVerticalCurve;
         protected float _spawnHeight;
         protected float _spawnTime;
-        protected float _gravity;
         protected float _spawnTimer;
 
         protected EnemyBall SpawnedBall { get; set; }
@@ -38,7 +37,7 @@ namespace Gameplay.Enemies
             Debug.Log("_originPosition = " + _originPosition);
         }
 
-        private void Update()
+        private void FixedUpdate()
         {
             float deltaTime = Time.deltaTime;
             switch (_state)
@@ -94,13 +93,12 @@ namespace Gameplay.Enemies
         protected void InvokeStateChangeEvent()
         {
             StateChangeEvent?.Invoke();
-            Debug.Log($"Enemy {name} change state: {_state}"); ;
         }
 
         protected void ChangeToDisable()
         {
             _state = State.Disable;
-            StateChangeEvent?.Invoke();
+            InvokeStateChangeEvent();
         }
 
         public override EnemyBall GetHoldedVersion(Transform holderTransform)

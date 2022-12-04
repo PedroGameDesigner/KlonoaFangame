@@ -17,6 +17,8 @@ namespace PlatformerRails
 
         public System.Action<IRail> RailChangeEvent;
 
+        public IRail Rail => rail;
+
         void Reset()
         {
             rigidbody = GetComponent<Rigidbody>();

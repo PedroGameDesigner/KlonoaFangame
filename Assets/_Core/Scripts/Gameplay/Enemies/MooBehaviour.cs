@@ -1,3 +1,4 @@
+using Gameplay.Klonoa;
 using PlatformerRails;
 using System;
 using System.Collections;
@@ -10,15 +11,23 @@ namespace Gameplay.Enemies
     {
         [SerializeField] private float _rightStopDistance;
         [SerializeField] private float _leftStopDistance;
+        [SerializeField] private float _gravity;
+        [SerializeField] private float _maxGroundDistance = 0.5f;
+        [SerializeField] private float _groundCheckLength = 0.05f;
+        [SerializeField] private float _maxCeilingDistance = 0.25f;
+        [SerializeField] private float _ceilingCheckLength = 0.05f;
+        [SerializeField] private LayerMask _groundLayer;
         [SerializeField] private Direction _startDirection = Direction.Left;
         [SerializeField] private MoverOnRails _mover;
         [Space]
         [SerializeField] private RailBehaviour _DebugRail;
 
         private MooState _mooState;
+        private CollisionData _collisionData;
 
         private float _firstStopDistance;
         private Direction _walkDirection;
+        private Vector3 _lastPosition;
         private float _distanceToWalk;
 
         private float _stopTimer;
@@ -38,6 +47,8 @@ namespace Gameplay.Enemies
 
         private void Initialize()
         {
+            _collisionData = new CollisionData(_maxGroundDistance, _groundCheckLength,
+                _maxCeilingDistance, _ceilingCheckLength, _groundLayer);
             _mooState = MooState.Move;
             _walkDirection = _startDirection;
             _firstStopDistance = _walkDirection == Direction.Left ?
@@ -45,19 +56,56 @@ namespace Gameplay.Enemies
             _distanceToWalk = _firstStopDistance;
         }
 
+        private void Start()
+        {
+            _lastPosition = _mover.Rail.World2Local(transform.position).Value;
+        }
+
         protected override void UpdateActiveState(float deltaTime)
-        {            
+        {
+            _collisionData.CheckGround(transform);
             switch (_mooState)
             {
-                case MooState.Move: UpdateMove(deltaTime); return;
-                case MooState.Stop: UpdateStop(deltaTime); return;
+                case MooState.Move:
+                    UpdateMoveState(deltaTime);
+                    break;
+                case MooState.Stop: UpdateStopState(deltaTime); break;
             }
+        }
+
+        private void UpdateMoveState(float deltaTime)
+        {
+            UpdateMove(deltaTime);
+            UpdateGravity(deltaTime);
+            CalculateTranslation(deltaTime);
+            _lastPosition = _mover.Position;
         }
 
         private void UpdateMove(float deltaTime)
         {
-            _mover.Velocity = Velocity;
-            float translation = _mover.Velocity.magnitude * deltaTime;
+            Vector3 velocity = _mover.Velocity;
+            velocity.z = Velocity.z;
+            _mover.Velocity = velocity;  
+        }
+
+        protected void UpdateGravity(float deltaTime)
+        {
+            if (_gravity <= 0) return;
+            //Y+ axis = Upwoard (depends on rail rotation)
+            Vector3 velocity = _mover.Velocity;
+            if (_collisionData.Grounded)
+            {
+                velocity.y = (_collisionData.MaxGroundDistance - _collisionData.GroundDistance) / deltaTime; //ths results for smooth move on slopes                
+            }
+            else
+                velocity.y -= _gravity * deltaTime;
+
+            _mover.Velocity = velocity;
+        }
+
+        protected void CalculateTranslation(float deltaTime)
+        {
+            float translation = Mathf.Abs(_lastPosition.z - _mover.Position.z);
             _distanceToWalk -= translation;
 
             if (_distanceToWalk <= 0)
@@ -66,7 +114,7 @@ namespace Gameplay.Enemies
             }
         }
 
-        private void UpdateStop(float deltaTime)
+        private void UpdateStopState(float deltaTime)
         {
             _mover.Velocity = Vector3.zero;
             _stopTimer += deltaTime;
@@ -78,9 +126,9 @@ namespace Gameplay.Enemies
         }
         protected override void ChangeToActiveState()
         {
-            base.ChangeToActiveState();
             _mover.enabled = true;
             Initialize();
+            base.ChangeToActiveState();
         }
 
         private void ChangeToMove()
@@ -90,6 +138,7 @@ namespace Gameplay.Enemies
             _distanceToWalk = StopDistance;
             _mooState = MooState.Move;
             InvokeStateChangeEvent();
+            _lastPosition = _mover.Position;
         }
 
         private void ChangeToStop()

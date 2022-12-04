@@ -19,6 +19,11 @@ namespace Gameplay.Enemies
             _behaviour.StateChangeEvent += OnStateChange;
         }
 
+        private void Start()
+        {
+            OnStateChange();
+        }
+
         private void OnStateChange()
         {
             _renderer.flipX = _behaviour.Facing < 0 ? true : false;
