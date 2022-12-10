@@ -1,0 +1,16 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: cea03f0c156b1f340ba244198a4eb6f4, type: 3}
+  m_Name: TestLevelMusic
+  m_EditorClassIdentifier: 
+  _audioTracks:
+  - {fileID: 8300000, guid: 6fd3c9abdcc347946baf1f7b97a2969f, type: 3}

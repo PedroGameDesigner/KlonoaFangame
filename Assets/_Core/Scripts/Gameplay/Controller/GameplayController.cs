@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using Gameplay.Klonoa;
 using UnityEngine.SceneManagement;
+using Sounds;
 
 namespace Gameplay.Controller
 {
@@ -13,6 +14,7 @@ namespace Gameplay.Controller
 
         [SerializeField] private KlonoaBehaviour _klonoa;
         [SerializeField] private ResourcesController _resourcesController;
+        [SerializeField] private MusicPlayer _music;
         [SerializeField] private float _restartTime = 5f;
 
         private void Awake()
@@ -28,6 +30,7 @@ namespace Gameplay.Controller
 
         private IEnumerator DeathCoroutine()
         {
+            _music.StopMusic();
             yield return new WaitForSeconds(_restartTime);
             Scene activeScene = SceneManager.GetActiveScene();
             SceneManager.LoadScene(activeScene.buildIndex);

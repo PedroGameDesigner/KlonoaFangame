@@ -32,7 +32,7 @@ namespace Menu
 
         public void StopSound()
         {
-
+            StopCoroutine(_coroutine);
         }
     }
 }
