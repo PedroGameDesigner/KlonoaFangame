@@ -6,7 +6,7 @@ using UnityEngine;
 
 namespace Sounds
 {
-    [CreateAssetMenu(fileName = "Sound Clip", menuName = "Sound Clip", order = 1)]
+    [CreateAssetMenu(fileName = "Sound Clip", menuName = "Audio/Sound Clip", order = 1)]
     public class SoundClip : ScriptableObject
     {
         [SerializeField] private AudioClip _audioClip;

@@ -1,3 +1,4 @@
+using Sounds;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -11,6 +12,7 @@ namespace Menu
         [SerializeField] private string _levelScene;
         [SerializeField] private EventSystem _eventSystem;
         [Space]
+        [SerializeField] private MusicPlayer _musicPlayer;
         [SerializeField] private AudioSource _audioSource;
         [SerializeField] private AudioClip _selectSound;
         [SerializeField] private AudioClip _playSound;
@@ -32,7 +34,6 @@ namespace Menu
         {
             yield return new WaitForSeconds(_exitSound.length);
             Application.Quit();
-
         }
 
         public void PlayLevel()
@@ -40,6 +41,7 @@ namespace Menu
             if (_actionSelected) return;
             _actionSelected = true;
             _audioSource.PlayOneShot(_playSound);
+            _musicPlayer.StopMusic();
             StopEvents();
             StartCoroutine(DelayedPlayLevel());
         }
@@ -63,6 +65,5 @@ namespace Menu
         {
             _eventSystem.enabled = false;
         }
-
     }
 }

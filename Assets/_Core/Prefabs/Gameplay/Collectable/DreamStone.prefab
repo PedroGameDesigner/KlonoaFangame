@@ -9897,13 +9897,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 56fdfea201c6aec42822828f146a6b1b, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _value: 1
   _renderer: {fileID: 32262509464183919}
-  _collectParticles: {fileID: 5131922765854701701}
   _collectedSound: {fileID: 8300000, guid: 4cde6c6ea8f06ba4292246653613d0e0, type: 3}
   _audioSource: {fileID: 3214333803606083351}
-  _animationDuration: 1
-  _rotationSpeed: 1
+  _value: 1
+  _collectParticles: {fileID: 5131922765854701701}
 --- !u!135 &8759719545801870564
 SphereCollider:
   m_ObjectHideFlags: 0
@@ -9942,7 +9940,7 @@ AudioSource:
   m_GameObject: {fileID: 5607104420501741280}
   m_Enabled: 1
   serializedVersion: 4
-  OutputAudioMixerGroup: {fileID: 0}
+  OutputAudioMixerGroup: {fileID: -6812993171979934377, guid: 28ec6243b14f67842b1554ab49490629, type: 2}
   m_audioClip: {fileID: 0}
   m_PlayOnAwake: 1
   m_Volume: 1

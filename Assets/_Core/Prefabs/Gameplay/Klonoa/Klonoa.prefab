@@ -9841,7 +9841,7 @@ AudioSource:
   m_GameObject: {fileID: 1516165129255618758}
   m_Enabled: 1
   serializedVersion: 4
-  OutputAudioMixerGroup: {fileID: 0}
+  OutputAudioMixerGroup: {fileID: -6812993171979934377, guid: 28ec6243b14f67842b1554ab49490629, type: 2}
   m_audioClip: {fileID: 0}
   m_PlayOnAwake: 1
   m_Volume: 1
@@ -14898,7 +14898,7 @@ AudioSource:
   m_GameObject: {fileID: 2738652764647000536}
   m_Enabled: 1
   serializedVersion: 4
-  OutputAudioMixerGroup: {fileID: 0}
+  OutputAudioMixerGroup: {fileID: -6812993171979934377, guid: 28ec6243b14f67842b1554ab49490629, type: 2}
   m_audioClip: {fileID: 0}
   m_PlayOnAwake: 1
   m_Volume: 1
@@ -39567,6 +39567,8 @@ MonoBehaviour:
   _beginHoldingParameter: BeginHolding
   _isHoldingParameter: IsHolding
   _endHoldingParameter: EndHolding
+  _beginHangingParameter: BeginHanging
+  _endHangingParameter: EndHanging
   _throwParameter: Throw
   _floatParameter: Floating
   _ySpeedParameter: YSpeed
@@ -44823,7 +44825,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 1198161245600211103, guid: ed5945340c7785941b46e99a5ecc760f, type: 3}
       propertyPath: m_OrthographicSize
-      value: 0.5859999
+      value: 0.00000001
       objectReference: {fileID: 0}
     - target: {fileID: 4276787999123193625, guid: ed5945340c7785941b46e99a5ecc760f, type: 3}
       propertyPath: _maxDistance
