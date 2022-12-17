@@ -32,7 +32,9 @@ namespace Gameplay.Klonoa
 
         private void Update()
         {
-            _mainBehaviour.SetMoveDirection(_moveInput.ReadValue<Vector2>());
+            Vector2 input = _moveInput.ReadValue<Vector2>();
+            input.y = 0;
+            _mainBehaviour.SetMoveDirection(input);
         }
 
         private void OnJumpStarted(InputAction.CallbackContext context)
