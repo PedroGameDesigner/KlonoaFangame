@@ -15,6 +15,10 @@ public class MoveLinear : MonoBehaviour {
 
     void FixedUpdate()
     {
-        Controller.Velocity.x = -Controller.Position.x * 5f;
+        Vector3 velocity = new Vector3(
+            -Controller.Position.x * 5f,
+            Controller.Velocity.y,
+            Controller.Velocity.z);
+        Controller.Velocity = velocity;
     }
 }

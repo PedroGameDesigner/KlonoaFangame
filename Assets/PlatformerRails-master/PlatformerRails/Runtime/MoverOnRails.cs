@@ -4,20 +4,20 @@ using UnityEngine;
 namespace PlatformerRails
 {
     [RequireComponent(typeof(Rigidbody))]
-    public class MoverOnRails : MonoBehaviour
+    public class MoverOnRails : MonoBehaviour, IMover
     {
         [SerializeField]
         RailBehaviour railBehaviour;
         public Vector3 Position { get; set; }
-        public Vector3 Velocity;
+        public Vector3 Velocity { get; set; }
 
         IRail rail;
         Rigidbody rigidbody;
         IRail currentSingleRail;
 
-        public System.Action<IRail> RailChangeEvent;
+        public event System.Action<IRail> RailChangeEvent;
 
-        public IRail Rail => rail;
+        public IRail Rail => rail != null ? rail : railBehaviour;
 
         void Reset()
         {

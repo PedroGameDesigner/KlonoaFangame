@@ -14,7 +14,7 @@ EditorBuildSettings:
   - enabled: 0
     path: Assets/_Core/Scenes/Testing/Test Throw.unity
     guid: e12613d88cdb53544a9e1cf54f27124c
-  - enabled: 1
+  - enabled: 0
     path: Assets/_Core/Scenes/Concept/Game.unity
     guid: d1c3109bdb54ad54c8a2b2838528e640
   - enabled: 0

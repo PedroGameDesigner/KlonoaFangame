@@ -32,6 +32,7 @@ namespace Gameplay.Klonoa
         [SerializeField] private Transform _feetPosition;
         [Space]
         [SerializeField] private BallHolder _ballHolder;
+        [SerializeField] private MoverOnRails _mover;
 
         private bool _jumpKeep;
         private bool _jumpActivated;
@@ -45,7 +46,6 @@ namespace Gameplay.Klonoa
         private bool _previousTouchingCeiling = false;
 
         private KlonoaStateMachine _stateMachine;
-        private MoverOnRails _mover;
         private Rigidbody _rigidbody;
         private CapsuleCollider _collider;
         private Transform _originalParent;
@@ -60,8 +60,9 @@ namespace Gameplay.Klonoa
         private Vector3 checkDirection;
 
         public KlonoaDefinition Definition => _definition;
+        public MoverOnRails Mover => _mover;
         private Vector2 MoveDirection { set;  get; }
-        public CollisionData CollisionData { get; private set; } 
+        public CollisionData CollisionData { get; private set; }
         public bool IsGrounded => CollisionData.Grounded;
         public bool IsTouchingCeiling => CollisionData.TouchingCeiling;
         public bool IsWalking => Mathf.Abs(EffectiveSpeed.z) > _minWalkSpeed && Mathf.Abs(MoveDirection.x) > 0;
@@ -76,6 +77,7 @@ namespace Gameplay.Klonoa
         public bool CaptureProjectileThrowed => _projectile != null;
         public Vector3 EffectiveSpeed => _mover.Velocity;
         public FaceDirection Facing { get; private set; } = FaceDirection.Right;
+        public FaceDirection HorizontalFacing { get; private set; } = FaceDirection.Right;
         public EnemyBall HoldedBall { get; private set; }
         public HangeableObject HangingObject { get; private set; }
 
@@ -106,7 +108,6 @@ namespace Gameplay.Klonoa
             _stateMachine = new KlonoaStateMachine(this);
             _stateMachine.StartMachine();
             _stateMachine.StateChangeEvent += OnStateChange;
-            _mover = GetComponent<MoverOnRails>();
             _rigidbody = GetComponent<Rigidbody>();
             _collider = GetComponent<CapsuleCollider>();
             CollisionData = new CollisionData(_maxGroundDistance, _groundCheckLength, 
@@ -183,6 +184,11 @@ namespace Gameplay.Klonoa
             else if (MoveDirection.y != 0)
             {
                 Facing = MoveDirection.y > 0 ? FaceDirection.Front : FaceDirection.Back;
+            }
+
+            if (Facing == FaceDirection.Right || Facing == FaceDirection.Left)
+            {
+                HorizontalFacing = Facing;
             }
         }
 
