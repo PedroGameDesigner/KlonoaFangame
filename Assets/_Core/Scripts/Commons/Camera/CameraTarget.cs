@@ -20,8 +20,8 @@ namespace Cameras
         public Vector3 PathNormal => Vector3.Cross(Vector3.up, _target.transform.forward).normalized;
 
         private bool TargetIsGrounded => !Application.isPlaying || _target.IsGrounded;
-
-        private IRail Rail => !Application.isPlaying && _debugRail != null
+        private bool ShouldUpdate => Application.isPlaying || _debugRail != null;
+        private IRail Rail => !Application.isPlaying
             ? _debugRail
             : _target.Mover.Rail;
 
@@ -32,6 +32,7 @@ namespace Cameras
 
         private void LateUpdate()
         {
+            if (!ShouldUpdate) return;
             Vector3 nextPosition = UpdateNextPosition();
             nextPosition.y = UpdateYPosition(nextPosition.y);
             transform.position = _target.Mover.Rail.Local2World(nextPosition);

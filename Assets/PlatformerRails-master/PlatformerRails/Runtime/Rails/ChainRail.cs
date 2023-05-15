@@ -8,6 +8,8 @@ namespace PlatformerRails
     /// </summary>
     public class ChainRail : IRail
     {
+        private const float PRECISSION = 0.1f;
+
         List<IRail> Childs = new List<IRail>();
         public IEnumerable<IRail> Segments { get { return Childs; } }
 
