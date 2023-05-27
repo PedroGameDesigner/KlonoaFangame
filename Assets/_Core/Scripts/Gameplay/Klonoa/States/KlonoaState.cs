@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using StateMachine;
 using PlatformerRails;
+using Colliders;
 
 namespace Gameplay.Klonoa
 {
@@ -12,7 +13,7 @@ namespace Gameplay.Klonoa
         protected Vector2 _lastDirection;
 
         protected readonly KlonoaDefinition _definition;
-        protected readonly MoverOnRails _mover;
+        protected readonly CharacterOnRails _mover;
 
         public abstract bool IsNormalState { get; }
 
@@ -23,7 +24,7 @@ namespace Gameplay.Klonoa
 
         protected KlonoaState(KlonoaBehaviour behaviour) : base(behaviour) 
         {
-            _mover = behaviour.GetComponent<MoverOnRails>();
+            _mover = behaviour.GetComponent<CharacterOnRails>();
             _definition = behaviour.Definition;
         }
 
@@ -58,12 +59,7 @@ namespace Gameplay.Klonoa
             if (Gravity <= 0) return;
             //Y+ axis = Upwoard (depends on rail rotation)
             Vector3 velocity = _mover.Velocity;
-            if (_behaviour.CollisionData.Grounded)
-            {
-                velocity.y = (_behaviour.CollisionData.MaxGroundDistance - _behaviour.CollisionData.GroundDistance) / deltaTime; //ths results for smooth move on slopes                
-            }
-            else
-                velocity.y -= Gravity * deltaTime;
+            velocity.y -= Gravity * deltaTime;
 
             if (velocity.y < -TerminalVelocity)
                 velocity.y = -TerminalVelocity;
@@ -75,7 +71,7 @@ namespace Gameplay.Klonoa
         {
             if (_mover.Velocity.y <= 0) return;
 
-            if (_behaviour.CollisionData.TouchingCeiling)
+            if (_behaviour.IsTouchingCeiling)
             {
                 Vector3 velocity = _mover.Velocity;
                 velocity.y = 0;

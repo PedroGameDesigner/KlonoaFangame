@@ -1,21 +1,32 @@
-using Colliders;
-using CylinderCharacterController;
 using Gameplay.Enemies;
 using Gameplay.Enemies.Ball;
 using Gameplay.Projectile;
+using PlatformerRails;
+using System;
+using Extensions;
 using UnityEngine;
+using Gameplay.Collectables;
+using Gameplay.Mechanics;
+using CylinderCharacterController;
+using Colliders;
 
 namespace Gameplay.Klonoa
 {
-    public class KlonoaBehaviour : MonoBehaviour
+    public class OldKlonoaBehaviour : MonoBehaviour
     {
         [SerializeField] private KlonoaDefinition _definition;
         [Space]
+        [SerializeField] private float _maxGroundDistance = 0.5f;
+        [SerializeField] private float _groundCheckLength = 0.05f;
+        [SerializeField] private float _maxCeilingDistance = 0.25f;
+        [SerializeField] private float _ceilingCheckLength = 0.05f;
+        [SerializeField] private LayerMask _groundLayer;
+        [SerializeField] private LayerMask _collisionLayer;
         [SerializeField] private string _enemyTag = "Enemy";
         [SerializeField] private string _deathPlaneTag = "DeathPlane";
         [SerializeField] private string _collectableTag = "Collectable";
-        [Space]
         [SerializeField] private float _jumpTimeMarging = 0.15f;
+        [Space]
         [SerializeField] private float _minWalkSpeed = 0.1f;
         [Space]
         [SerializeField] private Transform _captureProjectileOrigin;
@@ -36,17 +47,25 @@ namespace Gameplay.Klonoa
         private bool _previousTouchingCeiling = false;
 
         private KlonoaStateMachine _stateMachine;
+        private Rigidbody _rigidbody;
+        private CylinderCollider _collider;
         private Transform _originalParent;
         private CaptureProjectile _projectile;
 
+        private RaycastHit _damageHit;
+        private RaycastHit[] _hits = new RaycastHit[10];
+        private float resultsCount;
         private float _airTime = 0;
+        private Vector3 point1;
+        private Vector3 point2;
         private Vector3 checkDirection;
 
         public KlonoaDefinition Definition => _definition;
         public CharacterOnRails Mover => _mover;
-        private Vector2 MoveDirection { set; get; }
-        public bool IsGrounded => Mover.IsGrounded;
-        public bool IsTouchingCeiling => Mover.IsTouchingCeiling;
+        private Vector2 MoveDirection { set;  get; }
+        public CollisionData CollisionData { get; private set; }
+        public bool IsGrounded => CollisionData.Grounded;
+        public bool IsTouchingCeiling => CollisionData.TouchingCeiling;
         public bool IsWalking => Mathf.Abs(EffectiveSpeed.z) > _minWalkSpeed && Mathf.Abs(MoveDirection.x) > 0;
         public bool IsFloating => _stateMachine.IsFloatState;
         public bool IsInDoubleJump => _stateMachine.IsDoubleJumpState;
@@ -64,32 +83,38 @@ namespace Gameplay.Klonoa
         public HangeableObject HangingObject { get; private set; }
 
         //Events
-        public event System.Action StateChangeEvent;
-        public event System.Action JumpEvent;
-        public event System.Action LandingEvent;
-        public event System.Action TouchCeilingEvent;
-        public event System.Action CaptureProjectileEvent;
-        public event System.Action BeginHoldingEvent;
-        public event System.Action EndHoldingEvent;
-        public event System.Action BeginHangingEvent;
-        public event System.Action EndHangingEvent;
-        public event System.Action SideThrowEnemyEvent;
-        public event System.Action<int> DamageEvent;
-        public event System.Action DeathEvent;
+        public event Action StateChangeEvent;
+        public event Action JumpEvent;
+        public event Action LandingEvent;
+        public event Action TouchCeilingEvent;
+        public event Action CaptureProjectileEvent;
+        public event Action BeginHoldingEvent;
+        public event Action EndHoldingEvent;
+        public event Action BeginHangingEvent;
+        public event Action EndHangingEvent;
+        public event Action SideThrowEnemyEvent;
+        public event Action<int> DamageEvent;
+        public event Action DeathEvent;
 
-        public event System.Action JumpInputEvent;
-        public event System.Action JumpKeepInputEvent;
-        public event System.Action JumpReleaseInputEvent;
-        public event System.Action AttackInputEvent;
-        public event System.Action<Vector2> DirectionChangeEvent;
+        public event Action JumpInputEvent;
+        public event Action JumpKeepInputEvent;
+        public event Action JumpReleaseInputEvent;
+        public event Action AttackInputEvent;
+        public event Action<Vector2> DirectionChangeEvent;
 
+        //Behaviour Methods
         void Awake()
         {
             _originalParent = transform.parent;
-            _stateMachine = new KlonoaStateMachine(this);
+            _stateMachine = new KlonoaStateMachine(null);
             _stateMachine.StartMachine();
             _stateMachine.StateChangeEvent += OnStateChange;
+            _rigidbody = GetComponent<Rigidbody>();
+            _collider = GetComponent<CylinderCollider>();
+            CollisionData = new CollisionData(_maxGroundDistance, _groundCheckLength, 
+                _maxCeilingDistance, _ceilingCheckLength, _groundLayer);      
         }
+        
         private void Update()
         {
             float deltaTime = Time.deltaTime;
@@ -108,6 +133,7 @@ namespace Gameplay.Klonoa
                 }
             }
         }
+
         private void FixedUpdate()
         {
             float deltaTime = Time.fixedDeltaTime;
@@ -115,6 +141,8 @@ namespace Gameplay.Klonoa
             //To make X value 0 means locate the character just above the rail
             moveSpeed.x = -_mover.Position.x * 5f;
             _mover.Velocity = moveSpeed;
+            CollisionData.CheckGround(transform);
+            CollisionData.CheckCeiling(transform);
 
             _stateMachine.FixedUpdate(deltaTime);
             if (_jumpKeep)
@@ -122,6 +150,7 @@ namespace Gameplay.Klonoa
 
             JumpAction(deltaTime);
             UpdateFacing();
+            CheckCollision(deltaTime);
             CheckLandingEvent();
             CheckCeilingEvent();
             UpdateAirTime(deltaTime);
@@ -133,7 +162,7 @@ namespace Gameplay.Klonoa
             if (CanJump() && _jumpActivated)
             {
                 Vector3 velocity = _mover.Velocity;
-                velocity.y = _jumpForce;// + Mathf.Max(0, (_maxGroundDistance - CollisionData.GroundDistance) / deltaTime);
+                velocity.y = _jumpForce + Mathf.Max(0, (_maxGroundDistance - CollisionData.GroundDistance) / deltaTime);
                 _mover.Velocity = velocity;
                 _airTime += _jumpTimeMarging * 1.1f;
                 if (_invokeJumpEvent) JumpEvent?.Invoke();
@@ -142,7 +171,7 @@ namespace Gameplay.Klonoa
 
         public bool CanJump()
         {
-            return (_ignoreGround || IsGrounded ||
+            return (_ignoreGround || IsGrounded || 
                 (_mover.Velocity.y <= 0 && _airTime <= _jumpTimeMarging));
         }
 
@@ -162,6 +191,30 @@ namespace Gameplay.Klonoa
             {
                 HorizontalFacing = Facing;
             }
+        }
+
+        private void CheckCollision(float deltaTime)
+        {
+            /*checkDirection = -Facing.GetVector();
+            point1 = _collider.Points()[0];
+            point2 = _collider.Points()[1];
+            resultsCount = _collider.Cast(checkDirection, _collisionLayer, out _hits, 0.1f * deltaTime);
+
+            if (resultsCount > 0)
+            {
+                float nearDistance = float.PositiveInfinity;
+                int nearIndex = 0;
+                for (int i = 0; i < resultsCount; i++)
+                {
+                    if (_hits[i].distance < nearDistance)
+                    {
+                        nearDistance = _hits[i].distance;
+                        nearIndex = i;
+                    }
+                }
+
+                OnHit(_hits[nearIndex]);
+            }            */
         }
 
         private void CheckLandingEvent()
@@ -191,9 +244,47 @@ namespace Gameplay.Klonoa
             }
         }
 
-        private void OnStateChange()
+        private void LateUpdate()
         {
-            StateChangeEvent?.Invoke();
+            _stateMachine.LateUpdate(Time.deltaTime);
+        }
+
+        private void OnHit(RaycastHit hit)
+        {
+            if (hit.collider.CompareTag(_enemyTag) && !_invincible)
+                OnDamage(hit);
+            else if (hit.collider.CompareTag(_collectableTag))
+                OnCollectableDetected(hit);
+            else if (hit.collider.CompareTag(_deathPlaneTag))
+                Death();
+        }
+
+        private void OnDamage(RaycastHit hit)
+        {
+            _invincibleTimer = 0;
+            _stateMachine.ChangeToDamageState(hit);
+            DamageEvent?.Invoke(1);
+            
+            /*else
+            {
+                _stateMachine.ChangeToDeathState();
+                DeathEvent?.Invoke();
+            }*/
+        }
+
+        public void Death()
+        {
+            _stateMachine.ChangeToDeathState();
+            DeathEvent?.Invoke();
+        }
+
+        private void OnCollectableDetected(RaycastHit hit)
+        {
+            Collectable collectable = hit.collider.GetComponent<Collectable>();
+            if (collectable != null)
+            {
+                collectable.Collect();
+            }
         }
 
         public void ReturnToNormalState()
@@ -207,23 +298,7 @@ namespace Gameplay.Klonoa
             _invokeJumpEvent = invokeJumpEvent;
             _jumpForce = jumpForce;
             _ignoreGround = ignoreGround;
-        }
-
-        public void Death()
-        {
-            _stateMachine.ChangeToDeathState();
-            DeathEvent?.Invoke();
-        }
-
-        public void InvokeBeginHoldingEvent()
-        {
-            BeginHoldingEvent?.Invoke();
-        }
-
-        public void InvokeEndHoldingEvent()
-        {
-            EndHoldingEvent?.Invoke();
-        }
+        }        
 
         public CaptureProjectile InstantiateCapture()
         {
@@ -234,8 +309,16 @@ namespace Gameplay.Klonoa
 
             return _projectile;
         }
+        
+        public void HoldObject(HoldableObject captureObject)
+        {
+            HoldedBall = captureObject.GetHoldedVersion(_ballHolder.transform);
+            _ballHolder.SetHoldedBall(HoldedBall);
+            _ballHolder.RestoreOriginPosition();
+            _ballHolder.MoveFromPosition(captureObject.transform.position, _definition.CaptureRepositionTime);
+        }
 
-        public void MoveBeforeDoubleJump(System.Action finishAction)
+        public void MoveBeforeDoubleJump(Action finishAction)
         {
             if (IsHolding)
             {
@@ -252,12 +335,20 @@ namespace Gameplay.Klonoa
             }
         }
 
-        public void HoldObject(HoldableObject captureObject)
+        public void HangFromObject(HangeableObject hangeable)
         {
-            HoldedBall = captureObject.GetHoldedVersion(_ballHolder.transform);
-            _ballHolder.SetHoldedBall(HoldedBall);
-            _ballHolder.RestoreOriginPosition();
-            _ballHolder.MoveFromPosition(captureObject.transform.position, _definition.CaptureRepositionTime);
+            transform.parent = hangeable.transform;
+            HangingObject = hangeable;
+            HangingObject.SetHangedObject(transform);
+            BeginHangingEvent?.Invoke();
+        }
+
+        public void FinishHanging()
+        {
+            transform.parent = _originalParent;
+            HangingObject.SetHangedObject(null);
+            HangingObject = null;
+            EndHangingEvent?.Invoke();
         }
 
         public void ThrowHoldedEnemySideways()
@@ -278,26 +369,25 @@ namespace Gameplay.Klonoa
             HoldedBall = null;
         }
 
-        public void HangFromObject(HangeableObject hangeable)
+        public void InvokeBeginHoldingEvent()
         {
-            transform.parent = hangeable.transform;
-            HangingObject = hangeable;
-            HangingObject.SetHangedObject(transform);
-            BeginHangingEvent?.Invoke();
+            BeginHoldingEvent?.Invoke();
         }
 
-        public void FinishHanging()
+        public void InvokeEndHoldingEvent()
         {
-            transform.parent = _originalParent;
-            HangingObject.SetHangedObject(null);
-            HangingObject = null;
-            EndHangingEvent?.Invoke();
+            EndHoldingEvent?.Invoke();
         }
 
         public void StartInvincibility(float extraTime)
         {
             _invincible = true;
             _invincibleTimer = 0;
+        }
+
+        private void OnStateChange()
+        {
+            StateChangeEvent?.Invoke();
         }
 
         //Input Access Methods
@@ -328,6 +418,28 @@ namespace Gameplay.Klonoa
         {
             //unused, added for completition
         }
+
+#if UNITY_EDITOR
+        void OnDrawGizmos()
+        {
+            Gizmos.matrix = transform.localToWorldMatrix;
+            Gizmos.color = Color.green;
+            Gizmos.DrawLine(Vector3.zero, Vector3.down * (_maxGroundDistance + _groundCheckLength));
+            Gizmos.DrawWireCube(Vector3.down * _maxGroundDistance, Vector3.right / 2 + Vector3.forward / 2);
+            Gizmos.matrix = Matrix4x4.identity;
+            DrawCollisionGizmos();
+        }
+
+        void DrawCollisionGizmos()
+        {
+            if (_collider == null) return;
+            Vector3 displacement = 0.1f * checkDirection * Time.deltaTime;
+            Gizmos.color = Color.red;
+            Gizmos.DrawWireSphere(point1 + displacement, _collider.Radius);
+            Gizmos.color = Color.blue;
+            Gizmos.DrawWireSphere(point2 + displacement, _collider.Radius);
+        }
+#endif
     }
 }
 

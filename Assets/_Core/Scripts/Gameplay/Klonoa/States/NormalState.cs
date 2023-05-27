@@ -53,12 +53,12 @@ namespace Gameplay.Klonoa
 
         void CheckGrounded()
         {
-            if (_behaviour.CollisionData.Grounded && !_previousGrounded)
+            if (_behaviour.IsGrounded && !_previousGrounded)
             {
                 _floatUsed = false;
             }
 
-            _previousGrounded = _behaviour.CollisionData.Grounded;
+            _previousGrounded = _behaviour.IsGrounded;
             _lastYVelocity = _mover.Velocity.y;
         }
 
