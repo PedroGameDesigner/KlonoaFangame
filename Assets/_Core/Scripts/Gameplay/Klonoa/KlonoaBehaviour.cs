@@ -1,6 +1,5 @@
 using Colliders;
-using CylinderCharacterController;
-using Gameplay.Enemies;
+using Gameplay.Collectables;
 using Gameplay.Enemies.Ball;
 using Gameplay.Projectile;
 using UnityEngine;
@@ -10,10 +9,6 @@ namespace Gameplay.Klonoa
     public class KlonoaBehaviour : MonoBehaviour
     {
         [SerializeField] private KlonoaDefinition _definition;
-        [Space]
-        [SerializeField] private string _enemyTag = "Enemy";
-        [SerializeField] private string _deathPlaneTag = "DeathPlane";
-        [SerializeField] private string _collectableTag = "Collectable";
         [Space]
         [SerializeField] private float _jumpTimeMarging = 0.15f;
         [SerializeField] private float _minWalkSpeed = 0.1f;
@@ -298,6 +293,25 @@ namespace Gameplay.Klonoa
         {
             _invincible = true;
             _invincibleTimer = 0;
+        }
+
+        public void OnDamage(Collision collision)
+        {
+            if (_invincible)
+            {
+                _invincibleTimer = 0;
+                _stateMachine.ChangeToDamageState(collision);
+                DamageEvent?.Invoke(1);
+            }
+        }
+
+        public void OnCollectableDetected(Collision collision)
+        {
+            Collectable collectable = collision.collider.GetComponent<Collectable>();
+            if (collectable != null)
+            {
+                collectable.Collect();
+            }
         }
 
         //Input Access Methods

@@ -11,8 +11,7 @@ namespace Colliders
         RailBehaviour railBehaviour;
 
         public Vector3 Position { get; set; }
-        Vector3 velocity;
-        public override Vector3 Velocity { get => velocity; set { velocity = value; Debug.Log("SetSpeed=" + velocity.ToString()); } }
+        public override Vector3 Velocity { get; set; }
         public IRail Rail => rail;
         public bool IsGrounded => physics.IsOnFloor;
         public bool IsTouchingCeiling => physics.IsTouchingCeiling;
@@ -35,7 +34,7 @@ namespace Colliders
         void OnEnable()
         {
             StartCoroutine(RunLateFixedUpdate());
-            UpdateLocalPosition();
+            //UpdateLocalPosition();
         }
 
         void OnDisable()

@@ -262,7 +262,7 @@ namespace Gameplay.Klonoa
         private void OnDamage(RaycastHit hit)
         {
             _invincibleTimer = 0;
-            _stateMachine.ChangeToDamageState(hit);
+            //_stateMachine.ChangeToDamageState(hit);
             DamageEvent?.Invoke(1);
             
             /*else

@@ -71,7 +71,7 @@ namespace Gameplay.Klonoa
             OnStateChange(_lastNormalState);
         }
 
-        public void ChangeToDamageState(RaycastHit hit)
+        public void ChangeToDamageState(Collision collision)
         {
             OnStateChange(_damageState);
         }
