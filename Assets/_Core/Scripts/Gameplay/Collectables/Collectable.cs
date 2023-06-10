@@ -18,7 +18,7 @@ namespace Gameplay.Collectables
 
         private void Awake()
         {
-            _collider = GetComponent<Collider>();
+            _collider = GetComponentInChildren<Collider>();
         }
 
         public virtual void Collect()

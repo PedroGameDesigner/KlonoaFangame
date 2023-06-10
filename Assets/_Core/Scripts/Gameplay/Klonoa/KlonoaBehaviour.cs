@@ -1,6 +1,7 @@
 using Colliders;
 using Gameplay.Collectables;
 using Gameplay.Enemies.Ball;
+using Gameplay.Hitboxes;
 using Gameplay.Projectile;
 using UnityEngine;
 
@@ -295,22 +296,13 @@ namespace Gameplay.Klonoa
             _invincibleTimer = 0;
         }
 
-        public void OnDamage(Collision collision)
+        public void OnDamage(HitData hitData)
         {
-            if (_invincible)
+            if (!_invincible)
             {
                 _invincibleTimer = 0;
-                _stateMachine.ChangeToDamageState(collision);
+                _stateMachine.ChangeToDamageState(hitData);
                 DamageEvent?.Invoke(1);
-            }
-        }
-
-        public void OnCollectableDetected(Collision collision)
-        {
-            Collectable collectable = collision.collider.GetComponent<Collectable>();
-            if (collectable != null)
-            {
-                collectable.Collect();
             }
         }
 

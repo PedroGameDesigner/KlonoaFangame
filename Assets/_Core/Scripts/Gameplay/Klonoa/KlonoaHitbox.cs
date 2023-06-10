@@ -18,12 +18,13 @@ namespace Gameplay.Klonoa
 
         private void OnCollisionEnter(Collision collision)
         {
+          /*  Debug.Log("CollidionEnter: " + collision.collider.name);
             if (collision.collider.CompareTag(_enemyTag))
                 _klonoa.OnDamage(collision);
             else if (collision.collider.CompareTag(_collectableTag))
                 _klonoa.OnCollectableDetected(collision);
             else if (collision.collider.CompareTag(_deathPlaneTag))
-                _klonoa.Death();
+                _klonoa.Death();*/
         }
     }
 }

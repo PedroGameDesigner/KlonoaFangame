@@ -2,6 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using StateMachine;
+using Gameplay.Hitboxes;
 
 namespace Gameplay.Klonoa
 {
@@ -71,7 +72,7 @@ namespace Gameplay.Klonoa
             OnStateChange(_lastNormalState);
         }
 
-        public void ChangeToDamageState(Collision collision)
+        public void ChangeToDamageState(HitData hitData)
         {
             OnStateChange(_damageState);
         }
