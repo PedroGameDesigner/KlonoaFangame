@@ -93,7 +93,7 @@ PrefabInstance:
       objectReference: {fileID: -5397416234189338067, guid: 0000000000000000d000000000000000, type: 0}
     - target: {fileID: 5607104420501741280, guid: b08582cbde0b99e46b223d26bf27a6cf, type: 3}
       propertyPath: m_Name
-      value: dreamstone big Variant
+      value: DreamStone Big
       objectReference: {fileID: 0}
     - target: {fileID: 6074759732297027932, guid: b08582cbde0b99e46b223d26bf27a6cf, type: 3}
       propertyPath: PivotAxis
