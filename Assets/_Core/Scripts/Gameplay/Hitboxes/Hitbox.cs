@@ -10,6 +10,8 @@ namespace Gameplay.Hitboxes
 
         [SerializeField] 
         private ReceptorType[] _receptorTypes;
+        [SerializeField]
+        private bool _limitDetection;
 
         private Collider _collider = null;
         private List<HitDetector> _detectedObjects = new List<HitDetector>();
@@ -27,13 +29,14 @@ namespace Gameplay.Hitboxes
                 if (typeId >= 0)
                 {
                     var detector = other.GetComponent<HitDetector>();
-                    if (detector != null && !_detectedObjects.Contains(detector))
+                    if (!_limitDetection && detector != null && !_detectedObjects.Contains(detector))
                     {
                         Vector3 contactPoint = _collider.ClosestPoint(transform.position);
                         Vector3 normal = transform.position - contactPoint;
                         HitData data = new HitData(contactPoint, normal, this);
                         InvokeDetectorByType(detector, data, _receptorTypes[typeId].effect);
-                        _detectedObjects.Add(detector);
+                        if (_limitDetection)
+                            _detectedObjects.Add(detector);
                     }
                 }
             }

@@ -86,7 +86,7 @@ namespace Gameplay.Enemies
             Initialize();
         }
 
-        protected override void Kill()
+        public override void Kill()
         {
             if (_splineFollower != null) _splineFollower.enabled = false;
 

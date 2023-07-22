@@ -137,7 +137,7 @@ namespace Gameplay.Enemies
             InvokeStateChangeEvent();
         }
 
-        protected override void Kill()
+        public override void Kill()
         {
             _mover.enabled = false;
 

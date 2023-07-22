@@ -1,6 +1,4 @@
 using System;
-using System.Collections;
-using System.Collections.Generic;
 using Gameplay.Enemies.Ball;
 using UnityEngine;
 
@@ -34,7 +32,6 @@ namespace Gameplay.Enemies
         {
             base.Awake();
             _originPosition = transform.position;
-            Debug.Log("_originPosition = " + _originPosition);
         }
 
         private void FixedUpdate()
@@ -125,7 +122,7 @@ namespace Gameplay.Enemies
             ChangeToSpawningState(spawnPosition, spawnTime, repositionCurve, verticalCurve);
         }
 
-        protected virtual void Kill()
+        public virtual void Kill()
         {
             DeathEvent?.Invoke(this);
             gameObject.SetActive(false);
