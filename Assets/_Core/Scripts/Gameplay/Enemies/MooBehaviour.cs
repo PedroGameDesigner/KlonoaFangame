@@ -1,8 +1,6 @@
+using Colliders;
 using Gameplay.Klonoa;
 using PlatformerRails;
-using System;
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 
 namespace Gameplay.Enemies
@@ -12,18 +10,13 @@ namespace Gameplay.Enemies
         [SerializeField] private float _rightStopDistance;
         [SerializeField] private float _leftStopDistance;
         [SerializeField] private float _gravity;
-        [SerializeField] private float _maxGroundDistance = 0.5f;
-        [SerializeField] private float _groundCheckLength = 0.05f;
-        [SerializeField] private float _maxCeilingDistance = 0.25f;
-        [SerializeField] private float _ceilingCheckLength = 0.05f;
-        [SerializeField] private LayerMask _groundLayer;
+        [SerializeField] private float _terminalVelocity;
         [SerializeField] private Direction _startDirection = Direction.Left;
-        [SerializeField] private MoverOnRails _mover;
+        [SerializeField] private CharacterOnRails _mover;
         [Space]
         [SerializeField] private RailBehaviour _DebugRail;
 
         private MooState _mooState;
-        private CollisionData _collisionData;
 
         private float _firstStopDistance;
         private Direction _walkDirection;
@@ -47,8 +40,6 @@ namespace Gameplay.Enemies
 
         private void Initialize()
         {
-            _collisionData = new CollisionData(_maxGroundDistance, _groundCheckLength,
-                _maxCeilingDistance, _ceilingCheckLength, _groundLayer);
             _mooState = MooState.Move;
             _walkDirection = _startDirection;
             _firstStopDistance = _walkDirection == Direction.Left ?
@@ -59,11 +50,11 @@ namespace Gameplay.Enemies
         private void Start()
         {
             _lastPosition = _mover.Rail.World2Local(transform.position).Value;
+            _mover.UpdateLocalPosition();
         }
 
         protected override void UpdateActiveState(float deltaTime)
         {
-            _collisionData.CheckGround(transform);
             switch (_mooState)
             {
                 case MooState.Move:
@@ -93,12 +84,10 @@ namespace Gameplay.Enemies
             if (_gravity <= 0) return;
             //Y+ axis = Upwoard (depends on rail rotation)
             Vector3 velocity = _mover.Velocity;
-            if (_collisionData.Grounded)
-            {
-                velocity.y = (_collisionData.MaxGroundDistance - _collisionData.GroundDistance) / deltaTime; //ths results for smooth move on slopes                
-            }
-            else
-                velocity.y -= _gravity * deltaTime;
+            velocity.y -= _gravity * deltaTime;
+
+            if (velocity.y < -_terminalVelocity)
+                velocity.y = -_terminalVelocity;
 
             _mover.Velocity = velocity;
         }

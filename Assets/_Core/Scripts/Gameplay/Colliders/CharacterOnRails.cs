@@ -55,7 +55,7 @@ namespace Colliders
             UpdateLocalPosition();
         }
 
-        void UpdateLocalPosition()
+        public void UpdateLocalPosition()
         {
             IRail usedRail;
             var w2l = rail.World2Local(transform.position, out usedRail);
