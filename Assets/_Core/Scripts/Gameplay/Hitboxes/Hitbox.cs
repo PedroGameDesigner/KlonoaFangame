@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.Events;
 
 namespace Gameplay.Hitboxes
 {
@@ -35,6 +36,7 @@ namespace Gameplay.Hitboxes
                         Vector3 normal = transform.position - contactPoint;
                         HitData data = new HitData(contactPoint, normal, this);
                         InvokeDetectorByType(detector, data, _receptorTypes[typeId].effect);
+                        _receptorTypes[typeId].onHit.Invoke(detector);
                         if (_limitDetection)
                             _detectedObjects.Add(detector);
                     }
@@ -81,6 +83,7 @@ namespace Gameplay.Hitboxes
         {
             public string tag;
             public Effect effect;
+            public UnityEvent<HitDetector> onHit;
         }
 
         private enum Effect

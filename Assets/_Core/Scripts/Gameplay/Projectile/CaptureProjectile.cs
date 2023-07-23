@@ -2,23 +2,23 @@ using System;
 using UnityEngine;
 using Extensions;
 using Gameplay.Enemies;
+using Gameplay.Hitboxes;
 
 namespace Gameplay.Projectile
 {
     public class CaptureProjectile : MonoBehaviour, IMovile
     {
-        [SerializeField] private LayerMask _captureLayer;
         [SerializeField] private float _reach;
         [SerializeField] private float _advanceTime;
         [SerializeField] private float _returnTime;
         [SerializeField] private float _waitFinalTime;
+        [SerializeField] private Collider _collider;
 
         private Vector3 _direction;
         private float _extraSpeed;
         private Transform _origin;
         private float _timer;
         private Vector3 _movingFinal;
-        private Collider _collider;
         private Vector3 _velocity;
 
         public bool Moving { get; private set; }
@@ -30,11 +30,6 @@ namespace Gameplay.Projectile
         public event Action ReturnFinishEvent;
         public delegate void CapturableDelegate(ICapturable capturedObject);
         public event CapturableDelegate CapturedEvent;
-
-        private void Awake()
-        {
-            _collider = GetComponent<Collider>();
-        }
 
         public void StartMovement(Vector3 direction, float extraSpeed, Transform origin)
         {
@@ -100,41 +95,17 @@ namespace Gameplay.Projectile
             Destroy(gameObject, _waitFinalTime);
         }
 
-        private void OnCollisionEnter(Collision collision)
+        public void OnCaptureObject(HitDetector hitDetector)
         {
-            if (_captureLayer.CheckLayer(collision.gameObject.layer))
+            ICapturable capturable = hitDetector.GetComponentInParent<ICapturable>(includeInactive: true);
+            if (capturable.CanBeCaptured)
             {
-                ICapturable capturable = collision.gameObject.GetComponent<ICapturable>();
-                capturable.Capture();
-
-                if (capturable.CanBeCaptured)
-                {
-                    CapturedEvent?.Invoke(capturable);
-                    Finish();
-                }
-                else
-                {
-                    FinishMovement();
-                }                    
+                CapturedEvent?.Invoke(capturable);
+                Finish();
             }
-        }
-
-        private void OnTriggerEnter(Collider other)
-        {
-            if (_captureLayer.CheckLayer(other.gameObject.layer))
+            else
             {
-                ICapturable capturable = other.gameObject.GetComponent<ICapturable>();
-                capturable.Capture();
-
-                if (capturable.CanBeCaptured)
-                {
-                    CapturedEvent?.Invoke(capturable);
-                    Finish();
-                }
-                else
-                {
-                    FinishMovement();
-                }
+                FinishMovement();
             }
         }
 

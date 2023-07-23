@@ -45094,6 +45094,9 @@ MonoBehaviour:
   _receptorTypes:
   - tag: Collectable
     effect: 2
+    onHit:
+      m_PersistentCalls:
+        m_Calls: []
   _limitDetection: 0
 --- !u!1001 &5521284028222098429
 PrefabInstance:

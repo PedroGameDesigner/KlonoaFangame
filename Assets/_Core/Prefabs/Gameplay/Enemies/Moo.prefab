@@ -464,6 +464,9 @@ MonoBehaviour:
   _receptorTypes:
   - tag: Player
     effect: 0
+    onHit:
+      m_PersistentCalls:
+        m_Calls: []
   _limitDetection: 0
 --- !u!135 &7211716521479270150
 SphereCollider:
