@@ -12,7 +12,9 @@ namespace Gameplay.Projectile
         [SerializeField] private float _advanceTime;
         [SerializeField] private float _returnTime;
         [SerializeField] private float _waitFinalTime;
-        [SerializeField] private Collider _collider;
+        [SerializeField] private LayerMask _collisionLayer;
+        [SerializeField] private SphereCollider _physicalCollider;
+        [SerializeField] private Collider _hitboxCollider;
 
         private Vector3 _direction;
         private float _extraSpeed;
@@ -41,6 +43,14 @@ namespace Gameplay.Projectile
 
             Moving = true;
             _timer = 0;
+
+            if (CheckInsideWall())
+                FinishMovement();
+        }
+
+        private bool CheckInsideWall()
+        {
+            return Physics.CheckSphere(transform.position, _physicalCollider.radius, _collisionLayer);
         }
 
         private void FixedUpdate()
@@ -91,7 +101,8 @@ namespace Gameplay.Projectile
         private void Finish()
         {
             enabled = false;
-            _collider.enabled = false;
+            _physicalCollider.enabled = false;
+            _hitboxCollider.enabled = false;
             Destroy(gameObject, _waitFinalTime);
         }
 
@@ -104,6 +115,14 @@ namespace Gameplay.Projectile
                 Finish();
             }
             else
+            {
+                FinishMovement();
+            }
+        }
+
+        private void OnCollisionEnter(Collision collision)
+        {
+            if (_collisionLayer.CheckLayer(collision.gameObject.layer))
             {
                 FinishMovement();
             }
