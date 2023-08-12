@@ -1,11 +1,11 @@
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 using Extensions;
 using System;
-using PlatformerRails;
 using Gameplay.Rails;
 using Gameplay.Klonoa;
+using Gameplay.Hitboxes;
+using CylinderCharacterController;
+using Colliders;
 
 namespace Gameplay.Enemies.Ball
 {
@@ -16,22 +16,27 @@ namespace Gameplay.Enemies.Ball
         private readonly float RAY_EXTRA_LENGTH = 0.1f;
         private readonly float SKIN_SIZE = 0.05f;
 
-        [SerializeField] private LayerMask _groundLayer = 0;
-        [SerializeField] private LayerMask _enemyLayer = 0;
-        [SerializeField] private float _fullRegrowTime = 0;
+        [Header("Colliders")]
+        [SerializeField] private Hitbox _hitbox = null;
+        [SerializeField] private CollisionDetector _collisionDetector = null;
+
+        [Header("Fly Settings")]
         [SerializeField] private float _flySpeed = 4;
         [SerializeField] private float _followPathTime = 1.5f;
         [SerializeField] private float _freeFlyTime = 6;
         [SerializeField] private float _destroyDelay = 0.25f;
+
+        [Header("Resize Settings")]
+        [SerializeField] private LayerMask _groundLayer = 0;
+        [SerializeField] private float _fullRegrowTime = 0;
         [SerializeField] private float _growStateInertia = 0.1f;
         [SerializeField] private float _maxGroundDistance;
         [SerializeField] private float _groundCheckLength;
 
-        private BoxCollider _collider;
-        private TranslatorOnRails _mover;
 
-        private readonly Vector3 _rayDirection = Vector3.up;
-        private Vector3 _lastPosition;
+        private CylinderCollider _collider;
+        private CharacterOnRails _mover;
+
         protected Vector3 _speed;
         protected Vector3 _flyDirection;
         protected Vector3 _velocity;
@@ -40,8 +45,8 @@ namespace Gameplay.Enemies.Ball
         protected float _growStateTimer;
 
         public Vector3 Position => transform.position;
-        public Vector3 ColliderSize => _collider.size;
-        public Vector3 BaseSize { get; private set; }
+        public float ColliderHeight => _collider.Height;
+        public float BaseHeight { get; private set; }
         public float RegrowSpeed { get; private set; }
         public bool FollowPath 
         {
@@ -53,42 +58,34 @@ namespace Gameplay.Enemies.Ball
                 _mover.enabled = value;
             } 
         }
+        public bool IsSolid
+        {
+            get => _collider.enabled;
+            set => _collider.enabled = value;
+        }
+
+        public bool CollideWithGround
+        {
+            get => _collisionDetector.enabled;
+            set => _collisionDetector.enabled = value;
+        }
+        public bool CollideWithEnemy
+        {
+            get => _hitbox.enabled;
+            set => _hitbox.enabled = value;
+        }
 
         public bool ClimbSlope { get; set; }
-        public bool CollisionEnabled { get; set; }
         public float FollowPathTime => _followPathTime;
         public float FreeFlyTime => _freeFlyTime;
         public float FullFlyTime => _followPathTime + _freeFlyTime;
         public float FlySpeed => _flySpeed;
         public float DestroyDelay => _destroyDelay;
-        public CollisionType SelectedCollisionType { get; set; } = CollisionType.None;
-        public LayerMask CollisionMask
-        {
-            get
-            {
-                switch (SelectedCollisionType)
-                {
-                    case CollisionType.Enemies:
-                        return _enemyLayer;
-                    case CollisionType.Ground:
-                        return _groundLayer;
-                    case CollisionType.All:
-                        return _enemyLayer | _groundLayer;
-                    default:
-                        return new LayerMask();
-                }
-            }
-        }
 
-        public Collider Collider => _collider;
+        public CylinderCollider Collider => _collider;
         private Vector3 Velocity => FollowPath ? _mover.Velocity : _velocity;
-        private Vector3 InnerColliderSize => _collider.size - Vector3.one * SKIN_SIZE;
-        private Vector3 RaysOrigin => ColliderCenter + Vector3.down * _collider.size.y * 0.5f +
-                RotateVector(new Vector3(-InnerColliderSize.x, 0, -InnerColliderSize.z) * 0.5f);
-        private float WidthSegment => InnerColliderSize.x / (WIDTH_POINTS_COUNT - 1);
-        private float DepthSegment => InnerColliderSize.z / (DEPTH_POINTS_COUNT - 1);
-        private float RayLength => BaseSize.y + RAY_EXTRA_LENGTH;
-        private Vector3 ColliderCenter => transform.position + _collider.center;
+        private float RayLength => BaseHeight + RAY_EXTRA_LENGTH;
+        private Vector3 ColliderCenter => transform.position + _collider.Height * Vector3.up;
 
         public event Action<GrowState> GrowStateChange;
         public event Action DestroyEvent;
@@ -98,20 +95,18 @@ namespace Gameplay.Enemies.Ball
 
         private void Awake()
         {
-            _collider = GetComponent<BoxCollider>();
-            _mover = GetComponent<TranslatorOnRails>();
+            _collider = GetComponent<CylinderCollider>();
+            _mover = GetComponent<CharacterOnRails>();
             _collisionData = new CollisionData(_maxGroundDistance, _groundCheckLength, 0, 0, _groundLayer);
 
-            BaseSize = _collider.size;
-            RegrowSpeed = BaseSize.y / _fullRegrowTime;
-            _lastPosition = transform.position;
+            BaseHeight = _collider.Height;
+            RegrowSpeed = BaseHeight / _fullRegrowTime;
         }
         
         private void FixedUpdate()
         {
-            _lastPosition = Position;
             _collisionData.CheckGround(transform);
-            UpdateSlopeClimb(Time.fixedDeltaTime);
+            //UpdateSlopeClimb(Time.fixedDeltaTime);
             UpdateFreeMovement();
             _growStateTimer += Time.fixedDeltaTime;
         }
@@ -144,40 +139,6 @@ namespace Gameplay.Enemies.Ball
             }
         }
 
-        private void LateUpdate()
-        {
-            DetectCollision();
-        }
-
-        private void DetectCollision()
-        {
-            if (!CollisionEnabled || !_collider.enabled) return;
-
-            _speed = Position - _lastPosition;
-            Vector3 speed;
-            if (Velocity.magnitude > 0)
-                speed = Velocity * Time.deltaTime;
-            else
-                speed = _speed;
-
-            RaycastHit[] results;
-            _collider.Cast(speed.normalized, CollisionMask, out results, speed.magnitude);
-
-            if (results.Length > 0)
-            {
-                IDamageable damageable = results[0].collider.GetComponent<IDamageable>();
-                if (damageable != null)
-                    damageable.DoDamage();
-
-                DestroySelf();
-            }
-
-            if ((_collisionData.Grounded && _flyDirection.y < 0))
-            {
-                DestroySelf();
-            }
-        }
-
         public void SetVelocity(float speed)
         {
             if (FollowPath)
@@ -203,7 +164,6 @@ namespace Gameplay.Enemies.Ball
         public void ThrowSide(Vector3 direction)
         {
             TransitionFinishEvent?.Invoke();
-            _lastPosition = transform.position;
             transform.parent = null;
             _flyDirection = direction;
             ThrownEvent?.Invoke(_flyDirection);
@@ -212,7 +172,6 @@ namespace Gameplay.Enemies.Ball
         public void ThrowDown()
         {
             TransitionFinishEvent?.Invoke();
-            _lastPosition = transform.position;
             transform.parent = null;
             _flyDirection = Vector3.down;
             ThrownEvent?.Invoke(_flyDirection);
@@ -220,45 +179,32 @@ namespace Gameplay.Enemies.Ball
 
         public float CheckCeilDistance()
         {
-            RaycastHit info;
             float collisionDistance = float.PositiveInfinity;
             for (int i = 0; i < WIDTH_POINTS_COUNT; i++)
             {
                 for (int j = 0; j < DEPTH_POINTS_COUNT; j++)
                 {
-                    bool hit = Physics.Raycast(GenerateRayOrigin(i, j), _rayDirection, out info, RayLength, _groundLayer);
-                    if (hit)
-                        collisionDistance = Mathf.Min(info.distance, collisionDistance);
+                    int count = _collider.CheckVerticalCollision(RayLength, Vector3.down * ColliderHeight);
+                    if (count > 0)
+                        collisionDistance = Mathf.Min(_collider.GetClosestVerticalHit().distance, collisionDistance);
                 }
             }
             return collisionDistance - RAY_EXTRA_LENGTH;
-        }
-        
-        private Vector3 GenerateRayOrigin(int xIndex, int zIndex)
-        {
-            return RaysOrigin + RotateVector(
-                Vector3.right * (WidthSegment * xIndex) +
-                Vector3.forward * (DepthSegment * zIndex));
-        }
-
-        private Vector3 RotateVector(Vector3 vector)
-        {
-            return transform.rotation * vector;
-        }
+        }        
 
         public void ChangeColliderHeight(float newHeight)
         {
-            Vector3 size = ColliderSize;
-            float previousSize = size.y;
-            _collider.center = Vector3.down * (BaseSize.y - newHeight) * 0.5f;
-            size.y = newHeight;
-            _collider.size = size;
+            float height = ColliderHeight;
+            float previousHeight = height;
+            height = newHeight;
+            _collider.Height = height;
+            _collider.GenerateShapePoints();
 
-            if (previousSize > _collider.size.y)
+            if (previousHeight > _collider.Height)
             {
                 ChangeGrowState(GrowState.Reduce);
             }
-            else if (previousSize < _collider.size.y)
+            else if (previousHeight < _collider.Height)
             {
                 ChangeGrowState(GrowState.Grow);
             }
@@ -282,25 +228,6 @@ namespace Gameplay.Enemies.Ball
         public void DestroySelf()
         {
             DestroyEvent?.Invoke();
-        }
-
-        private void OnDrawGizmos()
-        {
-            if (_collider == null) return;
-
-            Gizmos.color = Color.blue;
-            for (int i = 0; i < WIDTH_POINTS_COUNT; i++)
-            {
-                for (int j = 0; j < DEPTH_POINTS_COUNT; j++)
-                {
-                    if (i == 0 && j == 0) Gizmos.color = Color.cyan;
-                    else Gizmos.color = Color.blue;
-                    Vector3 origin = GenerateRayOrigin(i, j);
-                    Gizmos.DrawSphere(origin, 0.025f);
-                    Gizmos.color = Color.red;
-                    Gizmos.DrawRay(origin, _rayDirection * RayLength);
-                }
-            }
         }
 
         public enum CollisionType

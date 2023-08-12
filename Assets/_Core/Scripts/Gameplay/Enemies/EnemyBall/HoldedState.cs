@@ -19,8 +19,9 @@ namespace Gameplay.Enemies.Ball
         public override void Enter() 
         {
             _behaviour.ThrownEvent += OnThrown;
-            _behaviour.SelectedCollisionType = EnemyBall.CollisionType.Enemies;
-            _behaviour.CollisionEnabled = true;
+            _behaviour.IsSolid = true;
+            _behaviour.CollideWithEnemy = true;
+            _behaviour.CollideWithGround = false;
             _behaviour.FollowPath = false;
             _behaviour.ClimbSlope = false;
         }
@@ -36,9 +37,9 @@ namespace Gameplay.Enemies.Ball
         private void CalculateSize()
         {
             float newHeight = _behaviour.CheckCeilDistance();
-            Vector3 size = _behaviour.ColliderSize;
+            float height = _behaviour.ColliderHeight;
 
-            if (newHeight < size.y)
+            if (newHeight < height)
             {
                 ReduceColliderSize(newHeight);
             }
@@ -55,10 +56,10 @@ namespace Gameplay.Enemies.Ball
 
         private void RegrowColliderSize(float newHeight)
         {
-            Vector3 size = _behaviour.ColliderSize;
-            float sizeDiference = Mathf.Min(newHeight, _behaviour.BaseSize.y) - size.y;
-            float regrowAmount = Mathf.Min(sizeDiference, _behaviour.RegrowSpeed * Time.deltaTime);
-            float actualHeight = size.y + regrowAmount;
+            float height = _behaviour.ColliderHeight;
+            float HeightDiference = Mathf.Min(newHeight, _behaviour.BaseHeight) - height;
+            float regrowAmount = Mathf.Min(HeightDiference, _behaviour.RegrowSpeed * Time.deltaTime);
+            float actualHeight = height + regrowAmount;
             _behaviour.ChangeColliderHeight(actualHeight);
         }
 
@@ -76,7 +77,7 @@ namespace Gameplay.Enemies.Ball
 
         public override void Exit()
         {
-            _behaviour.ChangeColliderHeight(_behaviour.BaseSize.y);
+            _behaviour.ChangeColliderHeight(_behaviour.BaseHeight);
             _behaviour.ThrownEvent -= OnThrown;
         }
 

@@ -22,8 +22,9 @@ namespace Gameplay.Enemies.Ball
             _traveledTime = 0;
             _behaviour.FollowPath = false;
             _behaviour.ClimbSlope = true;
-            _behaviour.SelectedCollisionType = EnemyBall.CollisionType.All;
-            _behaviour.CollisionEnabled = true;
+            _behaviour.IsSolid = false;
+            _behaviour.CollideWithEnemy = true;
+            _behaviour.CollideWithGround = true;
             _behaviour.SetVelocity(_behaviour.FlySpeed);
         }
 

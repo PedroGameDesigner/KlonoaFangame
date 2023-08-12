@@ -13,10 +13,11 @@ namespace Gameplay.Enemies.Ball
         public override void Enter()
         {
             _behaviour.TransitionFinishEvent += OnTransitionFinished;
-            _behaviour.SelectedCollisionType = EnemyBall.CollisionType.None;
+            _behaviour.IsSolid = false;
+            _behaviour.CollideWithGround = false;
+            _behaviour.CollideWithEnemy = false;
             _behaviour.FollowPath = false;
             _behaviour.ClimbSlope = false;
-            _behaviour.CollisionEnabled = false;
         }
 
         public void SetNextState(State<EnemyBall> nextState)

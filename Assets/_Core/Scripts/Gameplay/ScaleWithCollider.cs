@@ -1,36 +1,40 @@
-using System.Collections;
-using System.Collections.Generic;
+using CylinderCharacterController;
 using UnityEngine;
 
 namespace Gameplay
 {
     public class ScaleWithCollider : MonoBehaviour
     {
-        [SerializeField] private BoxCollider _collider = null;
+        [SerializeField] private CylinderCollider _collider = null;
 
-        private Vector3 _baseSize;
-        private Vector3 _proxySize;
+        private SpriteRenderer _renderer;
+        private float _baseHeight;
+        private float _baseWide;
+        private float _proxyHeight;
 
         // Start is called before the first frame update
         private void Awake()
         {
-            _baseSize = _collider.size;
+            _renderer = GetComponent<SpriteRenderer>();
+            _baseHeight = _collider.Height;
+            _baseWide = _collider.Radius * 2f;
         }
 
         // Update is called once per frame
         private void Update()
         {
-            if (_collider.bounds.size != _proxySize)
-            {                
-                transform.localPosition = _collider.center;
-                float deform = (1 -  _collider.size.y / _baseSize.y) * 0.5f;
-                transform.localScale = new Vector3(
-                    _collider.size.x / _baseSize.x + deform,
-                    _collider.size.y / _baseSize.y,
-                    _collider.size.z / _baseSize.z + deform);
+            if (_collider.enabled)
+            {
+                if (_collider.Height != _proxyHeight)
+                {
+                    transform.localPosition = Vector3.up * _collider.Height * 0.5f;
+                    float deform = (_baseHeight - _collider.Height / _baseHeight) * 0.5f;
+                    float wide = (_collider.Radius * 2) / _baseWide + deform;
+                    transform.localScale = new Vector3(wide, _collider.Height / _baseHeight, wide);
+                }
+                _proxyHeight = _collider.Height;
             }
-            _proxySize = _collider.bounds.size;
-            gameObject.SetActive(_collider.enabled);
+            _renderer.enabled =_collider.enabled;
         }
     }
 }

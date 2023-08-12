@@ -13,8 +13,9 @@ namespace Gameplay.Enemies.Ball
         {
             _behaviour.SetVelocity(0);
             _behaviour.transform.parent = null;
-            _behaviour.Collider.enabled = false;
-            _behaviour.CollisionEnabled = false;
+            _behaviour.IsSolid = false;
+            _behaviour.CollideWithGround = false;
+            _behaviour.CollideWithEnemy = false;
             GameObject.Destroy(_behaviour.gameObject, _behaviour.DestroyDelay);
         }
 
