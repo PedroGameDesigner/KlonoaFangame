@@ -34,7 +34,6 @@ namespace Gameplay
                 }
                 _proxyHeight = _collider.Height;
             }
-            _renderer.enabled =_collider.enabled;
         }
     }
 }

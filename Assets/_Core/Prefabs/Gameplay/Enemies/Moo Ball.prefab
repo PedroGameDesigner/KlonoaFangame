@@ -4953,6 +4953,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _behaviour: {fileID: 1020939667055835225}
+  _renderer: {fileID: 5736782534936605800}
   _destroyParticles: {fileID: 1860351084320055808}
   _captureParticles: {fileID: 7808203810400692496}
 --- !u!114 &2207554406803197830
@@ -10096,7 +10097,7 @@ MonoBehaviour:
     m_Bits: 128
   _fullRegrowTime: 0.2
   _growStateInertia: 0.1
-  _maxGroundDistance: 0.6
+  _maxGroundDistance: 0.1
   _groundCheckLength: 0.1
 --- !u!114 &3575764557800602442
 MonoBehaviour:
@@ -10136,7 +10137,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   maxSlopeAngle: 180
-  totalStepHeight: 0.4
+  totalStepHeight: 0.2
   stepCount: 4
 --- !u!114 &8430071480087140842
 MonoBehaviour:

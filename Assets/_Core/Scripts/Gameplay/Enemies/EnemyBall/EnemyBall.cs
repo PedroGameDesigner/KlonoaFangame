@@ -106,7 +106,7 @@ namespace Gameplay.Enemies.Ball
         private void FixedUpdate()
         {
             _collisionData.CheckGround(transform);
-            //UpdateSlopeClimb(Time.fixedDeltaTime);
+            UpdateSlopeClimb(Time.fixedDeltaTime);
             UpdateFreeMovement();
             _growStateTimer += Time.fixedDeltaTime;
         }
@@ -122,20 +122,13 @@ namespace Gameplay.Enemies.Ball
 
         private void UpdateSlopeClimb(float deltaTime)
         {
-            if (_collisionData.Grounded && ClimbSlope)
+            if (!FollowPath && _collisionData.Grounded && ClimbSlope)
             {
                 float velocityY = 
                     (_collisionData.MaxGroundDistance - _collisionData.GroundDistance) / deltaTime; //ths results for smooth move on slopes                
 
                 velocityY = Mathf.Max(0, velocityY);
-                if (FollowPath)
-                {
-                    Vector3 velocity = _mover.Velocity;
-                    velocity.y = velocityY;
-                    _mover.Velocity = velocity;
-                }
-                else
-                    _velocity.y = velocityY;
+                _velocity.y = velocityY;
             }
         }
 

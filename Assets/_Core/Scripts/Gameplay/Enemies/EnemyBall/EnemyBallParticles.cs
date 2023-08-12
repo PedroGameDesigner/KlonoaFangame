@@ -1,6 +1,4 @@
 using Sirenix.OdinInspector;
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 
 namespace Gameplay.Enemies.Ball
@@ -13,6 +11,7 @@ namespace Gameplay.Enemies.Ball
 
         //Attributes
         [FoldoutGroup(REFERENCES_GROUP), SerializeField] private EnemyBall _behaviour = null;
+        [FoldoutGroup(REFERENCES_GROUP), SerializeField] private SpriteRenderer _renderer = null;
 
         [FoldoutGroup(PARTICLES_GROUP), SerializeField] private ParticleSystem _destroyParticles;
         [FoldoutGroup(PARTICLES_GROUP), SerializeField] private ParticleSystem _captureParticles;
@@ -26,6 +25,7 @@ namespace Gameplay.Enemies.Ball
 
         private void OnDestroyEvent()
         {
+            _renderer.enabled = false;
             _destroyParticles.Play(true);
             _captureParticles.Stop(true, ParticleSystemStopBehavior.StopEmittingAndClear);
         }
