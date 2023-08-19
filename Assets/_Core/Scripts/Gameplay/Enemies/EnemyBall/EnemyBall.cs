@@ -13,8 +13,7 @@ namespace Gameplay.Enemies.Ball
     {
         private const int WIDTH_POINTS_COUNT = 3;
         private const int DEPTH_POINTS_COUNT = 3;
-        private readonly float RAY_EXTRA_LENGTH = 0.1f;
-        private readonly float SKIN_SIZE = 0.05f;
+        private readonly float RAY_EXTRA_LENGTH = 0.05f;
 
         [Header("Colliders")]
         [SerializeField] private Hitbox _hitbox = null;
@@ -191,7 +190,7 @@ namespace Gameplay.Enemies.Ball
             float previousHeight = height;
             height = newHeight;
             _collider.Height = height;
-            _collider.GenerateShapePoints();
+            _collider.GeneratePointPositions();
 
             if (previousHeight > _collider.Height)
             {

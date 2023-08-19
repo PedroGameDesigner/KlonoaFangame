@@ -5,6 +5,7 @@ namespace Gameplay
 {
     public class ScaleWithCollider : MonoBehaviour
     {
+        [SerializeField] private float _minHeight = 0.1f;
         [SerializeField] private CylinderCollider _collider = null;
 
         private SpriteRenderer _renderer;
@@ -28,7 +29,8 @@ namespace Gameplay
                 if (_collider.Height != _proxyHeight)
                 {
                     transform.localPosition = Vector3.up * _collider.Height * 0.5f;
-                    float deform = (_baseHeight - _collider.Height / _baseHeight) * 0.5f;
+                    float height = Mathf.Max(_minHeight, _collider.Height / _baseHeight);
+                    float deform = (_baseHeight - height) * 0.5f;
                     float wide = (_collider.Radius * 2) / _baseWide + deform;
                     transform.localScale = new Vector3(wide, _collider.Height / _baseHeight, wide);
                 }

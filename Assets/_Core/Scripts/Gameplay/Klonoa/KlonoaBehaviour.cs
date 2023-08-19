@@ -235,6 +235,7 @@ namespace Gameplay.Klonoa
         {
             if (IsHolding)
             {
+                Mover.RemoveSubCollider(HoldedBall.Collider);
                 _ballHolder.MoveToPosition(
                     _feetPosition.position,
                     _definition.DoubleJumpPreparationTime,
@@ -251,6 +252,7 @@ namespace Gameplay.Klonoa
         public void HoldObject(HoldableObject captureObject)
         {
             HoldedBall = captureObject.GetHoldedVersion(_ballHolder.transform);
+            Mover.AddSubCollider(HoldedBall.Collider);
             _ballHolder.SetHoldedBall(HoldedBall);
             _ballHolder.RestoreOriginPosition();
             _ballHolder.MoveFromPosition(captureObject.transform.position, _definition.CaptureRepositionTime);
@@ -260,6 +262,7 @@ namespace Gameplay.Klonoa
         {
             if (HoldedBall == null) return;
 
+            Mover.RemoveSubCollider(HoldedBall.Collider);
             HoldedBall.transform.position = _enemyProjectileOrigin.position;
             HoldedBall.ThrowSide(Facing.GetVector());
             HoldedBall = null;
