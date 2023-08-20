@@ -21,7 +21,7 @@ namespace Gameplay.Enemies.Ball
         {
             _traveledTime = 0;
             _behaviour.FollowPath = false;
-            _behaviour.ClimbSlope = true;
+            _behaviour.ClimbSlope = false;
             _behaviour.IsSolid = false;
             _behaviour.CollideWithEnemy = true;
             _behaviour.CollideWithGround = true;

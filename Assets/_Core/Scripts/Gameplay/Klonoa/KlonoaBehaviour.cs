@@ -1,5 +1,4 @@
 using Colliders;
-using Gameplay.Collectables;
 using Gameplay.Enemies.Ball;
 using Gameplay.Hitboxes;
 using Gameplay.Projectile;
@@ -218,6 +217,7 @@ namespace Gameplay.Klonoa
 
         public void InvokeEndHoldingEvent()
         {
+            if (HoldedBall != null) Mover.RemoveSubCollider(HoldedBall.Collider);
             EndHoldingEvent?.Invoke();
         }
 
@@ -262,8 +262,8 @@ namespace Gameplay.Klonoa
         {
             if (HoldedBall == null) return;
 
-            Mover.RemoveSubCollider(HoldedBall.Collider);
-            HoldedBall.transform.position = _enemyProjectileOrigin.position;
+            if (HoldedBall != null) Mover.RemoveSubCollider(HoldedBall.Collider);
+            HoldedBall.transform.position = _enemyProjectileOrigin.position - HoldedBall.BaseHeight * Vector3.up * 0.5f;
             HoldedBall.ThrowSide(Facing.GetVector());
             HoldedBall = null;
             SideThrowEnemyEvent?.Invoke();
@@ -273,6 +273,7 @@ namespace Gameplay.Klonoa
         {
             if (HoldedBall == null) return;
 
+            if (HoldedBall != null) Mover.RemoveSubCollider(HoldedBall.Collider);
             HoldedBall.ThrowDown();
             HoldedBall = null;
         }

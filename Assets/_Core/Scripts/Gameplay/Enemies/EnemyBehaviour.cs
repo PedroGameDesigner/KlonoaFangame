@@ -118,14 +118,20 @@ namespace Gameplay.Enemies
 
         public virtual void Respawn(Vector3 spawnPosition, float spawnTime, AnimationCurve repositionCurve, AnimationCurve verticalCurve)
         {
-            gameObject.SetActive(true);
+            SetEnable(true);
             ChangeToSpawningState(spawnPosition, spawnTime, repositionCurve, verticalCurve);
         }
 
         public virtual void Kill()
         {
             DeathEvent?.Invoke(this);
-            gameObject.SetActive(false);
+            SetEnable(false);
+        }
+
+        protected virtual void SetEnable(bool value)
+        {
+            if (value) gameObject.SetActive(value);
+            enabled = value;
         }
 
         protected void OnBallDestroyed()

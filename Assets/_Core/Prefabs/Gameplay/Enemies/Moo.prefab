@@ -307,6 +307,7 @@ GameObject:
   - component: {fileID: 4522299097519090315}
   - component: {fileID: 3812644214350081492}
   - component: {fileID: 6836391990752371369}
+  - component: {fileID: 3718086658680908186}
   m_Layer: 14
   m_Name: Hit Receptor
   m_TagString: Enemy
@@ -415,6 +416,20 @@ Rigidbody:
   m_Interpolate: 0
   m_Constraints: 126
   m_CollisionDetection: 0
+--- !u!114 &3718086658680908186
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7802162323552424998}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: c5bdc3ccf81a6c5449c9e3e91fa0405a, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _referenceBehaviour: {fileID: 5600298607983526250}
+  _colliderToDisable: {fileID: 3812644214350081492}
 --- !u!1 &8342390426715926395
 GameObject:
   m_ObjectHideFlags: 0
@@ -427,6 +442,7 @@ GameObject:
   - component: {fileID: 6405398421646973437}
   - component: {fileID: 7211716521479270150}
   - component: {fileID: 8633724269373721356}
+  - component: {fileID: 2358742408828315843}
   m_Layer: 13
   m_Name: AttackHitbox
   m_TagString: Enemy
@@ -497,6 +513,20 @@ Rigidbody:
   m_Interpolate: 0
   m_Constraints: 0
   m_CollisionDetection: 0
+--- !u!114 &2358742408828315843
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8342390426715926395}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: c5bdc3ccf81a6c5449c9e3e91fa0405a, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _referenceBehaviour: {fileID: 5600298607983526250}
+  _colliderToDisable: {fileID: 7211716521479270150}
 --- !u!1001 &3364802696940339368
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -640,8 +670,32 @@ PrefabInstance:
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: ed5945340c7785941b46e99a5ecc760f, type: 3}
+--- !u!1 &3102436596645767038 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 7023459677983326558, guid: ed5945340c7785941b46e99a5ecc760f, type: 3}
+  m_PrefabInstance: {fileID: 5365554037851153952}
+  m_PrefabAsset: {fileID: 0}
+--- !u!114 &6973393341015149194
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3102436596645767038}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: a82f2f8b04500e44384bbbfc12c52746, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _referenceBehaviour: {fileID: 5600298607983526250}
+  _projectorToDisable: {fileID: 6545700266432530111}
 --- !u!4 &5369029700062130935 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 68933782417069271, guid: ed5945340c7785941b46e99a5ecc760f, type: 3}
+  m_PrefabInstance: {fileID: 5365554037851153952}
+  m_PrefabAsset: {fileID: 0}
+--- !u!119 &6545700266432530111 stripped
+Projector:
+  m_CorrespondingSourceObject: {fileID: 1198161245600211103, guid: ed5945340c7785941b46e99a5ecc760f, type: 3}
   m_PrefabInstance: {fileID: 5365554037851153952}
   m_PrefabAsset: {fileID: 0}

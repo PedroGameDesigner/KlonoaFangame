@@ -1,4 +1,4 @@
-using System.Collections;
+ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
@@ -18,6 +18,11 @@ namespace Gameplay.Enemies
         private void OnDeath(EnemyBehaviour caller)
         {
             _deathParticles.Play(true);
+        }
+
+        private void OnParticleSystemStopped()
+        {
+            _behaviour.gameObject.SetActive(false);
         }
     }
 }
