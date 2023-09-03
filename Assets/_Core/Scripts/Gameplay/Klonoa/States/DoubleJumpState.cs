@@ -44,7 +44,7 @@ namespace Gameplay.Klonoa
         {
             _mover.enabled = true;
             _behaviour.ThrowHoldedEnemyDownwards();
-            _behaviour.StartJumpAction(_definition.DoubleJumpSpeed, true, false);
+            _behaviour.StartJumpAction(_definition.DoubleJumpSpeed, ignoreGround: true, invokeJumpEvent: false, allowFloat: true);
             _ballInPosition = true;
         }
 

@@ -44,7 +44,7 @@ namespace Gameplay.Klonoa
         private float _doubleJumpSpeed;
 
         //Accessors
-        public SpeedData NotMoveSpeed => new SpeedData();
+        public SpeedData NotMoveSpeed => new SpeedData(0, 0);
         public SpeedData MoveSpeed => _moveSpeed;
 
         public float JumpSpeed => _jumpSpeed;
@@ -98,6 +98,12 @@ namespace Gameplay.Klonoa
         public float Drag
         {
             get { return _drag; }
+        }
+
+        public SpeedData(float accelaration, float drag)
+        {
+            _accelaration = accelaration;
+            _drag = drag;
         }
     }
 

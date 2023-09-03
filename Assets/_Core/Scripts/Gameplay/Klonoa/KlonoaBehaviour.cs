@@ -24,6 +24,7 @@ namespace Gameplay.Klonoa
         private bool _jumpActivated;
         private bool _invokeJumpEvent;
         private bool _ignoreGround;
+        private bool _allowFloat;
         private bool _invincible;
         private float _invincibleTimer;
         private float _jumpForce;
@@ -43,6 +44,7 @@ namespace Gameplay.Klonoa
         public bool IsGrounded => Mover.IsGrounded;
         public bool IsTouchingCeiling => Mover.IsTouchingCeiling;
         public bool IsWalking => Mathf.Abs(EffectiveSpeed.z) > _minWalkSpeed && Mathf.Abs(MoveDirection.x) > 0;
+        public bool AllowFloat => _allowFloat;
         public bool IsFloating => _stateMachine.IsFloatState;
         public bool IsInDoubleJump => _stateMachine.IsDoubleJumpState;
         public bool IsInDamage => _stateMachine.IsDamageState;
@@ -196,12 +198,13 @@ namespace Gameplay.Klonoa
             _stateMachine.ReturnToNormalState();
         }
 
-        public void StartJumpAction(float jumpForce, bool ignoreGround = false, bool invokeJumpEvent = true)
+        public void StartJumpAction(float jumpForce, bool ignoreGround = false, bool invokeJumpEvent = true, bool allowFloat = false)
         {
             _jumpActivated = true;
             _invokeJumpEvent = invokeJumpEvent;
             _jumpForce = jumpForce;
             _ignoreGround = ignoreGround;
+            _allowFloat = allowFloat;
         }
 
         public void Death()
