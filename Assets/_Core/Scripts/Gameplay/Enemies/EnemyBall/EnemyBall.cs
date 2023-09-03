@@ -86,7 +86,7 @@ namespace Gameplay.Enemies.Ball
         private float RayLength => BaseHeight + RAY_EXTRA_LENGTH;
         private Vector3 ColliderCenter => transform.position + _collider.Height * Vector3.up;
 
-        public event Action<GrowState> GrowStateChange;
+        public event Action<GrowState, float> GrowStateChange;
         public event Action DestroyEvent;
         public event Action StartTransitionEvent;
         public event Action TransitionFinishEvent;
@@ -193,26 +193,20 @@ namespace Gameplay.Enemies.Ball
             _collider.GeneratePointPositions();
 
             if (previousHeight > _collider.Height)
-            {
-                ChangeGrowState(GrowState.Reduce);
-            }
+                ChangeGrowState(GrowState.Reduce, _collider.Height - previousHeight);
             else if (previousHeight < _collider.Height)
-            {
-                ChangeGrowState(GrowState.Grow);
-            }
+                ChangeGrowState(GrowState.Grow, _collider.Height - previousHeight);
             else
-            {
-                ChangeGrowState(GrowState.Inert);
-            }
+                ChangeGrowState(GrowState.Inert, 0);
         }
 
-        private void ChangeGrowState(GrowState newState)
+        private void ChangeGrowState(GrowState newState, float difference)
         {
             if (_growState != newState &&
                 (newState != GrowState.Inert && _growStateTimer > _growStateInertia))
             {
                 _growState = newState;
-                GrowStateChange?.Invoke(_growState);
+                GrowStateChange?.Invoke(_growState, difference);
                 _growStateTimer = 0;
             }
         }

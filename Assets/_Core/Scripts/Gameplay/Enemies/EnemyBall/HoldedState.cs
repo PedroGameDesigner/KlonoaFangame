@@ -40,13 +40,9 @@ namespace Gameplay.Enemies.Ball
             float height = _behaviour.ColliderHeight;
 
             if (newHeight < height)
-            {
                 ReduceColliderSize(newHeight);
-            }
             else
-            {
                 RegrowColliderSize(newHeight);
-            }
         }
 
         private void ReduceColliderSize(float newHeight)

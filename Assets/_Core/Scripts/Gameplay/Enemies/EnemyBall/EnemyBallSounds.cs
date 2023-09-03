@@ -15,6 +15,7 @@ namespace Gameplay.Enemies.Ball
         //Attributes
         [FoldoutGroup(REFERENCES_GROUP), SerializeField] private EnemyBall _behaviour = null;
         [FoldoutGroup(REFERENCES_GROUP), SerializeField] private SoundSource _soundSource;
+        [FoldoutGroup(REFERENCES_GROUP), SerializeField] private float _minSoundDifference = 0.1f;
 
         [FoldoutGroup(CLIPS_GROUP), SerializeField] private SoundClip _destroySound;
         [FoldoutGroup(CLIPS_GROUP), SerializeField] private SoundClip _bounceSound;
@@ -25,9 +26,9 @@ namespace Gameplay.Enemies.Ball
             _behaviour.DestroyEvent += () => _soundSource.PlaySound(_destroySound);
         }
 
-        private void OnGrowStateChange(GrowState state)
+        private void OnGrowStateChange(GrowState state, float difference)
         {
-            if (state == GrowState.Reduce && !_soundSource.IsPlaying)
+            if (state == GrowState.Reduce && !_soundSource.IsPlaying & difference < -_minSoundDifference)
             {
                 _soundSource.PlaySound(_bounceSound);
             }
