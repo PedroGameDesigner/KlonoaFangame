@@ -5064,6 +5064,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _behaviour: {fileID: 1020939667055835225}
   _soundSource: {fileID: 1659571611577527725}
+  _minSoundDifference: 0.2
   _destroySound: {fileID: 11400000, guid: 1bb5e57061218cc439b6e99ed02c5508, type: 2}
   _bounceSound: {fileID: 11400000, guid: c65dcb5bad0ab5a4ab17ac8be8034883, type: 2}
 --- !u!114 &1659571611577527725
