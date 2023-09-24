@@ -1,10 +1,5 @@
 using Cinemachine;
-using Cinemachine.Utility;
-using System;
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
-using Sirenix.OdinInspector;
 namespace Cameras
 {
     [AddComponentMenu("")] // Hide in menu
