@@ -1,8 +1,6 @@
 using PlatformerRails;
 using Sirenix.OdinInspector;
 using Sirenix.OdinInspector.Editor;
-using System.Collections;
-using System.Collections.Generic;
 using System.Linq;
 using UnityEditor;
 using UnityEngine;
@@ -21,7 +19,6 @@ namespace EditorTools
         private int _copyCount = 1;
         [SerializeField, TabGroup("Multiple Objects")]
         private Vector3 _separation = Vector3.forward * 0.5f;
-
 
         private Transform _cursor;
 
@@ -49,9 +46,16 @@ namespace EditorTools
         private void InstantiateCursor()
         {
             if (_cursor == null)
-            _cursor = new GameObject("Cursor").transform;
+            {
+                GameObject cursor = GameObject.Find("Rail Instance Cursor");
+                if (cursor == null)
+                    _cursor = new GameObject("Rail Instance Cursor").transform;
+                else
+                    _cursor = cursor.transform;
 
-            _cursor.gameObject.AddComponent<SimpleGizmo>();
+                if (_cursor.GetComponent<SimpleGizmo>() == null)
+                    _cursor.gameObject.AddComponent<SimpleGizmo>();
+            }
         }
 
         private void OnValidate()
@@ -82,7 +86,7 @@ namespace EditorTools
         {
             Vector3 position = RailLocalPosition(Distance, _displacement.y, _displacement.x);
             Transform parent = InstanceParent;
-            Transform instance = Instantiate(_prefab, position, Quaternion.identity, parent);
+            Transform instance = IntantiatePrefab(_prefab, position, Quaternion.identity, parent);
         }
 
         [Button("Instantiate"), EnableIf("AllReady"), TabGroup("Multiple Objects")]
@@ -94,7 +98,7 @@ namespace EditorTools
             {
                 Vector3 displacement = (Vector3)_displacement + _separation * i;
                 Vector3 position = RailLocalPosition(Distance + displacement.z, displacement.y, displacement.x) ;
-                Transform instance = Instantiate(_prefab, position, Quaternion.identity, parent);
+                Transform instance = IntantiatePrefab(_prefab, position, Quaternion.identity, parent);
             }
         }
         private Vector3 RailLocalPosition(float distance, float height, float displacement)
@@ -109,6 +113,20 @@ namespace EditorTools
             return Selection.GetTransforms(
                 SelectionMode.TopLevel | SelectionMode.ExcludePrefab | SelectionMode.Editable)
                 .FirstOrDefault();
+        }
+
+        private Transform IntantiatePrefab(Transform transform, Vector3 position, Quaternion rotation, Transform parent)
+        {
+            var prefab = PrefabUtility.GetCorrespondingObjectFromSource(transform);
+            if (prefab != null)
+            {
+                var instance = (Transform)PrefabUtility.InstantiatePrefab(prefab, parent);
+                instance.position = position;
+                instance.rotation = rotation;
+                return instance;
+            }
+            else
+                return Instantiate(transform, position, Quaternion.identity, parent);
         }
     }
 }
