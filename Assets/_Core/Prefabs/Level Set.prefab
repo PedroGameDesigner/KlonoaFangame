@@ -11,6 +11,7 @@ GameObject:
   - component: {fileID: 6155886785397823215}
   - component: {fileID: 214718597740279564}
   - component: {fileID: 8494433430895338894}
+  - component: {fileID: 30852305409942119}
   m_Layer: 0
   m_Name: Follow Target Camera
   m_TagString: Untagged
@@ -86,6 +87,23 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _config: {fileID: 11400000, guid: 14eeb9cf57ea12e4ba4cdf4400356a57, type: 2}
   _target: {fileID: 1639233893098219478}
+--- !u!114 &30852305409942119
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 468561438753312926}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: b7fb6d5de3330164d8ff1aae076fa120, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _defaultCamera: 1
+  _transitionTime: 1
+  _followOnAir: 0
+  _followOnGround: 1
+  _deathZoneMargin: {x: 0, y: 0}
 --- !u!1 &1168608723468927385
 GameObject:
   m_ObjectHideFlags: 0
@@ -1686,7 +1704,7 @@ AudioListener:
   m_Enabled: 1
 --- !u!1 &7259186090613560837
 GameObject:
-  m_ObjectHideFlags: 0
+  m_ObjectHideFlags: 3
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
@@ -1703,7 +1721,7 @@ GameObject:
   m_IsActive: 1
 --- !u!4 &445341568183560917
 Transform:
-  m_ObjectHideFlags: 0
+  m_ObjectHideFlags: 3
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
@@ -1718,7 +1736,7 @@ Transform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!114 &9009087057401679657
 MonoBehaviour:
-  m_ObjectHideFlags: 0
+  m_ObjectHideFlags: 3
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
