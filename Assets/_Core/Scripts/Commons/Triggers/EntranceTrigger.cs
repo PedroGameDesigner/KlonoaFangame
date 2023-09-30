@@ -7,7 +7,10 @@ using UnityEngine.Events;
 
 public class EntranceTrigger : MonoBehaviour
 {
+    [SerializeField] private bool _useLayer;
     [SerializeField] LayerMask _detectionLayer;
+    [SerializeField] private bool _useTag;
+    [SerializeField] private string _detectionTag;
     [SerializeField] private UnityEvent<EntranceTrigger> _entranceCrossedEvent;
 
     private bool _hasObjectInside;
@@ -22,7 +25,7 @@ public class EntranceTrigger : MonoBehaviour
 
     private void OnTriggerEnter(Collider other)
     {
-        if (_detectionLayer.CheckLayer(other.gameObject.layer))
+        if (EvaluateTarget(other.gameObject))
         {
             _hasObjectInside = true;
             _planeSide = _plane.GetSide(other.transform.position);
@@ -31,7 +34,7 @@ public class EntranceTrigger : MonoBehaviour
 
     private void OnTriggerExit(Collider other)
     {
-        if (_hasObjectInside && _detectionLayer.CheckLayer(other.gameObject.layer))
+        if (_hasObjectInside && EvaluateTarget(other.gameObject))
         {
             bool newSide = _plane.GetSide(other.transform.position);
             _hasObjectInside = false;
@@ -40,6 +43,18 @@ public class EntranceTrigger : MonoBehaviour
                 _entranceCrossedEvent?.Invoke(this);
             }
         }
+    }
+
+    private bool EvaluateTarget(GameObject gameObject)
+    {
+        bool result = true;
+
+        if (_useLayer)
+            result |= _detectionLayer.CheckLayer(gameObject.layer);
+        if (_useTag)
+            result |= gameObject.CompareTag(_detectionTag);
+
+        return result;
     }
 
     private Plane GetColliderPlane(BoxCollider collider)

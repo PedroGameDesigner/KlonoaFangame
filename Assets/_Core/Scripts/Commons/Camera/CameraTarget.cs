@@ -53,14 +53,24 @@ namespace Cameras
 
         private void LateUpdate()
         {
-            if (!ShouldUpdate) return;
-            UpdateFacing();
-            Vector3 nextPosition = UpdateNextPosition();
-            nextPosition.y = UpdateYPosition(nextPosition.y);
-            transform.position = Rail.Local2World(nextPosition);
-            transform.rotation = _baseRotation * _target.transform.rotation;
+            if (Application.isPlaying)
+            {
+                UpdateFacing();
+                Vector3 nextPosition = UpdateNextPosition();
+                nextPosition.y = UpdateYPosition(nextPosition.y);
+                transform.position = Rail.Local2World(nextPosition);
+                transform.rotation = _baseRotation * _target.transform.rotation;
 
-            _lastY = nextPosition.y;
+                _lastY = nextPosition.y;
+            }
+            else if (_debugRail != null)
+            {
+                _currentForwardDisplacement = _target.HorizontalFacing.GetVector().z;
+                Vector3 nextPosition = UpdateNextPosition();
+                transform.position = Rail.Local2World(nextPosition);
+                transform.rotation = _baseRotation * _target.transform.rotation;
+                _lastY = nextPosition.y;
+            }
         }
 
         private void UpdateFacing()
@@ -106,7 +116,10 @@ namespace Cameras
             if (_moveRelativePosition != null)
                 StopCoroutine(_moveRelativePosition);
 
-            _moveRelativePosition = StartCoroutine(MoveRelativePosition(distanceToCamera, time));
+            if (Application.isPlaying)
+                _moveRelativePosition = StartCoroutine(MoveRelativePosition(distanceToCamera, time));
+            else
+                _distanceToCamera = distanceToCamera;
         }
 
         private IEnumerator MoveRelativePosition(float distanceToCamera, float time)
