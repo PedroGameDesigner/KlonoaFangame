@@ -953,9 +953,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 0d844c1288652404393ef594acb6909c, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _klonoa: {fileID: 0}
+  _klonoa: {fileID: 3261933161897130710}
   _resourcesController: {fileID: 5945509575152486338}
-  _music: {fileID: 0}
+  _music: {fileID: 865987204419197728}
   _restartTime: 2.5
 --- !u!114 &5945509575152486338
 MonoBehaviour:
