@@ -87,19 +87,23 @@ namespace EditorTools
             Vector3 position = RailLocalPosition(Distance, _displacement.y, _displacement.x);
             Transform parent = InstanceParent;
             Transform instance = IntantiatePrefab(_prefab, position, Quaternion.identity, parent);
+            Undo.RecordObject(instance, "Instantiate Object");
         }
 
         [Button("Instantiate"), EnableIf("AllReady"), TabGroup("Multiple Objects")]
         public void InstantiateMultiple()
         {
+            Transform[] instances = new Transform[_copyCount];
             Vector3 basePosition = RailLocalPosition(Distance, _displacement.y, _displacement.x);
             Transform parent = InstanceParent;
             for (int i = 0; i < _copyCount; i++)
             {
                 Vector3 displacement = (Vector3)_displacement + _separation * i;
                 Vector3 position = RailLocalPosition(Distance + displacement.z, displacement.y, displacement.x) ;
-                Transform instance = IntantiatePrefab(_prefab, position, Quaternion.identity, parent);
+                instances[i] = IntantiatePrefab(_prefab, position, Quaternion.identity, parent);
             }
+
+            Undo.RecordObjects(instances, "Instantiate Objects");
         }
         private Vector3 RailLocalPosition(float distance, float height, float displacement)
         {
@@ -117,16 +121,32 @@ namespace EditorTools
 
         private Transform IntantiatePrefab(Transform transform, Vector3 position, Quaternion rotation, Transform parent)
         {
-            var prefab = PrefabUtility.GetCorrespondingObjectFromSource(transform);
+            Transform prefab = transform;
+
+            if (!PrefabUtility.IsPartOfPrefabAsset(prefab))
+                prefab = PrefabUtility.GetCorrespondingObjectFromSource(transform);
+            
             if (prefab != null)
             {
                 var instance = (Transform)PrefabUtility.InstantiatePrefab(prefab, parent);
+                instance.name = GetUniqueName($"{instance.name} (Clone)", parent);
                 instance.position = position;
                 instance.rotation = rotation;
                 return instance;
             }
             else
                 return Instantiate(transform, position, Quaternion.identity, parent);
+        }
+
+        private string GetUniqueName(string baseName, Transform parent)
+        {
+            string[] names = new string[parent.childCount];
+            for (int i = 0; i < parent.childCount; i++)
+            {
+                names[i] = parent.GetChild(i).name;
+            }
+
+            return ObjectNames.GetUniqueName(names, baseName);
         }
     }
 }
