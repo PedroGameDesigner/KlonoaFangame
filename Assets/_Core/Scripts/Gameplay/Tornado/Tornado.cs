@@ -12,16 +12,17 @@ namespace Gameplay.Mechanics
 
         [SerializeField] private float _jumpHeight;
 
-        private KlonoaBehaviour _klonoa;
+        private Collider _klonoaCollider;
 
         public event Action BounceEvent;
 
         private void OnTriggerEnter(Collider other)
         {
-            if (_klonoa == null && other.tag == PLAYER_TAG)
+            if (_klonoaCollider == null && other.tag == PLAYER_TAG)
             {
-                _klonoa = other.GetComponent<KlonoaBehaviour>();
-                ImpulseKlonoa(_klonoa);
+                _klonoaCollider = other;
+                var klonoa = _klonoaCollider.GetComponentInParent<KlonoaBehaviour>();
+                ImpulseKlonoa(klonoa);
             }
         }
 
@@ -44,9 +45,9 @@ namespace Gameplay.Mechanics
 
         private void OnTriggerExit(Collider other)
         {
-            if (_klonoa != null && other.transform == _klonoa.transform)
+            if (_klonoaCollider != null && other.transform == _klonoaCollider.transform)
             {
-                _klonoa = null;
+                _klonoaCollider = null;
             }
         }
     }
