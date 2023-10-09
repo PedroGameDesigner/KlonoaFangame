@@ -86,8 +86,10 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _defaultCamera: 1
   _transitionTime: 1
+  _horizontalDistanceProportion: 0
   _followOnAir: 0
   _followOnGround: 1
+  _followOnEvent: 1
   _deathZoneMargin: {x: 0, y: 0}
 --- !u!1 &1168608723468927385
 GameObject:
@@ -1209,6 +1211,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _target: {fileID: 3261933161897130710}
+  _followHorizontal: 1
+  _followVertical: 1
   _baseRotation: {x: 0, y: 0, z: 0, w: 0}
   _cameraDistanceProportion: 0.2
   _facingRepositionCurve:
