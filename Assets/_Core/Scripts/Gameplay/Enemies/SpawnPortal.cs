@@ -21,7 +21,6 @@ namespace Gameplay.Enemies
         public event Action StartSpawnEvent;
         public event Action EndSpawnEvent;
 
-
         private void Awake()
         {
             foreach(var enemy in _enemies)
@@ -62,6 +61,21 @@ namespace Gameplay.Enemies
                 StartSpawnEvent?.Invoke();
 
             _spawnTimers.Add(new SpawnTimer(caller, _respawnTime));
+        }
+
+        private void OnDrawGizmos()
+        {
+            Gizmos.color = Color.red;
+            for(int i = 0; i < _enemies.Count; i++)
+            {
+                if (_enemies[i] != null)
+                    Gizmos.DrawLine(transform.position, _enemies[i].transform.position);
+                else
+                {
+                    Gizmos.DrawWireSphere(transform.position, 0.5f);
+                    break;
+                }
+            }
         }
 
         private class SpawnTimer
