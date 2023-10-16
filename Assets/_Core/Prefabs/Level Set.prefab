@@ -944,6 +944,7 @@ MonoBehaviour:
   _resourcesController: {fileID: 5945509575152486338}
   _music: {fileID: 865987204419197728}
   _restartTime: 2.5
+  _totalStone: 75
 --- !u!114 &5945509575152486338
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -956,7 +957,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 18748f77b64a2a047af8c04e42bdaba9, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _klonoa: {fileID: 0}
+  _klonoa: {fileID: 3261933161897130710}
 --- !u!114 &2387091175853658881
 MonoBehaviour:
   m_ObjectHideFlags: 0
