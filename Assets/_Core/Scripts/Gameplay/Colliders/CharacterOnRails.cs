@@ -10,14 +10,16 @@ namespace Colliders
         [SerializeField]
         RailBehaviour railBehaviour;
 
+        IRail rail;
+        IRail currentSingleRail;
+
         public Vector3 Position { get; set; }
         public override Vector3 Velocity { get; set; }
         public IRail Rail => rail;
+        public IRail CurrentSingleRail => currentSingleRail;
         public bool IsGrounded => physics.IsOnFloor;
         public bool IsTouchingCeiling => physics.IsTouchingCeiling;
 
-        IRail rail;
-        IRail currentSingleRail;
 
         public event System.Action OnLocalPositionUpdated;
         public event System.Action<IRail> RailChangeEvent;
@@ -90,11 +92,11 @@ namespace Colliders
         {
             if (usedRail != currentSingleRail)
             {
+                Debug.Log($"Character {name}: {currentSingleRail} => {usedRail}");
+                //Debug.Break();
                 RailChangeEvent?.Invoke(usedRail);
                 currentSingleRail = usedRail;
             }
         }
-
-
     }
 }
