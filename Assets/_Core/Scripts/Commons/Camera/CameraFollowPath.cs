@@ -44,13 +44,14 @@ namespace Cameras
 
         private void UpdateCameraBody(CinemachineVirtualCameraBase vcam, ref CameraState state, float deltaTime)
         {
+            /*
             Vector3 pathNormal = _target.PathNormal;
             _targetPosition = _target.transform.position + pathNormal * _config.CameraDistance;
 
             Vector3 difference = _targetPosition - state.RawPosition;
             Vector3 translation = CalculateTranslationVelocity(difference) * deltaTime;
             state.RawPosition += translation;
-            _translationPercent = translation.magnitude / difference.magnitude;
+            _translationPercent = translation.magnitude / difference.magnitude;*/
         }
 
         private Vector3 CalculateTranslationVelocity(Vector3 difference)
@@ -76,11 +77,12 @@ namespace Cameras
 
         private void SetCameraState(CinemachineVirtualCameraBase vcam, CinemachineCore.Stage stage, ref CameraState state)
         {
+            /*
             Vector3 pathNormal = _target.PathNormal;
             state.RawPosition = _target.transform.position + pathNormal * _config.CameraDistance;
 
             Vector3 VectorToTarget = _target.transform.position - state.FinalPosition;
-            state.RawOrientation = Quaternion.LookRotation(VectorToTarget, Vector3.up);
+            state.RawOrientation = Quaternion.LookRotation(VectorToTarget, Vector3.up);*/
         }
 
     }

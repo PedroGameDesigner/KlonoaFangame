@@ -19,9 +19,13 @@ namespace Cameras
         [SerializeField] private bool _defaultCamera;
         [SerializeField] private float _transitionTime;
 
-        [Header("Vertial Deathzone Settings")]
+        [Header("Horizontal Settings")]
+        [SerializeField] private float _horizontalDistanceProportion;
+
+        [Header("Vertial Settings")]
         [SerializeField] private bool _followOnAir = true;
         [SerializeField] private bool _followOnGround = true;
+        [SerializeField] private bool _followOnEvent = true;
         [SerializeField] private Vector2 _deathZoneMargin;
 
         private CinemachineVirtualCamera _camera;
@@ -46,9 +50,10 @@ namespace Cameras
 
         private void OnCameraLive(ICinemachineCamera cameraIn, ICinemachineCamera cameraOut)
         {
+            /*
             _target.FollowOnAir = _followOnAir;
             _target.FollowOnGround = _followOnGround;
-            _target.UpdateRelativePosition(DistanceToTarget, _transitionTime);
+            _target.UpdateRelativePosition(DistanceToTarget, _transitionTime);*/
         }
 
         public void ToggleCamera()
