@@ -46,17 +46,33 @@ public class DeathZoneState : MonoBehaviour
 
     private void OnEnable()
     {
-        klonoa.StateChangeEvent += OnKlonoaStateChange;        
+        //klonoa.JumpEvent += OnJump;
+        klonoa.BeginHangingEvent += OnBeginHanging;
+        klonoa.EndHangingEvent += OnEndHanging;
     }
 
     private void OnDisable()
     {
-        klonoa.StateChangeEvent -= OnKlonoaStateChange;
+        //klonoa.JumpEvent -= OnJump;
+        klonoa.BeginHangingEvent -= OnBeginHanging;
+        klonoa.EndHangingEvent -= OnEndHanging;
     }
 
-    private void OnKlonoaStateChange()
-    {
+    //private void OnJump() => BeginAlwaysActive(jumpActiveTime);
+    private void OnBeginHanging() => BeginAlwaysInactive();
+    private void OnEndHanging() => SetNormalState();
 
+
+    private void BeginAlwaysInactive()
+    {
+        currentStateType = StateType.AlwaysInactive;
+        DisableDeathZone();
+        isGrounded = true;
+    }
+
+    private void SetNormalState()
+    {
+        currentStateType = StateType.Normal;
     }
 
     private void DisableDeathZone()

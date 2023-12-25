@@ -11,9 +11,7 @@ namespace Gameplay
 
         public bool CanBeCaptured => true;
 
-        public void Capture()
-        {
-        }
+        public void Capture() { }
 
         public abstract void MoveToHangingPosition(float time, Action finishAction);
         public abstract void MoveToJumpPosition(float time, Action finishAction);

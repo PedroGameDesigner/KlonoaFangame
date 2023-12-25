@@ -41,6 +41,7 @@ namespace Gameplay.Klonoa
         public KlonoaDefinition Definition => _definition;
         public CharacterOnRails Mover => _mover;
         private Vector2 MoveDirection { set; get; }
+        public bool CanChangeFacing { set; get; }
         public bool IsGrounded => Mover.IsGrounded;
         public bool IsTouchingCeiling => Mover.IsTouchingCeiling;
         public bool IsWalking => Mathf.Abs(EffectiveSpeed.z) > _minWalkSpeed && Mathf.Abs(MoveDirection.x) > 0;
@@ -150,6 +151,10 @@ namespace Gameplay.Klonoa
                 float direction = Mathf.Sign(_mover.Velocity.z);
                 Facing = direction > 0 ? FaceDirection.Right : FaceDirection.Left;
             }
+            else if (CanChangeFacing && MoveDirection.x != 0)
+            {
+                Facing = MoveDirection.x > 0 ? FaceDirection.Right : FaceDirection.Left;
+            }
             else if (MoveDirection.y != 0)
             {
                 Facing = MoveDirection.y > 0 ? FaceDirection.Front : FaceDirection.Back;
@@ -248,7 +253,7 @@ namespace Gameplay.Klonoa
             {
                 HangingObject.MoveToJumpPosition(
                     _definition.DoubleJumpPreparationTime,
-                    finishAction);
+                    () => { finishAction.Invoke(); FinishHanging(); });
             }
         }
 

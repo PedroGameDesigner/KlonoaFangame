@@ -28,6 +28,7 @@ namespace Gameplay.Klonoa
         public override void Enter()
         {
             SubscribeToKlonoaEvent();
+            _behaviour.CanChangeFacing = CanTurn;
         }
 
         public override void Update(float deltaTime) { }
