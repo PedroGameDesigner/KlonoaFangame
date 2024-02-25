@@ -41,6 +41,7 @@ namespace Gameplay.Klonoa
         public KlonoaDefinition Definition => _definition;
         public CharacterOnRails Mover => _mover;
         private Vector2 MoveDirection { set; get; }
+        public bool EnableInput { get; set; } = false;
         public bool CanChangeFacing { set; get; }
         public bool IsGrounded => Mover.IsGrounded;
         public bool IsTouchingCeiling => Mover.IsTouchingCeiling;

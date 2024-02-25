@@ -2,9 +2,11 @@ using System.Collections;
 using UnityEngine;
 using Gameplay.Klonoa;
 using UnityEngine.SceneManagement;
-using Sounds;
 using Sirenix.OdinInspector;
 using Gameplay.Collectables;
+using GameControl;
+using UnityEngine.Playables;
+using Cameras;
 
 namespace Gameplay.Controller
 {
@@ -12,17 +14,37 @@ namespace Gameplay.Controller
     {
         private const int MAX_HEALTH = 6;
 
-        [SerializeField] private KlonoaBehaviour _klonoa;
-        [SerializeField] private ResourcesController _resourcesController;
-        [SerializeField] private MusicPlayer _music;
+        [SerializeField] private KlonoaBehaviour _klonoaPrefab;
+        [SerializeField] private Transform _klonoaDefaultSpawn;
+        [SerializeField] private CameraTarget _cameraTarget;
+
+        [Header("Sequences")]
+        [SerializeField] private PlayableDirector _introSequenceDirector;
+        [SerializeField] private PlayableDirector _deathSequenceDirector;
+
         [Header("Settings")]
-        [SerializeField] private float _restartTime = 5f;
         [SerializeField] private int _totalStone = 75;
+
+        private KlonoaBehaviour _klonoa;
+        private ResourcesController _resourcesController;
 
         private void Awake()
         {
+            Initialized();
+        }
+
+        private void Initialized()
+        {
+            _klonoa = Instantiate(_klonoaPrefab, _klonoaDefaultSpawn.position, _klonoaDefaultSpawn.rotation);
             _klonoa.DeathEvent += OnKlonoaDeath;
+
+            _resourcesController = GetComponentInChildren<ResourcesController>();
+            _resourcesController.Configure(_klonoa);
             _resourcesController.StartLevel(MAX_HEALTH, _totalStone, new bool[6]);
+
+            _cameraTarget.Klonoa = _klonoa;
+            
+            StartIntroSequence();
         }
 
         private void OnKlonoaDeath()
@@ -32,10 +54,31 @@ namespace Gameplay.Controller
 
         private IEnumerator DeathCoroutine()
         {
-            _music.StopMusic();
-            yield return new WaitForSeconds(_restartTime);
+            GameController.StopMusic();
+            yield return null;//new WaitForSeconds(_restartTime);
             Scene activeScene = SceneManager.GetActiveScene();
             SceneManager.LoadScene(activeScene.buildIndex);
+        }
+
+        private void StartIntroSequence()
+        {
+            _introSequenceDirector.Play();            
+        }
+
+        private void OnIntroEnded(PlayableDirector director)
+        {
+            director.stopped -= OnIntroEnded;
+            _klonoa.EnableInput = true;
+        }
+
+        private void StartDeathSequence()
+        {
+            _deathSequenceDirector.Play();
+        }
+
+        public void EnablePlayerInput(bool value)
+        {
+            _klonoa.EnableInput = value;
         }
 
 #if UNITY_EDITOR

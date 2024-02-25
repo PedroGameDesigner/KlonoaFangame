@@ -12,7 +12,7 @@ public class CameraFacingDisplacer : MonoBehaviour
     [SerializeField] private float transitionTime = 2f;
 
     private CinemachineFramingTransposer transposer;
-    private KlonoaBehaviour klonoa;
+    private CameraTarget target;
     private Coroutine coroutine;
     private float absoluteDisplacement;
     private float lastFacing;
@@ -22,21 +22,27 @@ public class CameraFacingDisplacer : MonoBehaviour
     {
         var vcam = GetComponent<CinemachineVirtualCamera>();
         transposer = vcam.GetCinemachineComponent<CinemachineFramingTransposer>();
-
-        var target = vcam.Follow.GetComponent<CameraTarget>();
-        klonoa = target.Klonoa;
+        target = vcam.Follow.GetComponent<CameraTarget>();
 
         absoluteDisplacement = Mathf.Abs(SCREEN_CENTER - transposer.m_ScreenX);
-        facing = klonoa.HorizontalFacing.GetVector().z;
         lastFacing = facing;
+    }
+
+    private void OnEnable()
+    {
+        if (target.Klonoa == null) return;
+
+        facing = target.Klonoa.HorizontalFacing.GetVector().z;
     }
 
     private void LateUpdate()
     {
-        if (lastFacing != klonoa.HorizontalFacing.GetVector().z)
+        if (target.Klonoa == null) return;
+
+        if (lastFacing != target.Klonoa.HorizontalFacing.GetVector().z)
         {
             if (coroutine != null) StopCoroutine(coroutine);
-            coroutine = StartCoroutine(ChangeFacingCoroutine(facing, klonoa.HorizontalFacing.GetVector().z));
+            coroutine = StartCoroutine(ChangeFacingCoroutine(facing, target.Klonoa.HorizontalFacing.GetVector().z));
         }
 
         transposer.m_ScreenX = SCREEN_CENTER - facing * absoluteDisplacement;

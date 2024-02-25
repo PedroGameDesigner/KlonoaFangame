@@ -32,6 +32,8 @@ namespace Gameplay.Klonoa
 
         private void Update()
         {
+            if (!_mainBehaviour.EnableInput) return;
+
             Vector2 input = _moveInput.ReadValue<Vector2>();
             input.y = 0;
             _mainBehaviour.SetMoveDirection(input);
@@ -39,21 +41,29 @@ namespace Gameplay.Klonoa
 
         private void OnJumpStarted(InputAction.CallbackContext context)
         {
+            if (!_mainBehaviour.EnableInput) return;
+
             _mainBehaviour.StartJump();
         }
 
         private void OnJumpCanceled(InputAction.CallbackContext context)
         {
+            if (!_mainBehaviour.EnableInput) return;
+
             _mainBehaviour.EndJump();
         }
 
         private void OnAttackStarted(InputAction.CallbackContext context)
         {
+            if (!_mainBehaviour.EnableInput) return;
+
             _mainBehaviour.StartAttack();
         }
 
         private void OnAttackCanceled(InputAction.CallbackContext context)
         {
+            if (!_mainBehaviour.EnableInput) return;
+
             _mainBehaviour.StopAttack();
         }
         

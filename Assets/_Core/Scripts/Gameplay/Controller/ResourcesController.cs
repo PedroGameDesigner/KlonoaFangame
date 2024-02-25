@@ -9,8 +9,6 @@ namespace Gameplay.Controller
 {
     public class ResourcesController : MonoBehaviour
     {
-        [SerializeField] private KlonoaBehaviour _klonoa;
-
         public int Health { get; private set; }
         public int Stones { get; private set; }
         public bool[] Shards { get; private set; }
@@ -18,11 +16,13 @@ namespace Gameplay.Controller
         public int MaxHealth { get; private set; }
         public int TotalStones { get; private set; }
 
+        private KlonoaBehaviour _klonoa;
         public event Action HealthChangeEvent;
         public event Action StonesChangeEvent;
 
-        private void Awake()
+        public void Configure(KlonoaBehaviour klonoa)
         {
+            _klonoa = klonoa;
             _klonoa.DamageEvent += OnKlonoaDamage;
             _klonoa.DeathEvent += OnKlonoaDeath;
             DreamStone.StoneCollectedEvent += OnStoneCollected;

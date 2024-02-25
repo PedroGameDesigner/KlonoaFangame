@@ -12,7 +12,7 @@ public class DeathZoneState : MonoBehaviour
     [SerializeField] private float extraDeathZoneHeight = 0.05f;
 
     private CinemachineFramingTransposer transposer;
-    private KlonoaBehaviour klonoa;
+    private CameraTarget target;
 
     private float screenY;
     private float deathZoneSize;
@@ -23,9 +23,7 @@ public class DeathZoneState : MonoBehaviour
     {
         var vcam = GetComponent<CinemachineVirtualCamera>();
         transposer = vcam.GetCinemachineComponent<CinemachineFramingTransposer>();
-
-        var target = vcam.Follow.GetComponent<CameraTarget>();
-        klonoa = target.Klonoa;
+        target = vcam.Follow.GetComponent<CameraTarget>();
 
         screenY = transposer.m_ScreenY;
         deathZoneSize = Mathf.Abs(SCREEN_CENTER - screenY) + extraDeathZoneHeight;
@@ -33,29 +31,35 @@ public class DeathZoneState : MonoBehaviour
 
     private void LateUpdate()
     {
-        if (currentStateType != StateType.Normal)
+        if (currentStateType != StateType.Normal || target.Klonoa == null)
             return;
 
-        if (!isGrounded && klonoa.IsGrounded) //Landing
+        if (!isGrounded && target.Klonoa.IsGrounded) //Landing
             DisableDeathZone();
-        else if (isGrounded && !klonoa.IsGrounded) //leaving ground
+        else if (isGrounded && !target.Klonoa.IsGrounded) //leaving ground
             EnableDeathZone();
 
-        isGrounded = klonoa.IsGrounded;
+        isGrounded = target.Klonoa.IsGrounded;
     }
 
     private void OnEnable()
     {
-        //klonoa.JumpEvent += OnJump;
-        klonoa.BeginHangingEvent += OnBeginHanging;
-        klonoa.EndHangingEvent += OnEndHanging;
+        if (target.Klonoa == null)
+        {
+            Debug.Log("NO KLONOA");
+            return;
+        }
+
+        target.Klonoa.BeginHangingEvent += OnBeginHanging;
+        target.Klonoa.EndHangingEvent += OnEndHanging;
     }
 
     private void OnDisable()
     {
-        //klonoa.JumpEvent -= OnJump;
-        klonoa.BeginHangingEvent -= OnBeginHanging;
-        klonoa.EndHangingEvent -= OnEndHanging;
+        if (target.Klonoa == null) return;
+
+        target.Klonoa.BeginHangingEvent -= OnBeginHanging;
+        target.Klonoa.EndHangingEvent -= OnEndHanging;
     }
 
     //private void OnJump() => BeginAlwaysActive(jumpActiveTime);

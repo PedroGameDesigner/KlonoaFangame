@@ -17,16 +17,16 @@ namespace Cameras
         private Vector3 _extraDisplacement = Vector3.zero;
         private Quaternion _extraRotation = Quaternion.identity;
 
-        public KlonoaBehaviour Klonoa => _target;
-
-        private void Awake()
+        public KlonoaBehaviour Klonoa
         {
-            if (_target == null)
-                _target = FindObjectOfType<KlonoaBehaviour>();
+            get => _target;
+            set => _target = value;
         }
 
         private void LateUpdate()
         {
+            if (_target == null) return;
+
             transform.rotation = _extraRotation * _rotation * _target.transform.rotation;
             transform.position = _target.transform.position + transform.rotation * (_displacement + _extraDisplacement);
         }

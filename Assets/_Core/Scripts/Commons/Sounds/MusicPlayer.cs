@@ -12,6 +12,7 @@ namespace Sounds
         [Space]
         [SerializeField] private AudioSource[] _sources;
 
+        private MusicClip _currentMusic;
         private AudioSourceStatus[] _audioStatus;
 
         private void Awake()
@@ -31,10 +32,16 @@ namespace Sounds
 
         public void StartMusic()
         {
-            int length = Mathf.Min(_audioStatus.Length, _music.AudioTracks.Length);
+            StartMusic(_music);
+        }
+
+        public void StartMusic(MusicClip music)
+        {
+            _currentMusic = music;
+            int length = Mathf.Min(_audioStatus.Length, _currentMusic.AudioTracks.Length);
             for (int i = 0; i < length; i++)
             {
-                StartAudioFadeIn(_audioStatus[i], _music.AudioTracks[i]);
+                StartAudioFadeIn(_audioStatus[i], _currentMusic.AudioTracks[i]);
             }
         }
 
@@ -42,7 +49,7 @@ namespace Sounds
         {
             for (int i = 0; i < _audioStatus.Length; i++)
             {
-                StartAudioFadeOut(_audioStatus[i], _music.AudioTracks[i]);
+                StartAudioFadeOut(_audioStatus[i], _currentMusic.AudioTracks[i]);
             }
         }
 
