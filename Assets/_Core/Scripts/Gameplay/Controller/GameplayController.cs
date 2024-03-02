@@ -49,12 +49,11 @@ namespace Gameplay.Controller
 
         private void OnKlonoaDeath()
         {
-            StartCoroutine(DeathCoroutine());
+            StartDeathSequence();
         }
 
         private IEnumerator DeathCoroutine()
         {
-            GameController.StopMusic();
             yield return null;//new WaitForSeconds(_restartTime);
             Scene activeScene = SceneManager.GetActiveScene();
             SceneManager.LoadScene(activeScene.buildIndex);
@@ -73,12 +72,18 @@ namespace Gameplay.Controller
 
         private void StartDeathSequence()
         {
+            GameController.StopMusic();
             _deathSequenceDirector.Play();
         }
 
         public void EnablePlayerInput(bool value)
         {
             _klonoa.EnableInput = value;
+        }
+
+        public void RestartScene()
+        {
+            GameController.RestartScene();
         }
 
 #if UNITY_EDITOR

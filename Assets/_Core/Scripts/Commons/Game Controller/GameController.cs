@@ -2,6 +2,7 @@ using Sounds;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 
 namespace GameControl
 {
@@ -10,6 +11,9 @@ namespace GameControl
         private static GameController instance;
 
         private MusicPlayer musicPlayer;
+        private SceneStartType sceneStartType;
+
+        public static SceneStartType CurrentSceneStartType => instance.sceneStartType;
 
         private void Awake()
         {
@@ -31,7 +35,22 @@ namespace GameControl
 
         public static void StopMusic()
         {
-
+            instance.musicPlayer.StopMusic();
         }
+
+        public static void StartScene(Scene scene)
+        {
+            instance.sceneStartType = SceneStartType.Restart;
+            SceneManager.LoadScene(scene.buildIndex);
+        }
+
+        public static void RestartScene()
+        {
+            Scene activeScene = SceneManager.GetActiveScene();
+            instance.sceneStartType = SceneStartType.Restart;
+            SceneManager.LoadScene(activeScene.buildIndex);
+        }
+
+        public enum SceneStartType { Start = 0, Restart = 1}
     }
 }
