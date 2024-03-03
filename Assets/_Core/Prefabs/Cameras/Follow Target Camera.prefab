@@ -214,4 +214,4 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: b7fb6d5de3330164d8ff1aae076fa120, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _defaultCamera: 0
+  _defaultCamera: 1

@@ -7,6 +7,7 @@ using Gameplay.Collectables;
 using GameControl;
 using UnityEngine.Playables;
 using Cameras;
+using Sounds;
 
 namespace Gameplay.Controller
 {
@@ -24,6 +25,7 @@ namespace Gameplay.Controller
 
         [Header("Settings")]
         [SerializeField] private int _totalStone = 75;
+        [SerializeField] private MusicClip _levelMusic;
 
         private KlonoaBehaviour _klonoa;
         private ResourcesController _resourcesController;
@@ -43,7 +45,10 @@ namespace Gameplay.Controller
             _resourcesController.StartLevel(MAX_HEALTH, _totalStone, new bool[6]);
 
             _cameraTarget.Klonoa = _klonoa;
-            
+        }
+
+        private void Start()
+        {
             StartIntroSequence();
         }
 
@@ -52,15 +57,9 @@ namespace Gameplay.Controller
             StartDeathSequence();
         }
 
-        private IEnumerator DeathCoroutine()
-        {
-            yield return null;//new WaitForSeconds(_restartTime);
-            Scene activeScene = SceneManager.GetActiveScene();
-            SceneManager.LoadScene(activeScene.buildIndex);
-        }
-
         private void StartIntroSequence()
         {
+            GameController.PlayMusic(_levelMusic);
             _introSequenceDirector.Play();            
         }
 

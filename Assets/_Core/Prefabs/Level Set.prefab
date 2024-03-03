@@ -1182,7 +1182,8 @@ MonoBehaviour:
   _cameraTarget: {fileID: 1639233893098219478}
   _introSequenceDirector: {fileID: 1829445101616864664}
   _deathSequenceDirector: {fileID: 1184033504006769694}
-  _totalStone: 75
+  _totalStone: 132
+  _levelMusic: {fileID: 11400000, guid: 70b5f3458cf8ace41b98428d7511d543, type: 2}
 --- !u!114 &5945509575152486338
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -2712,7 +2713,7 @@ RectTransform:
   m_GameObject: {fileID: 8738050686795121651}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_LocalScale: {x: 2, y: 2, z: 2}
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 1715920916771929284}

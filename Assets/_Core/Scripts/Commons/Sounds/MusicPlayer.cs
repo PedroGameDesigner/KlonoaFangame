@@ -47,7 +47,6 @@ namespace Sounds
 
         public void StopMusic()
         {
-            return;
             for (int i = 0; i < _audioStatus.Length; i++)
             {
                 StartAudioFadeOut(_audioStatus[i], _currentMusic.AudioTracks[i]);
