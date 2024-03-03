@@ -21,6 +21,8 @@ namespace GameControl
             {
                 instance = this;
                 musicPlayer = GetComponentInChildren<MusicPlayer>();
+                transform.SetParent(null);
+                DontDestroyOnLoad(gameObject);
             }
             else
             {
@@ -40,14 +42,14 @@ namespace GameControl
 
         public static void StartScene(Scene scene)
         {
-            instance.sceneStartType = SceneStartType.Restart;
+            instance.sceneStartType = SceneStartType.Start;
             SceneManager.LoadScene(scene.buildIndex);
         }
 
         public static void RestartScene()
         {
-            Scene activeScene = SceneManager.GetActiveScene();
             instance.sceneStartType = SceneStartType.Restart;
+            Scene activeScene = SceneManager.GetActiveScene();
             SceneManager.LoadScene(activeScene.buildIndex);
         }
 

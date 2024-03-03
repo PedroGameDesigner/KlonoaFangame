@@ -1,7 +1,6 @@
 using System.Collections;
 using UnityEngine;
 using Gameplay.Klonoa;
-using UnityEngine.SceneManagement;
 using Sirenix.OdinInspector;
 using Gameplay.Collectables;
 using GameControl;
@@ -13,7 +12,7 @@ namespace Gameplay.Controller
 {
     public class GameplayController : MonoBehaviour
     {
-        private const int MAX_HEALTH = 6;
+        private const int MAX_HEALTH = 1;
 
         [SerializeField] private KlonoaBehaviour _klonoaPrefab;
         [SerializeField] private Transform _klonoaDefaultSpawn;
@@ -21,6 +20,7 @@ namespace Gameplay.Controller
 
         [Header("Sequences")]
         [SerializeField] private PlayableDirector _introSequenceDirector;
+        [SerializeField] private PlayableDirector _restartSequenceDirector;
         [SerializeField] private PlayableDirector _deathSequenceDirector;
 
         [Header("Settings")]
@@ -49,7 +49,10 @@ namespace Gameplay.Controller
 
         private void Start()
         {
-            StartIntroSequence();
+            if (GameController.CurrentSceneStartType == GameController.SceneStartType.Start)
+                StartIntroSequence();
+            else
+                RestartIntroSequence();
         }
 
         private void OnKlonoaDeath()
@@ -61,6 +64,12 @@ namespace Gameplay.Controller
         {
             GameController.PlayMusic(_levelMusic);
             _introSequenceDirector.Play();            
+        }
+
+        private void RestartIntroSequence()
+        {
+            GameController.PlayMusic(_levelMusic);
+            _restartSequenceDirector.Play();
         }
 
         private void OnIntroEnded(PlayableDirector director)
