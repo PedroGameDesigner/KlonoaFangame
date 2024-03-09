@@ -10,8 +10,10 @@ namespace GameControl
     {
         private static GameController instance;
 
+        [SerializeField] private SceneConfiguration scenesConfig;
         private MusicPlayer musicPlayer;
         private SceneStartType sceneStartType;
+        private int currentLevel;
 
         public static SceneStartType CurrentSceneStartType => instance.sceneStartType;
 
@@ -40,10 +42,23 @@ namespace GameControl
             instance.musicPlayer.StopMusic();
         }
 
-        public static void StartScene(Scene scene)
+        public static void GoToFirstLevel()
         {
             instance.sceneStartType = SceneStartType.Start;
-            SceneManager.LoadScene(scene.buildIndex);
+            instance.currentLevel = 0;
+            SceneManager.LoadScene(instance.scenesConfig.FirstLevel);
+        }
+
+        public static void GoToNextLevel()
+        {
+            instance.sceneStartType = SceneStartType.Start;
+            instance.currentLevel++;
+            SceneManager.LoadScene(instance.scenesConfig.GetLevel(instance.currentLevel));
+        }
+
+        public static void GoToMenuScene()
+        {
+            SceneManager.LoadScene(instance.scenesConfig.MainMenu);
         }
 
         public static void RestartScene()

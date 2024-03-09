@@ -1,3 +1,4 @@
+using GameControl;
 using Sounds;
 using System.Collections;
 using System.Collections.Generic;
@@ -9,7 +10,6 @@ namespace Menu
 {
     public class MainMenu : MonoBehaviour
     {
-        [SerializeField] private string _levelScene;
         [SerializeField] private EventSystem _eventSystem;
         [Space]
         [SerializeField] private MusicPlayer _musicPlayer;
@@ -49,7 +49,7 @@ namespace Menu
         private IEnumerator DelayedPlayLevel()
         {
             yield return new WaitForSeconds(_playSound.length);
-            SceneManager.LoadScene(_levelScene, LoadSceneMode.Single);
+            GameController.GoToFirstLevel();
 
         }
 

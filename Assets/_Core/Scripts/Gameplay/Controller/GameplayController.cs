@@ -22,6 +22,7 @@ namespace Gameplay.Controller
         [SerializeField] private PlayableDirector _introSequenceDirector;
         [SerializeField] private PlayableDirector _restartSequenceDirector;
         [SerializeField] private PlayableDirector _deathSequenceDirector;
+        [SerializeField] private PlayableDirector _endingSequenceDirector;
 
         [Header("Settings")]
         [SerializeField] private int _totalStone = 75;
@@ -72,12 +73,6 @@ namespace Gameplay.Controller
             _restartSequenceDirector.Play();
         }
 
-        private void OnIntroEnded(PlayableDirector director)
-        {
-            director.stopped -= OnIntroEnded;
-            _klonoa.EnableInput = true;
-        }
-
         private void StartDeathSequence()
         {
             GameController.StopMusic();
@@ -93,6 +88,18 @@ namespace Gameplay.Controller
         {
             GameController.RestartScene();
         }
+
+        public void EndLevel()
+        {
+            GameController.StopMusic();
+            _endingSequenceDirector.Play();
+        }
+
+        public void GoNextLevel()
+        {
+            GameController.GoToMenuScene();
+        }
+
 
 #if UNITY_EDITOR
         [Button("Count Dreamstones")]
