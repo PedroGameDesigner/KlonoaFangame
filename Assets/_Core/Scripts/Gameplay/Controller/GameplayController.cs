@@ -12,7 +12,7 @@ namespace Gameplay.Controller
 {
     public class GameplayController : MonoBehaviour
     {
-        private const int MAX_HEALTH = 1;
+        private const int MAX_HEALTH = 6;
 
         [SerializeField] private KlonoaBehaviour _klonoaPrefab;
         [SerializeField] private Transform _klonoaDefaultSpawn;
