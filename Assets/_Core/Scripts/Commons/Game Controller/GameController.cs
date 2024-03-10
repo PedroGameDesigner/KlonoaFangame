@@ -1,3 +1,4 @@
+using SaveSystem;
 using Sounds;
 using System.Collections;
 using System.Collections.Generic;
@@ -9,6 +10,7 @@ namespace GameControl
     public class GameController : MonoBehaviour
     {
         private static GameController instance;
+        private static SaveManager save;
 
         [SerializeField] private SceneConfiguration scenesConfig;
         private MusicPlayer musicPlayer;
@@ -16,6 +18,7 @@ namespace GameControl
         private int currentLevel;
 
         public static SceneStartType CurrentSceneStartType => instance.sceneStartType;
+        public static SaveManager Save => save;
 
         private void Awake()
         {
@@ -23,6 +26,8 @@ namespace GameControl
             {
                 instance = this;
                 musicPlayer = GetComponentInChildren<MusicPlayer>();
+                save = GetComponentInChildren<SaveManager>();
+                save.Load();
                 transform.SetParent(null);
                 DontDestroyOnLoad(gameObject);
             }
