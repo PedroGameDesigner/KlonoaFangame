@@ -1,5 +1,6 @@
 using Gameplay.Collectables;
 using Gameplay.Klonoa;
+using SaveSystem;
 using System;
 using System.Collections;
 using System.Collections.Generic;
@@ -11,7 +12,8 @@ namespace Gameplay.Controller
     {
         public int Health { get; private set; }
         public int Stones { get; private set; }
-        public bool[] Shards { get; private set; }
+        public bool MoonShard { get; private set; }
+        public bool DarkMoonShard { get; private set; }
 
         public int MaxHealth { get; private set; }
         public int TotalStones { get; private set; }
@@ -29,11 +31,12 @@ namespace Gameplay.Controller
             HealthPickup.HealthCollectedEvent += OnHealthCollected;
         }
 
-        public void StartLevel(int maxHealth, int totalStones, bool[] shards)
+        public void StartLevel(int maxHealth, int totalStones, bool moonShard, bool darkMoonShard)
         {
             MaxHealth = maxHealth;
             TotalStones = totalStones;
-            Shards = shards;
+            MoonShard = moonShard;
+            DarkMoonShard = darkMoonShard;
 
             Health = MaxHealth;
             Stones = 0;

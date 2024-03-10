@@ -11,6 +11,16 @@ namespace SaveSystem
         public List<SaveLevelData> levelsData;
 
         public string ToJson() => JsonUtility.ToJson(this);
+
+        public SaveLevelData GetLevelData(int index)
+        {
+            while (index >= levelsData.Count) 
+            {
+                levelsData.Add(new SaveLevelData());
+            }
+
+            return levelsData[index];
+        }
     }
 
     [System.Serializable]

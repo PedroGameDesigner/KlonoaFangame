@@ -7,6 +7,7 @@ using GameControl;
 using UnityEngine.Playables;
 using Cameras;
 using Sounds;
+using SaveSystem;
 
 namespace Gameplay.Controller
 {
@@ -25,11 +26,13 @@ namespace Gameplay.Controller
         [SerializeField] private PlayableDirector _endingSequenceDirector;
 
         [Header("Settings")]
+        [SerializeField] private int _levelIndex = 0;
         [SerializeField] private int _totalStone = 75;
         [SerializeField] private MusicClip _levelMusic;
 
         private KlonoaBehaviour _klonoa;
         private ResourcesController _resourcesController;
+        private SaveLevelData _levelData;
 
         private void Awake()
         {
@@ -38,12 +41,16 @@ namespace Gameplay.Controller
 
         private void Initialized()
         {
+            _levelData = GameController.Save.GetData().GetLevelData(_levelIndex);
+
             _klonoa = Instantiate(_klonoaPrefab, _klonoaDefaultSpawn.position, _klonoaDefaultSpawn.rotation);
             _klonoa.DeathEvent += OnKlonoaDeath;
 
             _resourcesController = GetComponentInChildren<ResourcesController>();
             _resourcesController.Configure(_klonoa);
-            _resourcesController.StartLevel(MAX_HEALTH, _totalStone, new bool[6]);
+            var moonShard = _resourcesController.MoonShard;
+            var darkMoonShard = _resourcesController.DarkMoonShard;
+            _resourcesController.StartLevel(MAX_HEALTH, _totalStone, _levelData.moonShard, _levelData.darkMoonShard);
 
             _cameraTarget.Klonoa = _klonoa;
         }
@@ -97,7 +104,22 @@ namespace Gameplay.Controller
 
         public void GoNextLevel()
         {
+            SaveLevelProgress();
             GameController.GoToMenuScene();
+        }
+
+        public void SaveLevelProgress()
+        {
+            _levelData.levelCompleted = true;
+            _levelData.dreamStones = Mathf.Max(_levelData.dreamStones, _resourcesController.Stones);
+            _levelData.moonShard = _resourcesController.MoonShard;
+            _levelData.darkMoonShard = _resourcesController.DarkMoonShard;
+
+            var saveManager = GameController.Save;
+            var data = saveManager.GetData();
+            data.levelsData[_levelIndex] = _levelData;
+            saveManager.UpdateData(data);
+            saveManager.Save();
         }
 
 

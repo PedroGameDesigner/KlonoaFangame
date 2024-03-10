@@ -7,14 +7,15 @@ namespace SaveSystem
 {
     public class SaveManager : MonoBehaviour
     {
-        private const string SAVE_PATH = "save.json";
+        private const string SAVE_PATH = "/save.json";
         [SerializeField]
         private SaveData data;
 
-        private string FullSavePath => Application.dataPath + SAVE_PATH;
+        private string FullSavePath => Application.persistentDataPath + SAVE_PATH;
 
         public void Save()
         {
+            Debug.Log("Save at " + FullSavePath);
             File.WriteAllText(FullSavePath, data.ToJson());
         }
 

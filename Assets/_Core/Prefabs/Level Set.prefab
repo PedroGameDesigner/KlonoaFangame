@@ -1490,6 +1490,7 @@ MonoBehaviour:
   _restartSequenceDirector: {fileID: 689881960015043807}
   _deathSequenceDirector: {fileID: 1184033504006769694}
   _endingSequenceDirector: {fileID: 200093171101502733}
+  _levelIndex: 0
   _totalStone: 132
   _levelMusic: {fileID: 11400000, guid: 70b5f3458cf8ace41b98428d7511d543, type: 2}
 --- !u!114 &5945509575152486338
