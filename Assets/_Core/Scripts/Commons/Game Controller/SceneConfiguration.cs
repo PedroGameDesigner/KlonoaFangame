@@ -17,11 +17,15 @@ namespace GameControl
         [SerializeField]
         private SceneObject endingScene;
         public string FirstLevel => gameplayLevels[0].Name;
+        public string EndingScene => endingScene.Name;
+
+        public bool IsLastLevel(int levelIndex)
+        {
+            return levelIndex >= gameplayLevels.Length;
+        }
+
         public string GetLevel(int levelIndex)
         {
-            if (levelIndex < gameplayLevels.Length)
-                return gameplayLevels[levelIndex].Name;
-
             return endingScene.Name;
         }
     }

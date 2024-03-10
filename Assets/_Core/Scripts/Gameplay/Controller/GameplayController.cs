@@ -105,7 +105,7 @@ namespace Gameplay.Controller
         public void GoNextLevel()
         {
             SaveLevelProgress();
-            GameController.GoToMenuScene();
+            GameController.GoToNextLevel();
         }
 
         public void SaveLevelProgress()

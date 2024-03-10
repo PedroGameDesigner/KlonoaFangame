@@ -58,7 +58,16 @@ namespace GameControl
         {
             instance.sceneStartType = SceneStartType.Start;
             instance.currentLevel++;
-            SceneManager.LoadScene(instance.scenesConfig.GetLevel(instance.currentLevel));
+            if (!instance.scenesConfig.IsLastLevel(instance.currentLevel))
+            {
+                SceneManager.LoadScene(instance.scenesConfig.GetLevel(instance.currentLevel));
+            }
+            else
+            {
+                SetGameCompleted();
+                Save.Save();
+                SceneManager.LoadScene(instance.scenesConfig.EndingScene);
+            }
         }
 
         public static void GoToMenuScene()
@@ -71,6 +80,13 @@ namespace GameControl
             instance.sceneStartType = SceneStartType.Restart;
             Scene activeScene = SceneManager.GetActiveScene();
             SceneManager.LoadScene(activeScene.buildIndex);
+        }
+
+        private static void SetGameCompleted()
+        {
+            var data = Save.GetData();
+            data.gameCompleted = true;
+            Save.UpdateData(data);
         }
 
         public enum SceneStartType { Start = 0, Restart = 1}

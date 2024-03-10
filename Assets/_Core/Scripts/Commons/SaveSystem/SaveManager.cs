@@ -2,6 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using System.IO;
 using UnityEngine;
+using Sirenix.OdinInspector;
 
 namespace SaveSystem
 {
@@ -13,12 +14,14 @@ namespace SaveSystem
 
         private string FullSavePath => Application.persistentDataPath + SAVE_PATH;
 
+        [Button("Save")]
         public void Save()
         {
             Debug.Log("Save at " + FullSavePath);
             File.WriteAllText(FullSavePath, data.ToJson());
         }
 
+        [Button("Load")]
         public void Load()
         {
             if (File.Exists(FullSavePath))
