@@ -16,7 +16,7 @@ namespace Gameplay.Controller
         private const int MAX_HEALTH = 6;
 
         [SerializeField] private KlonoaBehaviour _klonoaPrefab;
-        [SerializeField] private Transform _klonoaDefaultSpawn;
+        [SerializeField] private SpawnController _spawnController;
         [SerializeField] private CameraTarget _cameraTarget;
 
         [Header("Sequences")]
@@ -43,7 +43,10 @@ namespace Gameplay.Controller
         {
             _levelData = GameController.Save.GetData().GetLevelData(_levelIndex);
 
-            _klonoa = Instantiate(_klonoaPrefab, _klonoaDefaultSpawn.position, _klonoaDefaultSpawn.rotation);
+            _spawnController.Configure(GameController.LastCheckPointID);
+
+            var spawnPoint = GetSpawnPosition();
+            _klonoa = Instantiate(_klonoaPrefab, spawnPoint.position, spawnPoint.rotation);
             _klonoa.DeathEvent += OnKlonoaDeath;
 
             _resourcesController = GetComponentInChildren<ResourcesController>();
@@ -53,6 +56,20 @@ namespace Gameplay.Controller
             _resourcesController.StartLevel(MAX_HEALTH, _totalStone, _levelData.moonShard, _levelData.darkMoonShard);
 
             _cameraTarget.Klonoa = _klonoa;
+        }
+
+        private Transform GetSpawnPosition()
+        {
+            if (GameController.CurrentSceneStartType == GameController.SceneStartType.Start)
+            {
+                _spawnController.SetCheckpointID(-1);
+                return _spawnController.GetDefaultSpawnPosition();
+            }
+            else
+            {
+                _spawnController.DisableCurrentCheckPoint();
+                return _spawnController.GetLastCheckPoint();
+            }
         }
 
         private void Start()
@@ -121,7 +138,6 @@ namespace Gameplay.Controller
             saveManager.UpdateData(data);
             saveManager.Save();
         }
-
 
 #if UNITY_EDITOR
         [Button("Count Dreamstones")]

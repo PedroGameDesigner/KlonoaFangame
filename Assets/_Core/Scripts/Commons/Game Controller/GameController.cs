@@ -16,8 +16,14 @@ namespace GameControl
         private MusicPlayer musicPlayer;
         private SceneStartType sceneStartType;
         private int currentLevel;
+        private int lastCheckpointID;
 
         public static SceneStartType CurrentSceneStartType => instance.sceneStartType;
+        public static int LastCheckPointID
+        {
+            get => instance.lastCheckpointID;
+            set => instance.lastCheckpointID = value;
+        }
         public static SaveManager Save => save;
 
         private void Awake()

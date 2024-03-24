@@ -109,7 +109,7 @@ namespace Gameplay.Projectile
         public void OnCaptureObject(HitDetector hitDetector)
         {
             ICapturable capturable = hitDetector.GetComponentInParent<ICapturable>(includeInactive: true);
-            if (capturable.CanBeCaptured)
+            if (capturable != null && capturable.CanBeCaptured)
             {
                 CapturedEvent?.Invoke(capturable);
                 Finish();

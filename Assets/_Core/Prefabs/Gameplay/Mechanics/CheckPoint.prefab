@@ -47,9 +47,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 601562edfba80b2409a9a2c272269b47, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  index: 0
   spawnpoint: {fileID: 8128075423876563098}
   animator: {fileID: 8128075425549156890}
-  collider: {fileID: 8128075424104125651}
+  collider: {fileID: 1472436006}
 --- !u!1 &8128075423876563093
 GameObject:
   m_ObjectHideFlags: 0
@@ -91,9 +92,8 @@ GameObject:
   m_Component:
   - component: {fileID: 8128075424104125655}
   - component: {fileID: 8128075424104125654}
-  - component: {fileID: 8128075424104125651}
   - component: {fileID: 8128075424104125649}
-  - component: {fileID: 8128075424104125648}
+  - component: {fileID: 1472436006}
   m_Layer: 14
   m_Name: Hit Receptor
   m_TagString: Enemy
@@ -173,19 +173,6 @@ MonoBehaviour:
           m_StringArgument: 
           m_BoolArgument: 0
         m_CallState: 2
---- !u!135 &8128075424104125651
-SphereCollider:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 8128075424104125650}
-  m_Material: {fileID: 0}
-  m_IsTrigger: 0
-  m_Enabled: 1
-  serializedVersion: 2
-  m_Radius: 0.55
-  m_Center: {x: 0, y: 0, z: 0}
 --- !u!54 &8128075424104125649
 Rigidbody:
   m_ObjectHideFlags: 0
@@ -202,20 +189,19 @@ Rigidbody:
   m_Interpolate: 0
   m_Constraints: 126
   m_CollisionDetection: 0
---- !u!114 &8128075424104125648
-MonoBehaviour:
+--- !u!65 &1472436006
+BoxCollider:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 8128075424104125650}
+  m_Material: {fileID: 0}
+  m_IsTrigger: 0
   m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: c5bdc3ccf81a6c5449c9e3e91fa0405a, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  _referenceBehaviour: {fileID: 0}
-  _colliderToDisable: {fileID: 8128075424104125651}
+  serializedVersion: 2
+  m_Size: {x: 1, y: 1.2, z: 1}
+  m_Center: {x: 0, y: 0, z: 0}
 --- !u!1 &8128075425333845288
 GameObject:
   m_ObjectHideFlags: 0

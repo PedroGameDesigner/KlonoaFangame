@@ -1445,6 +1445,7 @@ GameObject:
   - component: {fileID: 1783625144026914740}
   - component: {fileID: 5945509575152486338}
   - component: {fileID: 2387091175853658881}
+  - component: {fileID: 7678933592147507578}
   m_Layer: 0
   m_Name: Gameplay Controller
   m_TagString: Untagged
@@ -1484,7 +1485,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _klonoaPrefab: {fileID: 5521284029373538944, guid: 7c9adb3bfb1539542bdd2a7d58e0e439, type: 3}
-  _klonoaDefaultSpawn: {fileID: 3092482008476706836}
+  _spawnController: {fileID: 7678933592147507578}
   _cameraTarget: {fileID: 1639233893098219478}
   _introSequenceDirector: {fileID: 1829445101616864664}
   _restartSequenceDirector: {fileID: 689881960015043807}
@@ -1519,6 +1520,19 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _exitTime: 2.5
   _revertMultiplier: 2.5
+--- !u!114 &7678933592147507578
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3266342013604478572}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: a78cff742e6346f4cb1722fe409131ab, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  defaultSpawnPoint: {fileID: 3092482008476706836}
 --- !u!1 &3294899355138678426
 GameObject:
   m_ObjectHideFlags: 0
