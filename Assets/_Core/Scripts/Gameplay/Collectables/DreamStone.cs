@@ -13,8 +13,15 @@ namespace Gameplay.Collectables
         [Header("Dreamstone Properties")]
         [SerializeField] private int _value = 1;
         [SerializeField] protected ParticleSystem _collectParticles = null;
+        [Space]
+        [SerializeField] private int index;
 
         public int Value => _value;
+        public int Index
+        {
+            get => index;
+            set => index = value;
+        }
         public override float CollectionDuration => _collectParticles.main.duration;
 
         public override void Collect()
@@ -28,6 +35,11 @@ namespace Gameplay.Collectables
         protected override void InvokeCollectionEvent()
         {
             StoneCollectedEvent?.Invoke(this);
+        }
+
+        public void Disable()
+        {
+            gameObject.SetActive(false);
         }
     }
 }

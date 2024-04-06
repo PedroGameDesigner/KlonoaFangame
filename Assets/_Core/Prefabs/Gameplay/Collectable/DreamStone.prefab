@@ -10017,6 +10017,7 @@ MonoBehaviour:
   _audioSource: {fileID: 3214333803606083351}
   _value: 1
   _collectParticles: {fileID: 5131922765854701701}
+  index: 0
 --- !u!82 &3214333803606083351
 AudioSource:
   m_ObjectHideFlags: 0

@@ -13,6 +13,7 @@ namespace Gameplay
         [SerializeField] private Transform spawnpoint;
         [SerializeField] private Animator animator;
         [SerializeField] private new Collider collider;
+        [SerializeField] private AudioSource audioSource;
 
         public Transform Spawnpoint => spawnpoint;
         public int Index
@@ -23,8 +24,9 @@ namespace Gameplay
 
         public void Activation()
         {
-            GameController.LastCheckPointID = index;
+            GameController.LastLevelVisit.checkpointID = index;
             animator.SetTrigger("Pop");
+            audioSource.Play();
             collider.gameObject.SetActive(false);
         }
 

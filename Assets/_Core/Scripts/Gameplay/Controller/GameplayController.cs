@@ -9,6 +9,12 @@ using Cameras;
 using Sounds;
 using SaveSystem;
 
+#if UNITY_EDITOR
+using UnityEditor;
+using UnityEditor.SceneManagement;
+using UnityEngine.SceneManagement;
+#endif
+
 namespace Gameplay.Controller
 {
     public class GameplayController : MonoBehaviour
@@ -43,14 +49,14 @@ namespace Gameplay.Controller
         {
             _levelData = GameController.Save.GetData().GetLevelData(_levelIndex);
 
-            _spawnController.Configure(GameController.LastCheckPointID);
+            _spawnController.Configure(GameController.LastLevelVisit.checkpointID);
 
             var spawnPoint = GetSpawnPosition();
             _klonoa = Instantiate(_klonoaPrefab, spawnPoint.position, spawnPoint.rotation);
             _klonoa.DeathEvent += OnKlonoaDeath;
 
             _resourcesController = GetComponentInChildren<ResourcesController>();
-            _resourcesController.Configure(_klonoa);
+            _resourcesController.Configure(_klonoa, GameController.LastLevelVisit.collectedDreamstones);
             var moonShard = _resourcesController.MoonShard;
             var darkMoonShard = _resourcesController.DarkMoonShard;
             _resourcesController.StartLevel(MAX_HEALTH, _totalStone, _levelData.moonShard, _levelData.darkMoonShard);
@@ -140,15 +146,18 @@ namespace Gameplay.Controller
         }
 
 #if UNITY_EDITOR
-        [Button("Count Dreamstones")]
+        [Button("Count & Index Dreamstones")]
         private void CountStones()
         {
             _totalStone = 0;
             DreamStone[] dreamStones = FindObjectsByType<DreamStone>(FindObjectsSortMode.None);
             for (int i = 0; i < dreamStones.Length; i++)
             {
+                dreamStones[i].Index = i;
                 _totalStone += dreamStones[i].Value;
+                EditorUtility.SetDirty(dreamStones[i]);
             }
+            EditorSceneManager.MarkSceneDirty(EditorSceneManager.GetActiveScene());
         }
 
 #endif

@@ -16,13 +16,13 @@ namespace GameControl
         private MusicPlayer musicPlayer;
         private SceneStartType sceneStartType;
         private int currentLevel;
-        private int lastCheckpointID;
+        private LevelVisit lastLevelVisit = new LevelVisit();
 
         public static SceneStartType CurrentSceneStartType => instance.sceneStartType;
-        public static int LastCheckPointID
+        public static LevelVisit LastLevelVisit
         {
-            get => instance.lastCheckpointID;
-            set => instance.lastCheckpointID = value;
+            get => instance.lastLevelVisit;
+            set => instance.lastLevelVisit = value;
         }
         public static SaveManager Save => save;
 
@@ -96,5 +96,12 @@ namespace GameControl
         }
 
         public enum SceneStartType { Start = 0, Restart = 1}
+
+        [System.Serializable]
+        public class LevelVisit
+        {
+            public int checkpointID = -1;
+            public List<int> collectedDreamstones = new List<int>();
+        }
     }
 }

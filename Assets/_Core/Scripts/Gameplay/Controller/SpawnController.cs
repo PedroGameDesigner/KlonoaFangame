@@ -9,6 +9,7 @@ namespace Gameplay.Controller
         [SerializeField] private Transform defaultSpawnPoint;
 
         Dictionary<int, CheckPoint> checkPointsDict = new Dictionary<int, CheckPoint>();
+
         int lastCheckpoint = -1;
 
         public void Configure(int lastCheckpoint)

@@ -1,3 +1,4 @@
+using GameControl;
 using Gameplay.Collectables;
 using Gameplay.Klonoa;
 using SaveSystem;
@@ -19,16 +20,28 @@ namespace Gameplay.Controller
         public int TotalStones { get; private set; }
 
         private KlonoaBehaviour _klonoa;
+        Dictionary<int, DreamStone> dreamstonesDic = new Dictionary<int, DreamStone>();
+
+
         public event Action HealthChangeEvent;
         public event Action StonesChangeEvent;
 
-        public void Configure(KlonoaBehaviour klonoa)
+        public void Configure(KlonoaBehaviour klonoa, List<int> collectedStones)
         {
             _klonoa = klonoa;
             _klonoa.DamageEvent += OnKlonoaDamage;
             _klonoa.DeathEvent += OnKlonoaDeath;
             DreamStone.StoneCollectedEvent += OnStoneCollected;
             HealthPickup.HealthCollectedEvent += OnHealthCollected;
+
+            var dreamstones = FindObjectsByType<DreamStone>(FindObjectsSortMode.InstanceID);
+            dreamstonesDic.Clear();
+            for (int i = 0; i < dreamstones.Length; i++) 
+            {
+                dreamstonesDic[dreamstones[i].Index] = dreamstones[i];
+                if (collectedStones.Contains(dreamstones[i].Index))
+                    dreamstones[i].Disable();                
+            }
         }
 
         public void StartLevel(int maxHealth, int totalStones, bool moonShard, bool darkMoonShard)
@@ -66,6 +79,8 @@ namespace Gameplay.Controller
         {
             Stones += stone.Value;
             StonesChangeEvent?.Invoke();
+            GameController.LastLevelVisit.collectedDreamstones.Add(stone.Index);
+                
         }
 
         private void OnHealthCollected(HealthPickup healthPickup)
